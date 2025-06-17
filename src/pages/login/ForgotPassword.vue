@@ -1,21 +1,17 @@
 <script setup>
-import ForgotP from "../assets/img/ForgotP.png";
+import ForgotP from "../../assets/images/ForgotP.png";
 </script>
 
 <template>
   <div class="min-h-screen bg-white flex flex-col p-6">
-   <a href="" class="mb-6 text-2xl" ><i class="fa-solid fa-angle-left"></i></a>
+   <a href="/login" class="mb-6 text-2xl" ><i class="fa-solid fa-angle-left"></i></a>
     <h1 class="text-2xl font-bold text-gray-800 mb-1">Forgot password 🤔</h1>
     <p class="text-gray-500 mb-6">
       Select which contact details should we use to reset your password.
     </p>
 
     <div class="flex justify-center mb-2">
-      <img
-        :src="ForgotP"
-        alt="Forgot Password Illustration"
-        class="w-70 zh-auto"
-      />
+      <img :src="ForgotP" alt="Forgot Password Illustration" class="w-70 zh-auto"/>
     </div>
 
     <div class="space-y-4">

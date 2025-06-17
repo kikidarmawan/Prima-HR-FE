@@ -1,9 +1,21 @@
+<script setup>
+import { ref } from 'vue'
+import { Icon } from '@iconify/vue'
+import Login from "../../assets/images/prime.jpeg";
+
+
+const showPassword = ref(false)
+const togglePassword = () => {
+  showPassword.value = !showPassword.value
+}
+</script>
+
 <template>
   <div class="min-h-screen flex m-2 mt-10 justify-center bg-white px-4">
     <div class="w-full max-w-sm">
       <!-- logo prime -->
       <div class="flex justify-start mb-6">
-        <img src="@/assets/images/prime.jpeg" alt="Logo" class="w-20 h-20 rounded-full" />
+        <img :src="Login" alt="Logo" class="w-20 h-20 rounded-full" />
       </div>
 
       <!-- header -->
@@ -49,7 +61,7 @@
 
         <!-- forgot password -->
         <div class="text-right text-sm mb-6">
-          <a href="#" class="text-blue-500 hover:underline">Forgot Password?</a>
+          <a href="/ForgotPassword" class="text-blue-500 hover:underline">Forgot Password?</a>
         </div>
 
         <!-- login -->
@@ -64,12 +76,3 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import { Icon } from '@iconify/vue'
-
-const showPassword = ref(false)
-const togglePassword = () => {
-  showPassword.value = !showPassword.value
-}
-</script>
