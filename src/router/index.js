@@ -1,17 +1,23 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "../views/Home.vue";
+import ForgotPassword from "../views/ForgotPassword.vue";
 
 const routes = [
+  // {
+  //   path: "/",
+  //   name: "Home",
+  //   component: Home,
+  // },
+  // {
+  //   path: "/about",
+  //   name: "About",
+  //   component: () => import("../views/About.vue"), // Lazy loaded
+  // },
   {
-    path: "/",
-    name: "Home",
-    component: Home,
+    path: "/ForgotPassword",
+    name: "ForgotPassword",
+    component: ForgotPassword,
   },
-  {
-    path: "/about",
-    name: "About",
-    component: () => import("../views/About.vue"), // Lazy loaded
-  },
+  
 ];
 
 const router = createRouter({
