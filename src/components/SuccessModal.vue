@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20">
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs">
     <div class="bg-white rounded-2xl p-6 w-80 text-center shadow-xl">
       <img :src="img" alt="Success" class="mx-auto w-40 mb-4" />
       <h2 class="text-lg font-bold text-gray-800 mb-1">🎉 Congratulations</h2>
