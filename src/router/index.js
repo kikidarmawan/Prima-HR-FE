@@ -7,6 +7,7 @@ import LoginPage from "../pages/login/LoginPage.vue";
 import NewPassword from "../pages/login/NewPassword.vue";
 
 import Otp from "../pages/login/Otp.vue"
+import HomePage from "../pages/home/HomePage.vue";
 
 
 
@@ -33,8 +34,13 @@ const routes = [
   
   {
     path: "/otp",
-    name: 'Otp',
+    name: "Otp",
     component: Otp,
+  },
+  {
+    path: "/HomePage",
+    name: "HomePage",
+    component: HomePage,
   }
 
 ];
