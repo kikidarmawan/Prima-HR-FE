@@ -1,17 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "../views/Home.vue";
+import LoginPage from "../pages/login/LoginPage.vue";
 
 const routes = [
   {
-    path: "/",
-    name: "Home",
-    component: Home,
-  },
-  {
-    path: "/about",
-    name: "About",
-    component: () => import("../views/About.vue"), // Lazy loaded
-  },
+    path: "/login",
+    name: "Login",
+    component: LoginPage,
+  }
 ];
 
 const router = createRouter({
