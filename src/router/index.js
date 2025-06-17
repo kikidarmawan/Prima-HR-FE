@@ -29,7 +29,7 @@ const routes = [
     path: "/NewPassword",
     name: "NewPassword",
     component: NewPassword,
-
+  },
   
   {
     path: "/otp",
