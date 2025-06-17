@@ -4,6 +4,7 @@ import ForgotPassword from "../pages/login/ForgotPassword.vue";
 
 import LoginPage from "../pages/login/LoginPage.vue";
 import Otp from "../pages/login/Otp.vue"
+import HomePage from "../pages/home/HomePage.vue";
 
 
 const routes = [
@@ -22,8 +23,13 @@ const routes = [
   
   {
     path: "/otp",
-    name: 'Otp',
+    name: "Otp",
     component: Otp,
+  },
+  {
+    path: "/HomePage",
+    name: "HomePage",
+    component: HomePage,
   }
 
 ];
