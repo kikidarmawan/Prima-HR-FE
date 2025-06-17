@@ -3,7 +3,11 @@ import { createRouter, createWebHistory } from "vue-router";
 import ForgotPassword from "../pages/login/ForgotPassword.vue";
 
 import LoginPage from "../pages/login/LoginPage.vue";
+
 import NewPassword from "../pages/login/NewPassword.vue";
+
+import Otp from "../pages/login/Otp.vue"
+
 
 
 const routes = [
@@ -20,10 +24,17 @@ const routes = [
     component: LoginPage,
   },
 
+
   {
     path: "/NewPassword",
     name: "NewPassword",
     component: NewPassword,
+
+  
+  {
+    path: "/otp",
+    name: 'Otp',
+    component: Otp,
   }
 
 ];
