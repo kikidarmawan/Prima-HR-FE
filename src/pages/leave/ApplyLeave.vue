@@ -14,7 +14,7 @@ const applyLeave = (e) => {
 }
 
 const goToHome = () => {
-  router.push('/') 
+  router.push('/leaves') 
 }
 </script>
 

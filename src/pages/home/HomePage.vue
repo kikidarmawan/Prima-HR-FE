@@ -196,26 +196,14 @@ const setActive = (iconName) => {
         <div class="flex justify-between items-center w-full">
           <!-- Left 2 -->
             <div class="flex gap-10 items-center pl-2">
-            <router-link to="/HomePage">
+            <router-link to="/home">
               <i class="fa-solid fa-house text-gray-500 text-xl hover:text-blue-600 transition-colors cursor-pointer"></i>
             </router-link>
             <router-link to="/leaves">
               <i class="fa-regular fa-calendar text-xl text-gray-500 hover:text-blue-600 transition-colors cursor-pointer"></i>
             </router-link>
             </div>
-          <div class="flex gap-10 items-center pl-2">
-            <a href="home" @click="setActive('home')">
-              <i
-                :class="[
-                  'fa-solid fa-house text-xl',
-                  activeIcon === 'home' ? 'text-blue-500' : 'text-gray-500',
-                ]"
-              ></i>
-            </a>
-
-            <i class="fa-regular fa-calendar text-xl text-gray-500"></i>
-          </div>
-
+      
           <!-- Spacer Tengah -->
           <div class="w-16"></div>
 

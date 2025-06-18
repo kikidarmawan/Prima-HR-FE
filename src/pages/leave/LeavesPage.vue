@@ -116,9 +116,10 @@ const mockData = {
   <h1 class="text-xl font-semibold">All Leaves</h1>
   <div class="flex gap-2">
     <!-- Plus Button -->
-    <button class="p-2.5 border rounded-lg shadow-sm">
+  
+    <a href="/apply" class="p-2.5 border rounded-lg shadow-sm">
       <Icon icon="mdi:plus" class="text-base  " />
-    </button>
+    </a >
     <!-- Filter Button -->
     <button class="p-2">
       <Icon icon="mdi:tune-variant" class="text-xl" />
