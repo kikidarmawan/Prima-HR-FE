@@ -5,7 +5,9 @@ import { Icon } from "@iconify/vue";
 import StatsGrid from "@/pages/leave/components/StatsGrid.vue";
 import TabSelector from "@/pages/leave/components/TabSelector.vue";
 import TabContent from "@/pages/leave/components/TabContent.vue";
+import LeaveFitur from "../../components/LeaveFitur.vue";
 
+const showModal = ref(false)
 const tabs = ["Upcoming", "Past", "Team Leave"];
 const activeTab = ref("Upcoming");
 
@@ -121,9 +123,10 @@ const mockData = {
       <Icon icon="mdi:plus" class="text-base  " />
     </a >
     <!-- Filter Button -->
-    <a href="/" class="p-2">
+    <button  @click="showModal = true" class="p-2">
       <Icon icon="mdi:tune-variant" class="text-xl" />
-    </a>
+    </button>
+     <LeaveFitur v-if="showModal" @close="showModal = false" />
   </div>
 </div>
 
