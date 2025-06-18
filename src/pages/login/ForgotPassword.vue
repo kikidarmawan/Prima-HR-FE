@@ -5,8 +5,7 @@ import ForgotP from "../../assets/images/ForgotP.png";
 <template>
   <div class="min-h-screen bg-white flex flex-col p-6">
     <a href="/login" class="mb-6 text-2xl"
-      ><i class="fa-solid fa-angle-left"></i
-    ></a>
+      ><i class="fa-solid fa-angle-left"></i></a>
     <h1 class="text-3xl font-bold text-gray-800 mb-1">Forgot password 🤔</h1>
     <p class="text-gray-500 mb-6">
       Select which contact details should we use to reset your password.
