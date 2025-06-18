@@ -11,7 +11,7 @@ import LeavesPage from "../pages/leave/LeavesPage.vue";
 const routes = [
   {
 
-    path: "/ForgotPassword",
+    path: "/forgot-password",
     name: "ForgotPassword",
     component: ForgotPassword,
   },
@@ -24,7 +24,7 @@ const routes = [
 
 
   {
-    path: "/NewPassword",
+    path: "/new-password",
     name: "NewPassword",
     component: NewPassword,
   },
@@ -35,7 +35,7 @@ const routes = [
     component: Otp,
   },
   {
-    path: "/HomePage",
+    path: "/home",
     name: "HomePage",
     component: HomePage,
   },

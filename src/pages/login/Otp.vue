@@ -4,7 +4,7 @@ import ppp from "../../assets/images/ppp.jpg";
 
 <template>
   <div class="min-h-screen bg-white flex flex-col p-6 justify-between">
-    <a href="/ForgotPassword" class="mb-4 text-2xl">
+    <a href="/forgot-password" class="mb-4 text-2xl">
       <i class="fa-solid fa-angle-left"></i>
     </a>
 
@@ -36,8 +36,6 @@ import ppp from "../../assets/images/ppp.jpg";
     </div>
 
     <!-- Verify Button -->
-    <button
-      class="bg-blue-500 text-white text-lg font-medium w-full max-w-xs mx-auto py-3 rounded-lg shadow-md hover:bg-blue-600 transition-all duration-200">Verify
-    </button>
+     <a href="new-password" class="bg-blue-500 text-center text-white text-lg font-medium w-full py-3 rounded-lg shadow-md hover:bg-blue-600 transition-all duration-200">Verify</a>
   </div>
 </template>
