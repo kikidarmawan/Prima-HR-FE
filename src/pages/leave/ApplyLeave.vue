@@ -22,7 +22,7 @@ const goToHome = () => {
   <div class="min-h-screen bg-white p-6">
     <!-- Header -->
     <div class="flex items-center mb-6">
-      <a href="">
+      <a href="/leaves">
         <i class="fa-solid fa-angle-left text-2xl"></i>
       </a>
       <h1 class="ml-6 text-xl font-semibold">Apply Leave</h1>
