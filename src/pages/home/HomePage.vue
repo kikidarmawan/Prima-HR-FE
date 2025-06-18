@@ -179,7 +179,7 @@ const setActive = (iconName) => {
     <!-- Bottom Navbar -->
     <div class="fixed bottom-0 left-0 right-0 z-50 flex justify-center">
       <div
-        class="relative bg-white shadow-xl h-20 rounded-t-3xl px-6 flex justify-between items-center w-full max-w-md mx-auto"
+        class="relative bg-white shadow-xl h-15 rounded-t-3xl px-6 flex justify-between items-center w-full max-w-md mx-auto"
       >
         <!-- Curve Bulatan Tengah -->
         <div
@@ -195,6 +195,14 @@ const setActive = (iconName) => {
         <!-- Icons -->
         <div class="flex justify-between items-center w-full">
           <!-- Left 2 -->
+            <div class="flex gap-10 items-center pl-2">
+            <router-link to="/HomePage">
+              <i class="fa-solid fa-house text-gray-500 text-xl hover:text-blue-600 transition-colors cursor-pointer"></i>
+            </router-link>
+            <router-link to="/leaves">
+              <i class="fa-regular fa-calendar text-xl text-gray-500 hover:text-blue-600 transition-colors cursor-pointer"></i>
+            </router-link>
+            </div>
           <div class="flex gap-10 items-center pl-2">
             <a href="home" @click="setActive('home')">
               <i
@@ -211,13 +219,20 @@ const setActive = (iconName) => {
           <!-- Spacer Tengah -->
           <div class="w-16"></div>
 
-          <!-- Right 2 -->
-          <div class="flex gap-10 items-center pr-2">
-            <i class="fa-solid fa-umbrella-beach text-xl text-gray-500"></i>
-            <i class="fa-regular fa-user text-xl text-gray-500"></i>
+            <!-- Spacer Tengah -->
+            <div class="w-16"></div>
+
+            <!-- Right 2 -->
+            <div class="flex gap-10 items-center pr-2">
+            <router-link to="/">
+              <i class="fa-solid fa-umbrella-beach text-xl text-gray-500 hover:text-blue-600 transition-colors cursor-pointer"></i>
+            </router-link>
+            <router-link to="/">
+              <i class="fa-regular fa-user text-xl text-gray-500 hover:text-blue-600 transition-colors cursor-pointer"></i>
+            </router-link>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 </template>
