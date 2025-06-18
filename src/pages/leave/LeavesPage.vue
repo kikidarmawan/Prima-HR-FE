@@ -121,9 +121,9 @@ const mockData = {
       <Icon icon="mdi:plus" class="text-base  " />
     </a >
     <!-- Filter Button -->
-    <button class="p-2">
+    <a href="/" class="p-2">
       <Icon icon="mdi:tune-variant" class="text-xl" />
-    </button>
+    </a>
   </div>
 </div>
 
@@ -159,7 +159,7 @@ const mockData = {
         <div class="flex justify-between items-center w-full">
           <!-- Left 2 -->
             <div class="flex gap-10 items-center pl-2">
-            <router-link to="/HomePage">
+            <router-link to="/home">
               <i class="fa-solid fa-house text-gray-500 text-xl hover:text-blue-600 transition-colors cursor-pointer"></i>
             </router-link>
             <router-link to="/leaves">
