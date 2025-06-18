@@ -40,10 +40,10 @@ const goToHome = () => {
 
 <template>
   <div class="min-h-screen bg-white flex flex-col p-6">
-    <a href="/ForgotPassword" class="mb-6 text-2xl">
+    <a href="/forgot-password" class="mb-6 text-2xl">
       <i class="fa-solid fa-angle-left"></i>
     </a>
-    <h1 class="text-2xl font-bold text-gray-800 mb-1">Enter New Password</h1>
+    <h1 class="text-3xl font-bold text-gray-800 mb-1">Enter New Password</h1>
     <p class="text-gray-500 mb-6">Please enter your new password.</p>
 
     <div class="flex justify-center mb-2">

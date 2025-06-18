@@ -14,7 +14,7 @@ import HomePage from "../pages/home/HomePage.vue";
 const routes = [
   {
 
-    path: "/ForgotPassword",
+    path: "/forgot-password",
     name: "ForgotPassword",
     component: ForgotPassword,
   },
@@ -27,7 +27,7 @@ const routes = [
 
 
   {
-    path: "/NewPassword",
+    path: "/new-password",
     name: "NewPassword",
     component: NewPassword,
   },
@@ -38,7 +38,7 @@ const routes = [
     component: Otp,
   },
   {
-    path: "/HomePage",
+    path: "/home",
     name: "HomePage",
     component: HomePage,
   }
