@@ -61,7 +61,7 @@ const togglePassword = () => {
 
         <!-- forgot password -->
         <div class="text-right text-sm mb-6">
-          <a href="/ForgotPassword" class="text-blue-500 hover:underline">Forgot Password?</a>
+          <a href="/forgot-password" class="text-blue-500 hover:underline">Forgot Password?</a>
         </div>
 
         <!-- login -->

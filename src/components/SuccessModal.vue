@@ -4,12 +4,9 @@
       <img :src="img" alt="Success" class="mx-auto w-40 mb-4" />
       <h2 class="text-lg font-bold text-gray-800 mb-1">🎉 Congratulations</h2>
       <p class="text-sm text-gray-600 mb-6">Your account is ready to use</p>
-      <button
+      <a href="home">  <button
         @click="$emit('close')"
-        class="bg-blue-500 hover:bg-blue-600 text-white w-full py-2 rounded-lg text-sm font-semibold"
-      >
-        Back to Home
-      </button>
+        class="bg-blue-500 hover:bg-blue-600 text-white w-full py-2 rounded-lg text-sm font-semibold">Back to Home</button></a>
     </div>
   </div>
 </template>

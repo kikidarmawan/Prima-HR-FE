@@ -15,9 +15,15 @@ const dates = [
 
 const selectedDate = ref(3);
 const isCheckedIn = ref(false);
-
+//icon
 const toggleCheck = () => {
   isCheckedIn.value = !isCheckedIn.value;
+};
+
+const activeIcon = ref("home"); // bisa "home", "calendar", dll
+
+const setActive = (iconName) => {
+  activeIcon.value = iconName;
 };
 </script>
 
@@ -53,7 +59,8 @@ const toggleCheck = () => {
         v-for="(date, index) in dates"
         :key="index"
         @click="selectedDate.value = index"
-        :class="[ 'min-w-[64px] h-16 flex-shrink-0 border flex flex-col items-center justify-center rounded-2xl cursor-pointer transition-all duration-200',
+        :class="[
+          'min-w-[64px] h-16 flex-shrink-0 border flex flex-col items-center justify-center rounded-2xl cursor-pointer transition-all duration-200',
           selectedDate.value === index
             ? 'bg-blue-500 text-white border-blue-500'
             : 'bg-white text-black border-gray-300',
@@ -152,16 +159,18 @@ const toggleCheck = () => {
         <div
           @click="toggleCheck"
           class="w-full rounded-full flex items-center justify-start px-5 py-2 cursor-pointer shadow-md transition-all duration-300 hover:scale-[1.01]"
-          :class="isCheckedIn
-            ? 'bg-gradient-to-r from-pink-400 to-rose-400'
-            : 'bg-gradient-to-r from-blue-500 to-blue-600'"
+          :class="
+            isCheckedIn
+              ? 'bg-gradient-to-r from-pink-400 to-rose-400'
+              : 'bg-gradient-to-r from-blue-500 to-blue-600'
+          "
         >
           <i
             class="fa-solid fa-arrow-right bg-white text-xl p-2 text-blue-500 rounded-2xl mr-3"
             :class="isCheckedIn ? 'text-rose-500' : 'text-blue-500'"
           ></i>
           <span class="text-white font-medium">
-            {{ isCheckedIn ? 'Swipe to Check Out' : 'Swipe to Check In' }}
+            {{ isCheckedIn ? "Swipe to Check Out" : "Swipe to Check In" }}
           </span>
         </div>
       </div>
@@ -177,7 +186,8 @@ const toggleCheck = () => {
           class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white rounded-full z-10 flex items-center justify-center"
         >
           <div
-            class="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-md">
+            class="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-md"
+          >
             <i class="fa-solid fa-users text-xl"></i>
           </div>
         </div>
@@ -186,7 +196,15 @@ const toggleCheck = () => {
         <div class="flex justify-between items-center w-full">
           <!-- Left 2 -->
           <div class="flex gap-10 items-center pl-2">
-            <i class="fa-solid fa-house text-blue-500 text-xl"></i>
+            <a href="home" @click="setActive('home')">
+              <i
+                :class="[
+                  'fa-solid fa-house text-xl',
+                  activeIcon === 'home' ? 'text-blue-500' : 'text-gray-500',
+                ]"
+              ></i>
+            </a>
+
             <i class="fa-regular fa-calendar text-xl text-gray-500"></i>
           </div>
 
