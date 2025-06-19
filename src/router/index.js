@@ -8,12 +8,11 @@ import LeavesPage from "../pages/leave/LeavesPage.vue";
 import TeamPage from "../pages/team/TeamPage.vue";
 import ApplyLeave from "../pages/leave/ApplyLeave.vue";
 import LeaveDetail from "../pages/leave/LeaveDetail.vue";
-
 import MyProfile from "../pages/profile/MyProfile.vue";
-
 import HolidayPage from "../pages/holiday/HolidayPage.vue";
 import Notifications from "../pages/home/Notifications.vue";
 import Conditions from "../pages/profile/Conditions.vue";
+import Privacy from "../pages/profile/Privacy.vue";
 
 
 const routes = [
@@ -85,6 +84,11 @@ const routes = [
     path: "/conditions",
     name: "Conditions",
     component: Conditions,
+  },
+  {
+    path: "/privacy",
+    name: "Privacy",
+    component: Privacy,
   },
 ];
 
