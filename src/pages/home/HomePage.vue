@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import Oren from "../../assets/images/Oren.jpg";
+import Navbar from "@/components/Navbar.vue";
 
 // Data tanggal statis
 const dates = [
@@ -172,6 +173,7 @@ const setActive = (iconName) => {
       </div>
     </div>
 
+
     <!-- Bottom Navbar -->
     <div class="fixed bottom-0 left-0 right-0 z-50 flex justify-center">
       <div
@@ -215,5 +217,9 @@ const setActive = (iconName) => {
           </div>
         </div>
       </div>
+
+    
+    <Navbar />
+
     </div>
 </template>
