@@ -13,6 +13,7 @@ import HolidayPage from "../pages/holiday/HolidayPage.vue";
 import Notifications from "../pages/home/Notifications.vue";
 import Conditions from "../pages/profile/Conditions.vue";
 import Privacy from "../pages/profile/Privacy.vue";
+import ChangePassword from "../pages/profile/ChangePassword.vue";
 
 
 const routes = [
@@ -89,6 +90,11 @@ const routes = [
     path: "/privacy",
     name: "Privacy",
     component: Privacy,
+  },
+  {
+    path: "/change-password",
+    name: "ChangePassword",
+    component: ChangePassword,
   },
 ];
 

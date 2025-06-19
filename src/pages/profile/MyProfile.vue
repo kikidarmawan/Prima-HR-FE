@@ -19,7 +19,7 @@ import Navbar from "../../components/Navbar.vue";
       </button>
     </div>
 
-    <!-- Menu List -->
+
     <div class="px-6">
       <div
         class="flex items-center justify-between px-2 py-5 border-b border-gray-200">
