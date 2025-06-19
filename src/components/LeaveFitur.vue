@@ -26,8 +26,7 @@ const resetFilter = () => {
         <div class="flex items-center">
           <button
             @click="emit('close')"
-            class="w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 bg-gray-100 text-gray-500 hover:bg-gray-200 transition"
-          >
+            class="w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 bg-gray-100 text-gray-500 hover:bg-gray-200 transition">
             &times;
           </button>
         </div>
@@ -43,8 +42,7 @@ const resetFilter = () => {
               type="checkbox"
               value="Approved"
               v-model="status"
-              class="accent-blue-500"
-            />
+              class="accent-blue-500"/>
             Approved
           </label>
           <label class="flex items-center gap-2 text-sm">
@@ -52,8 +50,7 @@ const resetFilter = () => {
               type="checkbox"
               value="Unapproved"
               v-model="status"
-              class="accent-blue-500"
-            />
+              class="accent-blue-500"/>
             Unapproved
           </label>
           <label class="flex items-center gap-2 text-sm">
@@ -83,8 +80,7 @@ const resetFilter = () => {
               type="checkbox"
               value="Holiday"
               v-model="leaveType"
-              class="accent-blue-500"
-            />
+              class="accent-blue-500"/>
             Holiday
           </label>
         </div>
@@ -116,8 +112,7 @@ const resetFilter = () => {
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"
-            />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
           </svg>
         </div>
       </div>

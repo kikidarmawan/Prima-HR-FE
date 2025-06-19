@@ -9,6 +9,7 @@ import ApplyLeave from "../pages/leave/ApplyLeave.vue";
 
 import HomePage from "../pages/home/HomePage.vue";
 import LeavesPage from "../pages/leave/LeavesPage.vue";
+import LeaveDetail from "../pages/leave/LeaveDetail.vue";
 
 const routes = [
   {
@@ -48,6 +49,11 @@ const routes = [
     path: "/leaves",
     name: "Leaves",
     component: LeavesPage,
+  },
+  {
+    path: "/leave-detail",
+    name: "LeaveDetail",
+    component: LeaveDetail,
   },
 ];
 
