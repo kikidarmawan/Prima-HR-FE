@@ -12,7 +12,7 @@
     <p class="text-base font-semibold text-gray-600 mb-4">
       Please read these terms of service, carefully before using our app operated by us.
     </p>
-    <p class="text-xl font-semibold text-blue-600 mb-3">Conditions of Uses</p>
+    <p class="text-xl font-semibold text-blue-600 mb-4">Conditions of Uses</p>
     <p class="text-base text-gray-800 leading-relaxed ">
       It is a long established fact that a reader will be distracted by the readable content of a page
       when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal
