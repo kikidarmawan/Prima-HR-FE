@@ -114,11 +114,7 @@ const goToHome = () => {
     </div>
 
     <!-- Modal -->
-    <SuccessModal
-  v-if="showSuccessModal"
-  :img="Success"
-  @close="goToHome"
-/>
+    <SuccessModal v-if="showSuccessModal" :img="Success" @close="goToHome"/>
 
   </div>
 </template>
