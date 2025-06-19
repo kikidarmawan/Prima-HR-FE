@@ -60,7 +60,7 @@ import Navbar from "../../components/Navbar.vue";
           </div>
           <span class="text-base font-medium">Terms & Conditions</span>
         </div>
-        <a href="/terms">
+        <a href="/conditions">
           <i class="fa-solid fa-angle-right text-gray-400"></i>
         </a>
       </div>
