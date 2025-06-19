@@ -6,15 +6,9 @@ import Otp from "../pages/login/Otp.vue"
 import HomePage from "../pages/home/HomePage.vue";
 import LeavesPage from "../pages/leave/LeavesPage.vue";
 import TeamPage from "../pages/team/TeamPage.vue";
-
-
-import Otp from "../pages/login/Otp.vue";
-
 import ApplyLeave from "../pages/leave/ApplyLeave.vue";
-
-import HomePage from "../pages/home/HomePage.vue";
-import LeavesPage from "../pages/leave/LeavesPage.vue";
 import LeaveDetail from "../pages/leave/LeaveDetail.vue";
+import HolidayPage from "../pages/holiday/HolidayPage.vue";
 
 const routes = [
   {
@@ -59,12 +53,16 @@ const routes = [
     path: "/team",
     name: "Team",
     component: TeamPage,
-  }
-
-
+  },
+  {
     path: "/leave-detail",
     name: "LeaveDetail",
     component: LeaveDetail,
+  },
+  {
+    path: "/holiday",
+    name: "Holiday",
+    component: HolidayPage,
   },
 ];
 
