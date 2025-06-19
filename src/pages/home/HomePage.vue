@@ -32,11 +32,7 @@ const setActive = (iconName) => {
     <!-- Header -->
     <div class="flex items-center p-5 gap-5 w-full">
       <div class="flex gap-5 items-center">
-        <img
-          :src="Oren"
-          class="rounded-full w-[52px] h-[52px] object-cover"
-          alt=""
-        />
+        <img :src="Oren" class="rounded-full w-[52px] h-[52px] object-cover" alt=""/>
         <div>
           <h1 class="text-xl font-semibold text-gray-900">Michael Mitc</h1>
           <p class="text-gray-600">Lead UI/UX Designer</p>
@@ -179,15 +175,12 @@ const setActive = (iconName) => {
     <!-- Bottom Navbar -->
     <div class="fixed bottom-0 left-0 right-0 z-50 flex justify-center">
       <div
-        class="relative bg-white shadow-xl h-15 rounded-t-3xl px-6 flex justify-between items-center w-full max-w-md mx-auto"
-      >
+        class="relative bg-white shadow-xl h-15 rounded-t-3xl px-6 flex justify-between items-center w-full max-w-md mx-auto">
         <!-- Curve Bulatan Tengah -->
         <div
-          class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white rounded-full z-10 flex items-center justify-center"
-        >
+          class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white rounded-full z-10 flex items-center justify-center">
           <div
-            class="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-md"
-          >
+            class="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-md">
             <i class="fa-solid fa-users text-xl"></i>
           </div>
         </div>
@@ -196,12 +189,12 @@ const setActive = (iconName) => {
         <div class="flex justify-between items-center w-full">
           <!-- Left 2 -->
             <div class="flex gap-10 items-center pl-2">
-            <router-link to="/home">
+            <a href="/home" >
               <i class="fa-solid fa-house text-gray-500 text-xl hover:text-blue-600 transition-colors cursor-pointer"></i>
-            </router-link>
-            <router-link to="/leaves">
+            </a>
+            <a href="/leaves">
               <i class="fa-regular fa-calendar text-xl text-gray-500 hover:text-blue-600 transition-colors cursor-pointer"></i>
-            </router-link>
+            </a>
             </div>
       
           <!-- Spacer Tengah -->
@@ -212,12 +205,12 @@ const setActive = (iconName) => {
 
             <!-- Right 2 -->
             <div class="flex gap-10 items-center pr-2">
-            <router-link to="/">
+            <a href="">
               <i class="fa-solid fa-umbrella-beach text-xl text-gray-500 hover:text-blue-600 transition-colors cursor-pointer"></i>
-            </router-link>
-            <router-link to="/">
+            </a>
+            <a href="/profile">
               <i class="fa-regular fa-user text-xl text-gray-500 hover:text-blue-600 transition-colors cursor-pointer"></i>
-            </router-link>
+            </a >
             </div>
           </div>
         </div>
