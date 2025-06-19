@@ -1,4 +1,5 @@
 <template>
+  <a href="/leave-detail">
   <div class="bg-white rounded-2xl mx-3 p-4">
     <div class="flex gap-3 items-start">
       <img :src="item.avatar" alt="Avatar" class="w-10 h-10 rounded-full object-cover mt-1" />
@@ -25,7 +26,8 @@
   </button>
 </div>
 
-  </div>
+</div>
+</a>
 </template>
 
 
