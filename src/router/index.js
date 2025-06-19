@@ -13,6 +13,7 @@ import MyProfile from "../pages/profile/MyProfile.vue";
 
 import HolidayPage from "../pages/holiday/HolidayPage.vue";
 import Notifications from "../pages/home/Notifications.vue";
+import Conditions from "../pages/profile/Conditions.vue";
 
 
 const routes = [
@@ -80,6 +81,11 @@ const routes = [
     name: "Notifications",
     component: Notifications,
   },  
+  {
+    path: "/conditions",
+    name: "Conditions",
+    component: Conditions,
+  },
 ];
 
 const router = createRouter({
