@@ -5,6 +5,7 @@ import NewPassword from "../pages/login/NewPassword.vue";
 import Otp from "../pages/login/Otp.vue"
 import HomePage from "../pages/home/HomePage.vue";
 import LeavesPage from "../pages/leave/LeavesPage.vue";
+import TeamPage from "../pages/team/TeamPage.vue";
 
 
 
@@ -43,6 +44,11 @@ const routes = [
     path: "/leaves",
     name: "Leaves",
     component: LeavesPage,
+  },
+  {
+    path: "/team",
+    name: "Team",
+    component: TeamPage,
   }
 
 
