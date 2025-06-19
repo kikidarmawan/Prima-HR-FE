@@ -12,6 +12,7 @@ import LeaveDetail from "../pages/leave/LeaveDetail.vue";
 import MyProfile from "../pages/profile/MyProfile.vue";
 
 import HolidayPage from "../pages/holiday/HolidayPage.vue";
+import Notifications from "../pages/home/Notifications.vue";
 
 
 const routes = [
@@ -73,8 +74,12 @@ const routes = [
     path: "/holiday",
     name: "Holiday",
     component: HolidayPage,
-
   },
+  {
+    path: "/notif",
+    name: "Notifications",
+    component: Notifications,
+  },  
 ];
 
 const router = createRouter({
