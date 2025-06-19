@@ -5,6 +5,7 @@ import { Icon } from "@iconify/vue";
 import StatsGrid from "@/pages/leave/components/StatsGrid.vue";
 import TabSelector from "@/pages/leave/components/TabSelector.vue";
 import TabContent from "@/pages/leave/components/TabContent.vue";
+import Navbar from "@/components/Navbar.vue";
 import LeaveFitur from "../../components/LeaveFitur.vue";
 
 const showModal = ref(false)
@@ -87,23 +88,25 @@ const mockData = {
   "Team Leave": [
     {
       id: 4,
-      avatar: "https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg",
+      avatar:
+        "https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg",
       name: "Jane Cooper",
       date: "Apr 15, 2023 - Apr 18, 2023",
     },
     {
       id: 5,
-      avatar: "https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg",
+      avatar:
+        "https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg",
       name: "John Doe",
       date: "Mar 10, 2023 - Mar 12, 2023",
     },
     {
       id: 6,
-      avatar: "https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg",
+      avatar:
+        "https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg",
       name: "Martin Doe",
       date: "Mar 10, 2023 - Mar 12, 2023",
     },
-    
   ],
 };
 </script>
@@ -115,6 +118,18 @@ const mockData = {
     class="space-y-6 py-6 px-6 max-w-sm mx-auto bg-white rounded-xl shadow-md"
   >
     <div class="flex items-center justify-between">
+      <h1 class="text-xl font-semibold">All Leaves</h1>
+      <div class="flex gap-2">
+        <!-- Plus Button -->
+        <button class="p-2.5 border rounded-lg shadow-sm">
+          <Icon icon="mdi:plus" class="text-base" />
+        </button>
+        <!-- Filter Button -->
+        <button class="p-2">
+          <Icon icon="mdi:tune-variant" class="text-xl" />
+        </button>
+      </div>
+    </div>
   <h1 class="text-xl font-semibold">All Leaves</h1>
   <div class="flex gap-2">
     <!-- Plus Button -->
@@ -130,7 +145,6 @@ const mockData = {
   </div>
 </div>
 
-
     <StatsGrid :items="stats" />
     <TabSelector :options="tabs" v-model:activeTab="activeTab" />
   </div>
@@ -143,6 +157,8 @@ const mockData = {
     <TabContent :activeTab="activeTab" :data="mockData[activeTab]" mobile />
 
     <!-- navbar -->
+    <Navbar />
+  </div>
      <!-- Bottom Navbar -->
     <div class="fixed bottom-0 left-0 right-0 z-50 flex justify-center">
       <div
