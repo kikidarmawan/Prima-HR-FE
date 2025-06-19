@@ -44,7 +44,7 @@
                 class="fa-solid fa-umbrella-beach text-xl text-gray-500 hover:text-blue-600 transition-colors cursor-pointer"
               ></i>
             </router-link>
-            <router-link to="/">
+            <router-link to="/profile">
               <i
                 class="fa-regular fa-user text-xl text-gray-500 hover:text-blue-600 transition-colors cursor-pointer"
               ></i>

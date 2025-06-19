@@ -68,7 +68,8 @@ const routes = [
     path: "/profile",
     name: "MyProfile",
     component: MyProfile,
-
+  },
+  {
     path: "/holiday",
     name: "Holiday",
     component: HolidayPage,

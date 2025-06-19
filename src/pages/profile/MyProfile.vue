@@ -1,5 +1,7 @@
 <script setup>
 import Oren from "../../assets/images/Oren.jpg";
+import Navbar from "../../components/Navbar.vue";
+
 </script>
 
 <template>
@@ -88,6 +90,6 @@ import Oren from "../../assets/images/Oren.jpg";
         >Log out</span>
     </div>
      </a>
-    
+    <Navbar />
   </div>
 </template>
