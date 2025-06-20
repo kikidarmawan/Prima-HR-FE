@@ -57,7 +57,7 @@ const handleDelete = (member) => {
 </script>
 
 <template>
-  <div class="min-h-screen mx-auto overflow-scroll py-6 px-4">
+  <div class="min-h-screen bg-white mx-auto overflow-scroll py-6 px-4">
     <div class="flex items-center justify-between mb-4">
       <h1 class="text-lg font-semibold">Team Members</h1>
       <button class="cursor-pointer text-gray-400 text-xl">

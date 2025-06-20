@@ -11,8 +11,8 @@ const togglePassword = () => {
 </script>
 
 <template>
-  <div class="min-h-screen flex m-2 mt-10 justify-center bg-white px-4">
-    <div class="w-full max-w-sm">
+  <div class="min-h-screen flex justify-center bg-white px-4">
+    <div class="w-full max-w-sm m-12">
       <!-- logo prime -->
       <div class="flex justify-start mb-6">
         <img :src="Login" alt="Logo" class="w-20 h-20 rounded-full" />
@@ -65,6 +65,12 @@ const togglePassword = () => {
         </div>
 
         <!-- login -->
+        <router-link to="/home">
+          <button
+          class="w-full cursor-pointer  bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md font-medium">
+          Login
+        </button>
+        </router-link>
          <router-link to="/home">
            <button
              type="submit"

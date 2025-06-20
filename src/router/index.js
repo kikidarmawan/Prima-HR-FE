@@ -27,7 +27,6 @@ const routes = [
     name: "ForgotPassword",
     component: ForgotPassword,
   },
-
   {
     path: "/login",
     name: "Login",

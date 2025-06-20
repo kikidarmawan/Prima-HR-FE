@@ -73,7 +73,7 @@ const goToHome = () => {
             class="absolute right-3 top-1/2 cursor-pointer transform -translate-y-1/2 text-gray-500"
             @click="togglePassword"
           >
-            <Icon :icon="showPassword ? 'mdi:eye-off' : 'mdi:eye'" class="w-5 h-5" />
+            <Icon :icon="showPassword ? 'mdi:eye' : 'mdi:eye-off'" class="w-5 h-5" />
           </button>
         </div>
 
@@ -97,7 +97,7 @@ const goToHome = () => {
             class="absolute right-3 top-1/2 cursor-pointer transform -translate-y-1/2 text-gray-500"
             @click="toggleRePassword"
           >
-            <Icon :icon="showRePassword ? 'mdi:eye-off' : 'mdi:eye'" class="w-5 h-5" />
+            <Icon :icon="showRePassword ? 'mdi:eye' : 'mdi:eye-off'" class="w-5 h-5" />
           </button>
         </div>
       </div>

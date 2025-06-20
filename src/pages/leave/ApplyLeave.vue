@@ -1,21 +1,27 @@
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import SuccessLeave from '@/components/SuccessLeave.vue'
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import SuccessLeave from "@/components/SuccessLeave.vue";
 
-const router = useRouter()
-const showSuccessLeave = ref(false)
+const router = useRouter();
+const showSuccessLeave = ref(false);
 
 const applyLeave = (e) => {
-  e.preventDefault() 
+  e.preventDefault();
 
- 
-  showSuccessLeave.value = true
-}
+  showSuccessLeave.value = true;
+};
 
 const goToHome = () => {
-  router.push('/leaves') 
-}
+  router.push("/leaves");
+};
+
+const contactNumber = ref("");
+
+const onNumberInput = (e) => {
+  // Hanya izinkan angka
+  contactNumber.value = e.target.value.replace(/\D/g, "");
+};
 </script>
 
 <template>
@@ -32,7 +38,11 @@ const goToHome = () => {
       <!-- Title -->
       <div class="border border-blue-500 rounded-lg p-2">
         <label class="text-xs text-blue-500">Title</label>
-        <input type="text" placeholder="Sick Leave" class="w-full outline-none" />
+        <input
+          type="text"
+          placeholder="Sick Leave"
+          class="w-full outline-none"
+        />
       </div>
 
       <!-- Leave Type -->
@@ -44,14 +54,22 @@ const goToHome = () => {
             <option>Annual Leave</option>
             <option>Emergency Leave</option>
           </select>
-          <i class="fa-solid fa-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+          <i
+            class="fa-solid fa-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+          ></i>
         </div>
       </div>
 
       <!-- Contact Number -->
       <div class="border border-blue-500 rounded-lg p-2 w-full">
         <label class="text-xs text-blue-500">Contact Number</label>
-        <input type="text" placeholder="(603) 555-0123" class="w-full outline-none" />
+        <input
+          type="text"
+          placeholder="(+62)"
+          class="w-full outline-none"
+          v-model="contactNumber"
+          @input="onNumberInput"
+        />
       </div>
 
       <!-- Start Date -->
@@ -73,7 +91,11 @@ const goToHome = () => {
       <!-- Reason for leave -->
       <div class="border border-blue-500 rounded-lg w-full p-2">
         <label class="text-xs text-blue-500">Reason for Leave</label>
-        <textarea rows="3" placeholder="I need to take a medical leave." class="w-full outline-none resize-none"></textarea>
+        <textarea
+          rows="3"
+          placeholder="I need to take a medical leave."
+          class="w-full outline-none resize-none"
+        ></textarea>
       </div>
 
       <!-- Button apply -->

@@ -55,14 +55,18 @@
         </div>
         Reject
       </button>
+      <a href="/leaves"
+        class="flex-1 bg-emerald-500 text-white font-semibold py-3 rounded-xl ml-2 flex items-center justify-center gap-2 hover:bg-emerald-600 transition">
+
       <button
         class="flex-1 bg-emerald-500 text-white cursor-pointer font-semibold py-3 rounded-xl ml-2 flex items-center justify-center gap-2 hover:bg-emerald-600 transition">
+
         <div
           class="w-8 h-8 rounded-full border border-white flex items-center justify-center">
           <i class="fa-solid fa-check text-white text-base "></i>
         </div>
         Accept
-      </button>
+      </a>
     </div>
   </div>
 </template>
