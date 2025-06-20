@@ -1,6 +1,5 @@
 <script setup>
 import Oren from "../../assets/images/Oren.jpg";
-import Navbar from "@/components/Navbar.vue";
 import Navbar from "../../components/Navbar.vue";
 </script>
 

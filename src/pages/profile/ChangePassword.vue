@@ -32,10 +32,10 @@ const toggleConfirm = () => {
     <div class="relative">
       <label class="block text-blue-500 mb-1 text-sm font-medium">Password</label>
       <input
-        :type="showPassword ? 'text' : 'password'"
-        v-model="password"
-        class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300"
-        placeholder="Enter new password"/>
+      :type="showPassword ? 'text' : 'password'"
+      v-model="password"
+      class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300"
+      placeholder="Enter new password"/>
       <button
         type="button"
         @click="togglePassword"

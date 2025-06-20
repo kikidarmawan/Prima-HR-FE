@@ -8,14 +8,15 @@ const tabs = ["Personal", "Professional", "Documents"];
 const activeTab = ref("Personal");
 </script>
 
-
 <template>
   <div class="p-5 max-w-sm mx-auto min-h-screen bg-white">
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
-      <a href="/profile">
-        <i class="fa-solid fa-angle-left text-gray-400"></i>
-      </a>
+      <div class="cursor-pointer">
+        <a href="/home">
+          <i class="fa-solid fa-angle-left text-2xl"><span class="text-white">a</span></i>              
+        </a>
+      </div>
 
       <h1 class="text-lg font-bold text-center flex-1 -ml-6">My Profile</h1>
     </div>

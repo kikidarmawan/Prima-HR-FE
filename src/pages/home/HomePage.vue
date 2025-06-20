@@ -179,6 +179,6 @@ const setActive = (iconName) => {
     <!-- navbar -->
     <Navbar />
     </div>
-    <Navbar />
-  </div>
+
+
 </template>
