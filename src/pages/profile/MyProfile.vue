@@ -1,5 +1,6 @@
 <script setup>
 import Oren from "../../assets/images/Oren.jpg";
+import Navbar from "@/components/Navbar.vue";
 </script>
 
 <template>
@@ -17,7 +18,7 @@ import Oren from "../../assets/images/Oren.jpg";
       </button>
     </div>
 
-    <!-- Menu List -->
+    <!-- list -->
     <div class="px-6">
       <div
         class="flex items-center justify-between px-2 py-5 border-b border-gray-200">
@@ -28,9 +29,10 @@ import Oren from "../../assets/images/Oren.jpg";
           </div>
           <span class="text-sm font-medium">My Profile</span>
         </div>
-        <a href="/profile">
-          <i class="fa-solid fa-angle-right text-gray-400"></i>
-        </a>
+        <a href="/profile/details">
+  <i class="fa-solid fa-angle-right text-gray-400"></i>
+</a>
+
       </div>
 
       <!-- Settings -->
@@ -88,6 +90,6 @@ import Oren from "../../assets/images/Oren.jpg";
         >Log out</span>
     </div>
      </a>
-    
+    <Navbar />
   </div>
 </template>

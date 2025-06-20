@@ -34,7 +34,7 @@ const updatePassword = () => {
 }
 
 const goToHome = () => {
-  router.push('/home') // sesuaikan dengan rute home kamu
+  router.push('/home')
 }
 </script>
 

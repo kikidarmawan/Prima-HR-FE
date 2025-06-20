@@ -55,7 +55,7 @@ const togglePassword = () => {
         </label>
         <!-- eye icon -->
         <button type="button" @click="togglePassword" class="absolute right-3 top-2.5 text-gray-500">
-          <Icon :icon="showPassword ? 'mdi:eye-off' : 'mdi:eye'" class="w-5 h-5" />
+          <Icon :icon="showPassword ? 'mdi:eye' : 'mdi:eye-off'" class="w-5 h-5" />
         </button>
       </div>
 

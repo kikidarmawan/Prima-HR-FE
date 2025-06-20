@@ -115,17 +115,20 @@ const mockData = {
 <template>
   <div class="bg-gray-100 min-h-screen flex flex-col items-center">
     <!-- Bagian Putih: max-w-sm dan penuh -->
+    
+    <!-- Navbar -->
+    <Navbar />
     <div class="bg-white w-full space-y-6 py-6 px-6 rounded-b-4xl">
       <!-- Header -->
       <div class="flex items-center py-5 justify-between">
         <h1 class="text-xl font-semibold">All Leaves</h1>
         <div class="flex gap-2">
           <!-- Plus -->
-          <a href="/apply" class="p-2.5 border rounded-lg shadow-sm">
+          <a href="/apply" class="p-2.5 border rounded-lg shadow-sm cursor-pointer">
             <Icon icon="mdi:plus" class="text-base" />
           </a>
           <!-- Filter -->
-          <button @click="showModal = true" class="p-2">
+          <button @click="showModal = true" class="p-2 cursor-pointer">
             <Icon icon="mdi:tune-variant" class="text-xl" />
           </button>
           <LeaveFitur v-if="showModal" @close="showModal = false" />
@@ -141,14 +144,11 @@ const mockData = {
 
     <!-- Bagian Abu: juga max-w-sm agar tetap rata -->
     <div
-      class="w-full max-w-sm bg-gray-100 py-2 overflow-y-auto"
+      class="w-full max-w-sm bg-gray-100 overflow-y-auto"
       style="max-height: 400px"
     >
       <TabContent :activeTab="activeTab" :data="mockData[activeTab]" mobile />
     </div>
-
-    <!-- Navbar -->
-    <Navbar />
   </div>
 </template>
 
