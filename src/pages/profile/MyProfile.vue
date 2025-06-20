@@ -1,7 +1,7 @@
 <script setup>
 import Oren from "../../assets/images/Oren.jpg";
+import Navbar from "@/components/Navbar.vue";
 import Navbar from "../../components/Navbar.vue";
-
 </script>
 
 <template>
@@ -19,7 +19,7 @@ import Navbar from "../../components/Navbar.vue";
       </button>
     </div>
 
-
+    <!-- list -->
     <div class="px-6">
       <div
         class="flex items-center justify-between px-2 py-5 border-b border-gray-200">
@@ -30,9 +30,10 @@ import Navbar from "../../components/Navbar.vue";
           </div>
           <span class="text-base font-medium">My Profile</span>
         </div>
-        <a href="/profile">
-          <i class="fa-solid fa-angle-right text-gray-400"></i>
-        </a>
+        <a href="/profile/details">
+  <i class="fa-solid fa-angle-right text-gray-400"></i>
+</a>
+
       </div>
 
       <!-- Settings -->

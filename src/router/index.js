@@ -10,6 +10,7 @@ import ApplyLeave from "../pages/leave/ApplyLeave.vue";
 import LeaveDetail from "../pages/leave/LeaveDetail.vue";
 import MyProfile from "../pages/profile/MyProfile.vue";
 import HolidayPage from "../pages/holiday/HolidayPage.vue";
+import ProfileDetails from "../pages/profile/ProfileDetails.vue";
 import Notifications from "../pages/home/Notifications.vue";
 import Conditions from "../pages/profile/Conditions.vue";
 import Privacy from "../pages/profile/Privacy.vue";
@@ -28,13 +29,11 @@ const routes = [
     name: "Login",
     component: LoginPage,
   },
-
   {
     path: "/new-password",
     name: "NewPassword",
     component: NewPassword,
   },
-
   {
     path: "/otp",
     name: "Otp",
@@ -66,10 +65,14 @@ const routes = [
     component: LeaveDetail,
   },
   {
-
     path: "/profile",
     name: "MyProfile",
     component: MyProfile,
+  },
+  {
+    path: '/profile/details',
+    name: 'ProfileDetails',
+    component: ProfileDetails
   },
   {
     path: "/holiday",

@@ -176,6 +176,9 @@ const setActive = (iconName) => {
         </div>
       </div>
     </div>
+    <!-- navbar -->
+    <Navbar />
+    </div>
     <Navbar />
   </div>
 </template>

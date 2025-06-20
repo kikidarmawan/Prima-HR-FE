@@ -107,7 +107,7 @@ const resetFilter = () => {
 
           <!-- Icon arrow bawah -->
           <svg
-            class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-black pointer-events-none"
+            class="cursor-pointer absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer w-4 h-4 text-black pointer-events-none"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -121,12 +121,12 @@ const resetFilter = () => {
       <div class="flex justify-between gap-4">
         <button
           @click="resetFilter"
-          class="w-full py-2 bg-gray-100 text-gray-800 rounded-lg font-semibold text-sm">
+          class="w-full py-2 bg-gray-100 cursor-pointer text-gray-800 rounded-lg font-semibold text-sm">
           Reset
         </button>
         <button
           @click="emit('close')"
-          class="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold text-sm">
+          class="w-full py-2 bg-blue-500 hover:bg-blue-600 cursor-pointer text-white rounded-lg font-semibold text-sm">
           Apply
         </button>
       </div>
