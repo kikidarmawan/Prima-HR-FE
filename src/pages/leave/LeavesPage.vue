@@ -124,9 +124,9 @@ const mockData = {
         <h1 class="text-xl font-semibold">All Leaves</h1>
         <div class="flex gap-2">
           <!-- Plus -->
-          <a href="/apply" class="p-2.5 border rounded-lg shadow-sm cursor-pointer">
-            <Icon icon="mdi:plus" class="text-base" />
-          </a>
+           <router-link to="/apply" class="p-2.5 border rounded-lg shadow-sm cursor-pointer">
+             <Icon icon="mdi:plus" class="text-base" />
+           </router-link>
           <!-- Filter -->
           <button @click="showModal = true" class="p-2 cursor-pointer">
             <Icon icon="mdi:tune-variant" class="text-xl" />
@@ -145,8 +145,7 @@ const mockData = {
     <!-- Bagian Abu: juga max-w-sm agar tetap rata -->
     <div
       class="w-full max-w-sm bg-gray-100 overflow-y-auto"
-      style="max-height: 400px"
-    >
+      style="max-height: 400px">
       <TabContent :activeTab="activeTab" :data="mockData[activeTab]" mobile />
     </div>
   </div>

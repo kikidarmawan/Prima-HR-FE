@@ -28,7 +28,7 @@ const activeTab = ref("Personal");
         :key="tab"
         @click="activeTab = tab"
         :class="[
-          'px-4 py-2 rounded-lg text-sm font-medium',
+          'px-4 py-2 rounded-lg text-sm font-medium cursor-pointer',
           activeTab === tab
             ? 'bg-blue-500 text-white'
             : 'bg-gray-100 text-gray-700',

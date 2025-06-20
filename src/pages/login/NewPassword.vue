@@ -34,7 +34,7 @@ const updatePassword = () => {
 }
 
 const goToHome = () => {
-  router.push('/home')
+  router.push('/login')
 }
 </script>
 

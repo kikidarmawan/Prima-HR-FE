@@ -29,9 +29,9 @@ const setActive = (iconName) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 overflow-y-auto pb-28">
+  <div class="min-h-screen bg-gray-50 overflow-y-auto pb-28 ">
     <!-- Header -->
-    <div class="flex items-center p-5 gap-5 w-full">
+    <div class="flex items-center p-5 gap-5 w-full justify-between">
       <div class="flex gap-5 items-center">
         <img
           :src="Oren"
@@ -45,14 +45,14 @@ const setActive = (iconName) => {
       </div>
 
       <!-- Bell Icon -->
-      <a href="/notif">
-        <div class="ml-10">
+      <router-link to="/notif" >
+        <div class="justify-between">
           <div
             class="w-12 h-12 flex items-center justify-center rounded-full border border-gray-300 shadow-sm bg-white">
             <i class="fa-regular fa-bell text-lg text-gray-700"></i>
           </div>
         </div>
-      </a>
+      </router-link>
     </div>
 
     <!-- Date Scroll -->
@@ -163,9 +163,7 @@ const setActive = (iconName) => {
           :class="
             isCheckedIn
               ? 'bg-gradient-to-r from-pink-400 to-rose-400'
-              : 'bg-gradient-to-r from-blue-500 to-blue-600'
-          "
-        >
+              : 'bg-gradient-to-r from-blue-500 to-blue-600'">
           <i
             class="fa-solid fa-arrow-right bg-white text-xl p-2 text-blue-500 rounded-2xl mr-3"
             :class="isCheckedIn ? 'text-rose-500' : 'text-blue-500'"

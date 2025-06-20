@@ -59,15 +59,19 @@ const togglePassword = () => {
 
         <!-- forgot password -->
         <div class="text-right text-sm mb-6">
-          <a href="/forgot-password" class="text-blue-500 hover:underline">Forgot Password?</a>
+          <router-link to="/forgot-password" class="text-blue-500 hover:underline" >
+            Forgot Password?
+          </router-link>
         </div>
 
         <!-- login -->
-        <button
-          type="submit"
-          class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md font-medium">
-          Login
-        </button>
+         <router-link to="/home">
+           <button
+             type="submit"
+             class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md font-medium cursor-pointer">
+             Login
+           </button>
+         </router-link>
       </form>
     </div>
   </div>

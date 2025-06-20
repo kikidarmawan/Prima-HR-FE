@@ -1,6 +1,6 @@
 <template>
-  <a href="/leave-detail">
-  <div class="bg-white rounded-2xl space-x-5 mx-3 p-4">
+  <router-link to="/leave-detail">
+    <div class="bg-white rounded-2xl space-x-5 mx-3 p-4">
     <div class="flex gap-3 items-start">
       <img :src="item.avatar" alt="Avatar" class="w-10 h-10 rounded-full object-cover mt-1" />
       <div>
@@ -27,7 +27,10 @@
 </div>
 
 </div>
-</a>
+  </router-link>
+
+  
+
 </template>
 
 
