@@ -114,8 +114,6 @@ const mockData = {
 
 <template>
   <div class="bg-gray-100 min-h-screen flex flex-col items-center">
-    <!-- Bagian Putih: max-w-sm dan penuh -->
-    
     <!-- Navbar -->
     <Navbar />
     <div class="bg-white w-full space-y-6 py-6 px-6 rounded-b-4xl">
@@ -141,8 +139,6 @@ const mockData = {
         <TabSelector :options="tabs" v-model:activeTab="activeTab" />
       </div>
     </div>
-
-    <!-- Bagian Abu: juga max-w-sm agar tetap rata -->
     <div
       class="w-full max-w-sm bg-gray-100 overflow-y-auto"
       style="max-height: 400px"

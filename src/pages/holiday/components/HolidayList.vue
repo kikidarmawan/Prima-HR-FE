@@ -24,6 +24,6 @@ defineProps({
   date: String,
   day: String,
   name: String,
-  highlight: Boolean // true → biru, false → abu
+  highlight: Boolean 
 });
 </script>

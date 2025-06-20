@@ -19,11 +19,14 @@ import ChangePassword from "../pages/profile/ChangePassword.vue";
 
 const routes = [
   {
+    path: "/",
+    redirect: "/login",
+  },
+  {
     path: "/forgot-password",
     name: "ForgotPassword",
     component: ForgotPassword,
   },
-
   {
     path: "/login",
     name: "Login",

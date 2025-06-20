@@ -13,7 +13,7 @@ const activeTab = ref("Personal");
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
       <div class="cursor-pointer">
-        <a href="/home">
+        <a href="/profile">
           <i class="fa-solid fa-angle-left text-2xl"><span class="text-white">a</span></i>              
         </a>
       </div>

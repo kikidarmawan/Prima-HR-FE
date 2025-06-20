@@ -1,7 +1,7 @@
 @import "tailwindcss";
 body {
-  max-width: 425px;
-=======
+  background-color: #b3b3b3;
   max-width:425px;
   margin: 0 auto;
+  font-family: 'Poppins';
 }

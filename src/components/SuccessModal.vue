@@ -29,10 +29,10 @@
         <h2 class="text-lg font-bold text-blue-500 mb-1">🎉 Congratulations</h2>
         <p class="text-sm text-gray-600 mb-6">Your account is ready to use</p>
         <button
-          @click="$emit('close')"
-          class="bg-blue-500 hover:bg-blue-600 text-white w-full py-2 rounded-lg text-sm font-semibold"
+          @click="$router.push('/login')"
+          class="bg-blue-500 cursor-pointer hover:bg-blue-600 text-white w-full py-2 rounded-lg text-sm font-semibold"
         >
-          Back to Home
+          Back to Login
         </button>
       </div>
     </transition>

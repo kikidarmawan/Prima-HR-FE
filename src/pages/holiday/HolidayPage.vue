@@ -2,7 +2,7 @@
 <template>
   <div class="p-5 bg-gray-50">
     
-    <div style="max-height: 550px; overflow-y: auto;">
+    <div style="max-height: 545px; overflow-y: auto;">
     <h1 class="text-xl font-bold mb-5">Holiday List</h1>
 
     <HolidayList
@@ -38,7 +38,6 @@
         day="Sunday"
         name="Diwali"
       />
-    <Navbar />
     <HolidayList
       date="September 07, 2023"
       day="Thursday"
