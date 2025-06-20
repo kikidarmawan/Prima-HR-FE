@@ -13,9 +13,9 @@ const activeTab = ref("Personal");
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
       <div class="cursor-pointer">
-        <a href="/home">
+        <router-link to="/profile">
           <i class="fa-solid fa-angle-left text-2xl"><span class="text-white">a</span></i>              
-        </a>
+        </router-link>
       </div>
 
       <h1 class="text-lg font-bold text-center flex-1 -ml-6">My Profile</h1>
@@ -28,12 +28,11 @@ const activeTab = ref("Personal");
         :key="tab"
         @click="activeTab = tab"
         :class="[
-          'px-4 py-2 rounded-lg text-sm font-medium',
+          'px-4 py-2 rounded-lg text-sm font-medium cursor-pointer',
           activeTab === tab
             ? 'bg-blue-500 text-white'
             : 'bg-gray-100 text-gray-700',
-        ]"
-      >
+        ]">
         {{ tab }}
       </button>
     </div>

@@ -16,8 +16,7 @@ const resetFilter = () => {
 
 <template>
   <div
-    class="fixed inset-0 z-50 flex items-end justify-center bg-black/30 backdrop-blur-sm"
-  >
+    class="fixed inset-0 z-50 flex items-end justify-center bg-black/30 backdrop-blur-sm">
     <div class="bg-white w-full max-w-md rounded-t-3xl px-6 pt-4 pb-6">
       <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4"></div>
       <!-- Header -->
@@ -26,7 +25,7 @@ const resetFilter = () => {
         <div class="flex items-center">
           <button
             @click="emit('close')"
-            class="w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 bg-gray-100 text-gray-500 hover:bg-gray-200 transition">
+            class="w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 bg-gray-100 text-gray-500 hover:bg-gray-200 transition cursor-pointer">
             &times;
           </button>
         </div>
@@ -34,8 +33,7 @@ const resetFilter = () => {
       <!-- Status Filter -->
       <div class="mb-4">
         <label class="block text-sm font-medium text-gray-600 mb-2"
-          >Status</label
-        >
+          >Status</label>
         <div class="space-y-2">
           <label class="flex items-center gap-2 text-sm">
             <input
@@ -58,8 +56,7 @@ const resetFilter = () => {
               type="checkbox"
               value="Pending"
               v-model="status"
-              class="accent-blue-500"
-            />
+              class="accent-blue-500"/>
             Pending
           </label>
         </div>
@@ -107,7 +104,7 @@ const resetFilter = () => {
 
           <!-- Icon arrow bawah -->
           <svg
-            class="cursor-pointer absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer w-4 h-4 text-black pointer-events-none"
+            class="cursor-pointer absolute right-3 top-1/2 transform -translate-y-1/2  w-4 h-4 text-black pointer-events-none"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"

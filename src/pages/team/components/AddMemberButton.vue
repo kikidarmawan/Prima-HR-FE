@@ -1,5 +1,5 @@
 <template>
-  <button class="bg-blue-600 text-white w-full py-3 rounded-xl mt-4 flex items-center justify-center space-x-2">
+  <button class="cursor-pointer bg-blue-600 text-white w-full py-3 rounded-xl mt-4 flex items-center justify-center space-x-2">
     <span class="text-xl">
       <Icon icon="mdi:plus" />
     </span>

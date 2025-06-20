@@ -20,10 +20,10 @@ const toggleConfirm = () => {
 
     </div>
   <div class="flex items-center justify-between p-6 ">
-    <a href="/profile" class="text-2xl text-gray-700">
-      <i class="fa-solid fa-angle-left"></i>
-    </a>
-    <h1 class="text-xl font-semibold text-gray-800">Change Password</h1>
+    <router-link to="/profile"  text-gray-700>
+       <i class="fa-solid fa-angle-left text-2xl"></i>
+    </router-link>
+    <h1 class="text-xl font-semibold text-gray-800 ">Change Password</h1>
     <div class="w-6"></div>
   </div>
 
@@ -39,7 +39,7 @@ const toggleConfirm = () => {
       <button
         type="button"
         @click="togglePassword"
-        class="absolute right-4 top-[42px] text-gray-500">
+        class="cursor-pointer absolute right-4 top-[42px] text-gray-500">
         <i :class="showPassword ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
       </button>
     </div>
@@ -54,7 +54,7 @@ const toggleConfirm = () => {
       <button
         type="button"
         @click="toggleConfirm"
-        class="absolute right-4 top-[42px] text-gray-500">
+        class="cursor-pointer absolute right-4 top-[42px] text-gray-500">
         <i :class="showConfirm ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
       </button>
     </div>
