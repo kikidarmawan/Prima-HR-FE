@@ -56,7 +56,9 @@ const notifications = [
   <div class="min-h-screen bg-white p-5">
     <!-- Topbar -->
     <div class="flex items-center justify-between mb-5">
-      <a href="/home" class="text-xl"><i class="fa-solid fa-angle-left"></i></a>
+      <router-link to="/home" class="text-xl">
+        <i class="fa-solid fa-angle-left"></i>
+      </router-link>
       <h1 class="text-lg font-semibold">Notification</h1>
       <div class="w-6"></div> 
     </div>

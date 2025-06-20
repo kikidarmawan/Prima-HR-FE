@@ -52,14 +52,16 @@ const togglePassword = () => {
           Password
         </label>
         <!-- eye icon -->
-        <button type="button" @click="togglePassword" class="absolute right-3 top-2.5 text-gray-500">
+        <button type="button" @click="togglePassword" class="absolute cursor-pointer right-3 top-2.5 text-gray-500">
           <Icon :icon="showPassword ? 'mdi:eye' : 'mdi:eye-off'" class="w-5 h-5" />
         </button>
       </div>
 
         <!-- forgot password -->
         <div class="text-right text-sm mb-6">
-          <a href="/forgot-password" class="text-blue-500 hover:underline">Forgot Password?</a>
+          <router-link to="/forgot-password" class="text-blue-500 hover:underline" >
+            Forgot Password?
+          </router-link>
         </div>
 
         <!-- login -->
@@ -69,6 +71,13 @@ const togglePassword = () => {
           Login
         </button>
         </router-link>
+         <router-link to="/home">
+           <button
+             type="submit"
+             class="w-full  bg-blue-500 hover:bg-blue-600  text-white py-2 rounded-md font-medium cursor-pointer">
+             Login
+           </button>
+         </router-link>
       </form>
     </div>
   </div>

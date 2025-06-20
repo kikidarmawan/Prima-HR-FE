@@ -21,7 +21,7 @@ defineProps({
         </div>
       </div>
       <button
-        class="text-gray-400 text-xl"
+        class=" cursor-pointer text-gray-400 text-xl"
         @click="emit('open-options')"
       >
         <Icon icon="mdi:dots-vertical" class="cursor-pointer" />

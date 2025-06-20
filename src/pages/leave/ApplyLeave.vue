@@ -28,9 +28,9 @@ const onNumberInput = (e) => {
   <div class="min-h-screen bg-white p-6">
     <!-- Header -->
     <div class="flex items-center mb-6">
-      <a href="/leaves">
+      <router-link to="/leaves">
         <i class="fa-solid fa-angle-left text-2xl"></i>
-      </a>
+      </router-link>
       <h1 class="ml-6 text-xl font-semibold">Apply Leave</h1>
     </div>
 
@@ -101,8 +101,7 @@ const onNumberInput = (e) => {
       <!-- Button apply -->
       <button
         type="submit"
-        class="w-full mt-5 bg-blue-500 text-white font-semibold py-3 rounded-xl hover:bg-blue-600 transition"
-      >
+        class="w-full mt-5 bg-blue-500 text-white cursor-pointer font-semibold py-3 rounded-xl hover:bg-blue-600 transition">
         Apply Leave
       </button>
     </form>

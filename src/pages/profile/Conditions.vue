@@ -1,9 +1,9 @@
 <template>
   <div class="min-h-screen bg-white px-4 py-6">
     <div class="flex items-center justify-between mb-6">
-      <a href="/profile" class="text-2xl text-gray-700">
+      <router-link to="/profile" class="text-2xl text-gray-700">
         <i class="fa-solid fa-angle-left"></i>
-      </a>
+      </router-link>
       <h1 class="text-xl font-semibold text-gray-800">Terms & Conditions</h1>
       <div class="w-6"></div>
     </div>
