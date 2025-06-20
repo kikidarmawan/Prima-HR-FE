@@ -26,7 +26,7 @@
         <p class="text-sm text-gray-600 mb-6">Your account is ready to use</p>
         <button
           @click="$emit('close')"
-          class="bg-blue-500 hover:bg-blue-600 text-white w-full py-2 rounded-lg text-sm font-semibold">
+          class="bg-blue-500 hover:bg-blue-600 text-white cursor-pointer w-full py-2 rounded-lg text-sm font-semibold">
           Back to Home
         </button>
       </div>

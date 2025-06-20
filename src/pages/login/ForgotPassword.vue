@@ -4,8 +4,9 @@ import ForgotP from "../../assets/images/ForgotP.png";
 
 <template>
   <div class="min-h-screen bg-white flex flex-col p-6">
-    <a href="/login" class="mb-6 text-2xl"
-      ><i class="fa-solid fa-angle-left"></i></a>
+    <router-link to="/login"  class="mb-6 text-2xl">
+      <i class="fa-solid fa-angle-left"></i>
+    </router-link>
     <h1 class="text-3xl font-bold text-gray-800 mb-1">Forgot password 🤔</h1>
     <p class="text-gray-500 mb-6">
       Select which contact details should we use to reset your password.
@@ -60,8 +61,8 @@ import ForgotP from "../../assets/images/ForgotP.png";
     </div>
 
     <!-- Continue Button -->
-    <a href="otp"
-      class="mt-10 bg-blue-500 text-white text-center py-3 rounded-xl text-lg font-semibold hover:bg-blue-600 transition">Continue
-      </a>
+     <router-link to="/otp"  class="mt-10 bg-blue-500 text-white text-center py-3 rounded-xl text-lg font-semibold hover:bg-blue-600 transition" >
+      Continue
+    </router-link>
   </div>
 </template>

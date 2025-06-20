@@ -73,7 +73,7 @@ const setActive = (iconName) => {
     </div>
 
     <!-- Today Shift -->
-    <div class="p-5 border border-gray-200 bg-gray-100 rounded-2xl mt-3 mx-5">
+    <div class="p-5  bg-gray-100 rounded-2xl mt-3">
       <h1 class="text-base font-semibold mb-3">Today Shift</h1>
       <div class="flex gap-4">
         <!-- Check In -->
@@ -116,8 +116,7 @@ const setActive = (iconName) => {
       <div class="space-y-3 mt-3">
         <!-- Check In -->
         <div
-          class="bg-white border w-full p-4 rounded-2xl shadow-sm flex justify-between items-center"
-        >
+          class="bg-white  w-full p-4 rounded-2xl shadow-sm flex justify-between items-center">
           <div class="flex items-center gap-3">
             <div class="bg-blue-100 p-2 rounded-md">
               <i class="fa-solid fa-arrow-right text-blue-600"></i>
@@ -137,8 +136,7 @@ const setActive = (iconName) => {
 
         <!-- Break In -->
         <div
-          class="bg-white border w-full p-4 rounded-2xl shadow-sm flex justify-between items-center"
-        >
+          class="bg-white  w-full p-4 rounded-2xl shadow-sm flex justify-between items-center">
           <div class="flex items-center gap-3">
             <div class="bg-blue-100 p-2 rounded-md">
               <i class="fa-solid fa-mug-saucer text-blue-600"></i>

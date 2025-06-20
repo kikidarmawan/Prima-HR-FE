@@ -12,14 +12,14 @@
     <div class="mt-3 flex gap-2 w-full">
   <button
     @click="$emit('action', { id: item.id, type: 'reject' })"
-    class="flex-1 py-2 bg-red-400 hover:bg-red-500 text-white text-sm cursor-pointer rounded-lg flex items-center justify-center gap-2"
+    class="flex-1 py-2 bg-red-400 hover:bg-red-500  text-white text-sm cursor-pointer rounded-lg flex items-center justify-center gap-2"
   >
     <Icon icon="mdi:close-circle-outline" class="w-4 h-4" />
     Reject
   </button>
   <button
     @click="$emit('action', { id: item.id, type: 'approve' })"
-    class="flex-1 py-2 bg-green-400 hover:bg-green-500 text-white text-sm rounded-lg flex items-center justify-center cursor-pointer gap-2"
+    class="flex-1 py-2 bg-green-400 hover:bg-green-500  text-white text-sm rounded-lg flex items-center justify-center cursor-pointer gap-2"
   >
     <Icon icon="mdi:check-circle-outline" class="w-4 h-4" />
     Accept

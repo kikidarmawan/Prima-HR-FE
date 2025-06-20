@@ -4,9 +4,10 @@ import ppp from "../../assets/images/ppp.jpg";
 
 <template>
   <div class="min-h-screen bg-white flex flex-col p-6 justify-between">
-    <a href="/forgot-password" class="mb-4 text-2xl">
+    <router-link to="/forgot-password" class="mb-4 text-2xl">
       <i class="fa-solid fa-angle-left"></i>
-    </a>
+
+    </router-link>
 
     <div>
       <h1 class="text-3xl font-bold text-gray-800 mb-1">
@@ -32,10 +33,12 @@ import ppp from "../../assets/images/ppp.jpg";
     <!-- Countdown + Resend -->
     <div class="text-base text-gray-500 text-right mb-6">
       <span class="mr-2">00:30</span>
-      <button class="text-blue-500 hover:underline">Resend it</button>
+      <button class="text-blue-500  hover:underline cursor-pointer">Resend it</button>
     </div>
 
     <!-- Verify Button -->
-     <a href="new-password" class="bg-blue-500 text-center text-white text-lg font-medium w-full py-3 rounded-lg shadow-md hover:bg-blue-600 transition-all duration-200">Verify</a>
+      <router-link to="/new-password" class="bg-blue-500 text-center text-white text-lg font-medium w-full py-3 rounded-lg shadow-md hover:bg-blue-600 transition-all duration-200">
+        Verify
+      </router-link>
   </div>
 </template>

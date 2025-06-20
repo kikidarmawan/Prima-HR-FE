@@ -79,8 +79,7 @@ const goToHome = () => {
       <!-- Button apply -->
       <button
         type="submit"
-        class="w-full mt-5 bg-blue-500 text-white font-semibold py-3 rounded-xl hover:bg-blue-600 transition"
-      >
+        class="w-full mt-5 bg-blue-500 text-white cursor-pointer font-semibold py-3 rounded-xl hover:bg-blue-600 transition">
         Apply Leave
       </button>
     </form>

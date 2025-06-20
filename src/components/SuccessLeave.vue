@@ -35,7 +35,7 @@
 
       <button
         @click="$emit('close')"
-        class="mt-6 w-full bg-blue-500 text-white rounded-lg py-2 text-sm hover:bg-blue-600 transition duration-200"
+        class="mt-6 w-full bg-blue-500 cursor-pointer text-white rounded-lg py-2 text-sm hover:bg-blue-600 transition duration-200"
       >
         Done
       </button>

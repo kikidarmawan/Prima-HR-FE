@@ -40,9 +40,9 @@ const goToHome = () => {
 
 <template>
   <div class="min-h-screen bg-white flex flex-col p-6">
-    <a href="/forgot-password" class="mb-6 text-2xl">
-      <i class="fa-solid fa-angle-left"></i>
-    </a>
+    <router-link to="/forgot-password"  class="mb-6 text-2xl">
+         <i class="fa-solid fa-angle-left"></i>
+    </router-link>
     <h1 class="text-3xl font-bold text-gray-800 mb-1">Enter New Password</h1>
     <p class="text-gray-500 mb-6">Please enter your new password.</p>
 
@@ -70,7 +70,7 @@ const goToHome = () => {
           </label>
           <button
             type="button"
-            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+            class="absolute right-3 top-1/2 cursor-pointer transform -translate-y-1/2 text-gray-500"
             @click="togglePassword"
           >
             <Icon :icon="showPassword ? 'mdi:eye-off' : 'mdi:eye'" class="w-5 h-5" />
@@ -94,7 +94,7 @@ const goToHome = () => {
           </label>
           <button
             type="button"
-            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+            class="absolute right-3 top-1/2 cursor-pointer transform -translate-y-1/2 text-gray-500"
             @click="toggleRePassword"
           >
             <Icon :icon="showRePassword ? 'mdi:eye-off' : 'mdi:eye'" class="w-5 h-5" />
@@ -106,7 +106,7 @@ const goToHome = () => {
       <div class="mt-6">
         <button
           @click="updatePassword"
-          class="w-full bg-blue-500 hover:bg-blue-600 text-white text-base font-medium py-3 cursor-pointer rounded-xl"
+          class="w-full bg-blue-500  hover:bg-blue-600 text-white text-base font-medium py-3 cursor-pointer rounded-xl"
         >
           Update Password
         </button>
