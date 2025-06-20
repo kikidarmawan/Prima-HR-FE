@@ -28,10 +28,8 @@
           @click="$router.push('/login')"
           class="bg-blue-500 cursor-pointer hover:bg-blue-600 text-white w-full py-2 rounded-lg text-sm font-semibold"
         >
+       
           Back to Login
-          @click="$emit('close')"
-          class="bg-blue-500 hover:bg-blue-600 text-white cursor-pointer w-full py-2 rounded-lg text-sm font-semibold">
-          Back to Home
         </button>
       </div>
     </transition>

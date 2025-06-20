@@ -2,7 +2,7 @@
 <template>
   <div class="p-5 bg-gray-50">
     
-    <div style="max-height: 545px; overflow-y: auto;">
+    <div style="overflow-y: auto;">
     <h1 class="text-xl font-bold mb-5">Holiday List</h1>
 
     <HolidayList

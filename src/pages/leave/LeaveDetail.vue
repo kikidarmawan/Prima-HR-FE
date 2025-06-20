@@ -46,27 +46,6 @@
       </div>
     </div>
 
-    <!-- Buttons -->
-    <div class="flex justify-between mt-10">
-      <button
-        class="flex-1 bg-red-500 text-white cursor-pointer font-semibold py-3 rounded-xl mr-2 flex items-center justify-center gap-2 hover:bg-red-600 transition">
-        <div class="w-8 h-8 rounded-full border border-white flex items-center justify-center">
-            <i class="fa-solid fa-xmark text-white text-base"></i>
-        </div>
-        Reject
-      </button>
-      <a href="/leaves"
-        class="flex-1 bg-emerald-500 text-white font-semibold py-3 rounded-xl ml-2 flex items-center justify-center gap-2 hover:bg-emerald-600 transition">
-
-      <button
-        class="flex-1 bg-emerald-500 text-white cursor-pointer font-semibold py-3 rounded-xl ml-2 flex items-center justify-center gap-2 hover:bg-emerald-600 transition">
-
-        <div
-          class="w-8 h-8 rounded-full border border-white flex items-center justify-center">
-          <i class="fa-solid fa-check text-white text-base "></i>
-        </div>
-        Accept
-      </a>
-    </div>
+   
   </div>
 </template>

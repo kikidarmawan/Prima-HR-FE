@@ -1,6 +1,6 @@
 <template>
   <!-- Bottom Navbar -->
-  <div class="fixed bottom-0 left-0 right-0 z-50 flex justify-center">
+  <div class="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-center">
     <div
       class="relative bg-white shadow-xl h-15 rounded-t-3xl px-6 flex justify-between items-center w-full max-w-md mx-auto">
       <!-- Curve Bulatan Tengah -->
