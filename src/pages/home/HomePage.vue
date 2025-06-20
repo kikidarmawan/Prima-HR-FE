@@ -33,7 +33,11 @@ const setActive = (iconName) => {
     <!-- Header -->
     <div class="flex items-center p-5 gap-5 w-full">
       <div class="flex gap-5 items-center">
-        <img :src="Oren" class="rounded-full w-[52px] h-[52px] object-cover" alt=""/>
+        <img
+          :src="Oren"
+          class="rounded-full w-[52px] h-[52px] object-cover"
+          alt=""
+        />
         <div>
           <h1 class="text-xl font-semibold text-gray-900">Michael Mitc</h1>
           <p class="text-gray-600">Lead UI/UX Designer</p>
@@ -41,13 +45,14 @@ const setActive = (iconName) => {
       </div>
 
       <!-- Bell Icon -->
-      <div class="ml-auto">
-        <div
-          class="w-12 h-12 flex items-center justify-center rounded-full border border-gray-300 shadow-sm bg-white"
-        >
-          <i class="fa-regular fa-bell text-lg text-gray-700"></i>
+      <a href="/notif">
+        <div class="ml-10">
+          <div
+            class="w-12 h-12 flex items-center justify-center rounded-full border border-gray-300 shadow-sm bg-white">
+            <i class="fa-regular fa-bell text-lg text-gray-700"></i>
+          </div>
         </div>
-      </div>
+      </a>
     </div>
 
     <!-- Date Scroll -->
@@ -61,8 +66,7 @@ const setActive = (iconName) => {
           selectedDate.value === index
             ? 'bg-blue-500 text-white border-blue-500'
             : 'bg-white text-black border-gray-300',
-        ]"
-      >
+        ]">
         <span class="text-base font-semibold">{{ date.day }}</span>
         <span class="text-xs">{{ date.weekday }}</span>
       </div>
@@ -73,7 +77,7 @@ const setActive = (iconName) => {
       <h1 class="text-base font-semibold mb-3">Today Shift</h1>
       <div class="flex gap-4">
         <!-- Check In -->
-        <div class="bg-white border w-40 p-4 rounded-2xl shadow-sm">
+        <div class="w-full bg-white p-4 rounded-2xl shadow-sm">
           <div class="flex items-center gap-2 mb-2">
             <div class="bg-blue-100 p-2 rounded-md">
               <i class="fa-solid fa-arrow-right text-blue-600"></i>
@@ -87,7 +91,7 @@ const setActive = (iconName) => {
         </div>
 
         <!-- Check Out -->
-        <div class="bg-white border w-40 p-4 rounded-2xl shadow-sm">
+        <div class="w-full bg-white p-4 rounded-2xl shadow-sm">
           <div class="flex items-center gap-2 mb-2">
             <div class="bg-blue-100 p-2 rounded-md">
               <i class="fa-solid fa-arrow-left text-blue-600"></i>
@@ -175,4 +179,6 @@ const setActive = (iconName) => {
     <!-- navbar -->
     <Navbar />
     </div>
+    <Navbar />
+  </div>
 </template>

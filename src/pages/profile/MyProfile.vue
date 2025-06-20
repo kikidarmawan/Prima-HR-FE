@@ -1,6 +1,7 @@
 <script setup>
 import Oren from "../../assets/images/Oren.jpg";
 import Navbar from "@/components/Navbar.vue";
+import Navbar from "../../components/Navbar.vue";
 </script>
 
 <template>
@@ -27,7 +28,7 @@ import Navbar from "@/components/Navbar.vue";
             class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
             <i class="fa-regular fa-user text-2xl text-gray-600"></i>
           </div>
-          <span class="text-sm font-medium">My Profile</span>
+          <span class="text-base font-medium">My Profile</span>
         </div>
         <a href="/profile/details">
   <i class="fa-solid fa-angle-right text-gray-400"></i>
@@ -41,11 +42,11 @@ import Navbar from "@/components/Navbar.vue";
         <div class="flex items-center gap-4">
           <div
             class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-            <i class="fa-solid fa-gear text-2xl text-gray-600"></i>
+            <i class="fa-solid fa-lock text-2xl text-gray-600"></i>           
           </div>
-          <span class="text-sm font-medium">Settings</span>
+          <span class="text-base font-medium ">Change Password</span>
         </div>
-        <a href="/settings">
+        <a href="/change-password">
           <i class="fa-solid fa-angle-right text-gray-400"></i>
         </a>
       </div>
@@ -58,9 +59,9 @@ import Navbar from "@/components/Navbar.vue";
             class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
             <i class="fa-regular fa-file-lines text-2xl text-gray-600"></i>
           </div>
-          <span class="text-sm font-medium">Terms & Conditions</span>
+          <span class="text-base font-medium">Terms & Conditions</span>
         </div>
-        <a href="/terms">
+        <a href="/conditions">
           <i class="fa-solid fa-angle-right text-gray-400"></i>
         </a>
       </div>
@@ -71,7 +72,7 @@ import Navbar from "@/components/Navbar.vue";
           <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
             <i class="fa-solid fa-shield-halved text-2xl text-gray-600"></i>
           </div>
-          <span class="text-sm font-medium">Privacy Policy</span>
+          <span class="text-base font-medium">Privacy Policy</span>
         </div>
         <a href="/privacy">
           <i class="fa-solid fa-angle-right text-gray-400"></i>

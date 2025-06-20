@@ -46,11 +46,9 @@ const togglePassword = () => {
         <input
           :type="showPassword ? 'text' : 'password'"
           placeholder=" "
-          class="w-full border border-blue-300 rounded-md px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400 peer"
-        />
+          class="w-full border border-blue-300 rounded-md px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400 peer"/>
         <label
-          class="absolute left-3 -top-2 bg-white px-1 text-xs text-blue-600 z-10 pointer-events-none transition-all duration-200 peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:-top-2 peer-focus:text-xs peer-focus:text-blue-600"
-        >
+          class="absolute left-3 -top-2 bg-white px-1 text-xs text-blue-600 z-10 pointer-events-none transition-all duration-200 peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:-top-2 peer-focus:text-xs peer-focus:text-blue-600">
           Password
         </label>
         <!-- eye icon -->
@@ -67,8 +65,7 @@ const togglePassword = () => {
         <!-- login -->
         <button
           type="submit"
-          class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md font-medium"
-        >
+          class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md font-medium">
           Login
         </button>
       </form>

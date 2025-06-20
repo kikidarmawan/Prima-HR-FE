@@ -11,6 +11,10 @@ import LeaveDetail from "../pages/leave/LeaveDetail.vue";
 import MyProfile from "../pages/profile/MyProfile.vue";
 import HolidayPage from "../pages/holiday/HolidayPage.vue";
 import ProfileDetails from "../pages/profile/ProfileDetails.vue";
+import Notifications from "../pages/home/Notifications.vue";
+import Conditions from "../pages/profile/Conditions.vue";
+import Privacy from "../pages/profile/Privacy.vue";
+import ChangePassword from "../pages/profile/ChangePassword.vue";
 
 
 const routes = [
@@ -74,7 +78,26 @@ const routes = [
     path: "/holiday",
     name: "Holiday",
     component: HolidayPage,
-
+  },
+  {
+    path: "/notif",
+    name: "Notifications",
+    component: Notifications,
+  },  
+  {
+    path: "/conditions",
+    name: "Conditions",
+    component: Conditions,
+  },
+  {
+    path: "/privacy",
+    name: "Privacy",
+    component: Privacy,
+  },
+  {
+    path: "/change-password",
+    name: "ChangePassword",
+    component: ChangePassword,
   },
 ];
 

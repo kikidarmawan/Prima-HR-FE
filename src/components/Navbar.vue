@@ -40,6 +40,18 @@
               <i class="fa-regular fa-user text-xl text-gray-500 hover:text-blue-600 transition-colors cursor-pointer"></i>
             </a >
             </div>
+          <!-- Right 2 -->
+          <div class="flex gap-16.5 items-center pr-2">
+            <router-link to="/holiday">
+              <i
+                class="fa-solid fa-umbrella-beach text-xl text-gray-500 hover:text-blue-600 transition-colors cursor-pointer"
+              ></i>
+            </router-link>
+            <router-link to="/profile">
+              <i
+                class="fa-regular fa-user text-xl text-gray-500 hover:text-blue-600 transition-colors cursor-pointer"
+              ></i>
+            </router-link>
           </div>
         </div>
       </div>
