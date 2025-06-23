@@ -1,13 +1,13 @@
 <script setup>
-import { Icon } from '@iconify/vue'
+import { Icon } from "@iconify/vue";
 
-const emit = defineEmits(['open-options'])
+const emit = defineEmits(["open-options"]);
 
 defineProps({
   avatar: String,
   name: String,
   email: String,
-})
+});
 </script>
 
 <template>
@@ -21,7 +21,7 @@ defineProps({
         </div>
       </div>
       <button
-        class=" cursor-pointer text-gray-400 text-xl"
+        class="cursor-pointer text-gray-400 text-xl"
         @click="emit('open-options')"
       >
         <Icon icon="mdi:dots-vertical" class="cursor-pointer" />

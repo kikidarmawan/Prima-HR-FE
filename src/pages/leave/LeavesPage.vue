@@ -122,9 +122,12 @@ const mockData = {
         <h1 class="text-xl font-semibold">All Leaves</h1>
         <div class="flex gap-2">
           <!-- Plus -->
-           <router-link to="/apply" class="p-2.5 border rounded-lg shadow-sm cursor-pointer">
-             <Icon icon="mdi:plus" class="text-base" />
-           </router-link>
+          <router-link
+            to="/apply"
+            class="p-2.5 border rounded-lg shadow-sm cursor-pointer"
+          >
+            <Icon icon="mdi:plus" class="text-base" />
+          </router-link>
           <!-- Filter -->
           <button @click="showModal = true" class="p-2 cursor-pointer">
             <Icon icon="mdi:tune-variant" class="text-xl" />
@@ -139,9 +142,8 @@ const mockData = {
         <TabSelector :options="tabs" v-model:activeTab="activeTab" />
       </div>
     </div>
-    <div
-      class="w-full max-w-sm bg-gray-100 overflow-y-auto"
-      style="max-height: 400px">
+    <div class="w-full max-w-sm bg-gray-100 overflow-y-auto pb-24 max-h-[calc(100vh-260px)]">
+
       <TabContent :activeTab="activeTab" :data="mockData[activeTab]" mobile />
     </div>
   </div>

@@ -13,7 +13,8 @@ import Navbar from "../../components/Navbar.vue";
 
       <!-- Edit Profile -->
       <button
-        class="mt-4 bg-blue-500 w-full text-lg text-white px-6 py-2 rounded-xl cursor-pointer">
+        class="mt-4 bg-blue-500 w-full text-lg text-white px-6 py-2 rounded-xl cursor-pointer"
+      >
         Edit Profile
       </button>
     </div>
@@ -24,14 +25,16 @@ import Navbar from "../../components/Navbar.vue";
       <div class="px-6">
         <router-link to="/profile/details">
           <div
-            class="flex items-center justify-between px-2 py-5 border-b border-gray-200">
+            class="flex items-center justify-between px-2 py-5 border-b border-gray-200"
+          >
             <div class="flex items-center gap-4">
               <div
-                class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center"
+              >
                 <i class="fa-regular fa-user text-2xl text-gray-600"></i>
               </div>
               <span class="text-base font-medium">My Profile</span>
-              </div>
+            </div>
             <i class="fa-solid fa-angle-right text-gray-400"></i>
           </div>
         </router-link>
@@ -39,10 +42,12 @@ import Navbar from "../../components/Navbar.vue";
         <!-- Settings -->
         <router-link to="/change-password">
           <div
-            class="flex items-center justify-between px-2 py-5 border-b border-gray-200">
+            class="flex items-center justify-between px-2 py-5 border-b border-gray-200"
+          >
             <div class="flex items-center gap-4">
               <div
-                class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center"
+              >
                 <i class="fa-solid fa-lock text-2xl text-gray-600"></i>
               </div>
               <span class="text-base font-medium">Change Password</span>
@@ -53,16 +58,19 @@ import Navbar from "../../components/Navbar.vue";
 
         <!-- Terms & Conditions -->
         <router-link to="/conditions">
-          <div class="flex items-center justify-between px-2 py-5 border-b border-gray-200">
+          <div
+            class="flex items-center justify-between px-2 py-5 border-b border-gray-200"
+          >
             <div class="flex items-center gap-4">
               <div
-                class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center"
+              >
                 <i class="fa-regular fa-file-lines text-2xl text-gray-600"></i>
               </div>
               <span class="text-base font-medium">Terms & Conditions</span>
             </div>
-              <i class="fa-solid fa-angle-right text-gray-400"></i>
-            </div>
+            <i class="fa-solid fa-angle-right text-gray-400"></i>
+          </div>
         </router-link>
 
         <!-- Privacy Policy -->

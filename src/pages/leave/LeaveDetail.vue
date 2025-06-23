@@ -45,7 +45,5 @@
         <p class="text-lg font-semibold">Michael Mitc</p>
       </div>
     </div>
-
-   
   </div>
 </template>

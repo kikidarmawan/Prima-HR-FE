@@ -6,7 +6,7 @@
   >
     <div class="bg-white w-full max-w-sm mx-auto rounded-t-xl p-5">
       <button
-        class="w-full text-left py-3 flex  items-center space-x-3 cursor-pointer hover:bg-gray-100 rounded"
+        class="w-full text-left py-3 flex items-center space-x-3 cursor-pointer hover:bg-gray-100 rounded"
         @click="$emit('call', member)"
       >
         <Icon icon="mdi:phone-outline" class="text-xl" />
@@ -24,14 +24,14 @@
 </template>
 
 <script setup>
-import { Icon } from '@iconify/vue'
+import { Icon } from "@iconify/vue";
 
 defineProps({
   modelValue: Boolean,
   member: Object,
-})
+});
 
-const emit = defineEmits(['update:modelValue', 'call', 'delete'])
+const emit = defineEmits(["update:modelValue", "call", "delete"]);
 
-const close = () => emit('update:modelValue', false)
+const close = () => emit("update:modelValue", false);
 </script>

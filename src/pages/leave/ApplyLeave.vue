@@ -45,10 +45,11 @@ const onNumberInput = (e) => {
         />
       </div>
 
-      <div class="relative w-full ">
+      <div class="relative w-full">
         <select
           id="leaveType"
-          class="peer w-full appearance-none border border-blue-500 text-sm text-gray-700 bg-white rounded-lg pt-5 pb-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500  ">
+          class="peer w-full appearance-none border border-blue-500 text-sm text-gray-700 bg-white rounded-lg pt-5 pb-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        >
           <option value="">Medical Leave</option>
           <option>Annual Leave</option>
           <option>Emergency Leave</option>
@@ -57,17 +58,19 @@ const onNumberInput = (e) => {
         <!-- Floating label -->
         <label
           for="leaveType"
-          class="absolute space-y-5 left-3 top-2 text-xs text-blue-500 bg-white px-1 transition-all peer-focus:top-1 peer-focus:text-[10px] peer-focus:text-blue-600 pointer-events-none">
+          class="absolute space-y-5 left-3 top-2 text-xs text-blue-500 bg-white px-1 transition-all peer-focus:top-1 peer-focus:text-[10px] peer-focus:text-blue-600 pointer-events-none"
+        >
           Leave Type
         </label>
         <!-- Chevron icon -->
         <i
-          class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+          class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+        ></i>
       </div>
 
       <!-- Contact Number -->
       <div class="border border-blue-500 rounded-lg p-2 w-full">
-        <label class="text-xs text-blue-500 ">Contact Number</label>
+        <label class="text-xs text-blue-500">Contact Number</label>
         <input
           type="text"
           placeholder="(+62)"
@@ -78,7 +81,6 @@ const onNumberInput = (e) => {
       </div>
 
       <div class="space-y-4">
-        <!-- Start Date -->
         <!-- Start Date -->
         <div class="border border-blue-500 rounded-lg p-2">
           <label class="text-xs text-blue-500">Start Date</label>

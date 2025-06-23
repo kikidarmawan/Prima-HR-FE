@@ -86,7 +86,7 @@ const routes = [
     path: "/notif",
     name: "Notifications",
     component: Notifications,
-  },  
+  },
   {
     path: "/conditions",
     name: "Conditions",

@@ -60,7 +60,7 @@ const notifications = [
         <i class="fa-solid fa-angle-left"></i>
       </router-link>
       <h1 class="text-lg font-semibold">Notification</h1>
-      <div class="w-6"></div> 
+      <div class="w-6"></div>
     </div>
 
     <!-- Notification List -->
@@ -68,18 +68,21 @@ const notifications = [
       <div
         v-for="item in notifications"
         :key="item.id"
-        class="flex items-start gap-4 border-b border-gray-200 pb-4 mb-4">
+        class="flex items-start gap-4 border-b border-gray-200 pb-4 mb-4"
+      >
         <!-- Icon -->
         <div>
           <template v-if="item.image">
             <img
               :src="item.image"
               alt="avatar"
-              class="w-10 h-10 rounded-full object-cover"/>
+              class="w-10 h-10 rounded-full object-cover"
+            />
           </template>
           <template v-else>
             <div
-              class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-100 text-blue-500">
+              class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-100 text-blue-500"
+            >
               <i :class="['fas', item.icon]"></i>
             </div>
           </template>

@@ -14,7 +14,9 @@ const activeTab = ref("Personal");
     <div class="flex items-center justify-between mb-6">
       <div class="cursor-pointer">
         <router-link to="/profile">
-          <i class="fa-solid fa-angle-left text-2xl"><span class="text-white">a</span></i>              
+          <i class="fa-solid fa-angle-left text-2xl"
+            ><span class="text-white">a</span></i
+          >
         </router-link>
       </div>
 
@@ -32,7 +34,8 @@ const activeTab = ref("Personal");
           activeTab === tab
             ? 'bg-blue-500 text-white'
             : 'bg-gray-100 text-gray-700',
-        ]">
+        ]"
+      >
         {{ tab }}
       </button>
     </div>

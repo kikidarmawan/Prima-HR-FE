@@ -4,7 +4,7 @@ import ForgotP from "../../assets/images/ForgotP.png";
 
 <template>
   <div class="min-h-screen bg-white flex flex-col p-6">
-    <router-link to="/login"  class="mb-6 text-2xl">
+    <router-link to="/login" class="mb-6 text-2xl">
       <i class="fa-solid fa-angle-left"></i>
     </router-link>
     <h1 class="text-3xl font-bold text-gray-800 mb-1">Forgot password 🤔</h1>
@@ -61,7 +61,10 @@ import ForgotP from "../../assets/images/ForgotP.png";
     </div>
 
     <!-- Continue Button -->
-     <router-link to="/otp"  class="mt-10 bg-blue-500 text-white text-center py-3 rounded-xl text-lg font-semibold hover:bg-blue-600 transition" >
+    <router-link
+      to="/otp"
+      class="mt-10 bg-blue-500 text-white text-center py-3 rounded-xl text-lg font-semibold hover:bg-blue-600 transition"
+    >
       Continue
     </router-link>
   </div>
