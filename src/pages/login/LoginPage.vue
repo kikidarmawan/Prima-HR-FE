@@ -12,7 +12,7 @@ const togglePassword = () => {
 
 <template>
   <div class="min-h-screen flex justify-center bg-white px-4">
-    <div class="w-full max-w-sm m-6">
+    <div class="w-full max-w-sm m-5">
       <!-- logo prime -->
       <div class="flex justify-start mb-6">
         <img :src="Login" alt="Logo" class="w-20 h-20 rounded-full" />
