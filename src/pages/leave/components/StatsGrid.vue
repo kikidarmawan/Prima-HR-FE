@@ -1,4 +1,3 @@
-
 <script setup>
 defineProps({
   items: {
@@ -9,45 +8,44 @@ defineProps({
 
 const borderClass = (color) => {
   const map = {
-    blue: "border-blue-300",
-    green: "border-green-300",
-    teal: "border-teal-300",
-    red: "border-red-300",
+    blue: "border-blue-500",
+    green: "border-lime-400",
+    teal: "border-teal-400",
+    red: "border-red-400",
   };
-  return map[color] || "border-gray-300";
+  return map[color] || "border-gray-600";
 };
 
 const bgClass = (color) => {
   const map = {
-    blue: "bg-blue-50",
-    green: "bg-green-50",
-    teal: "bg-teal-50",
-    red: "bg-red-50",
+    blue: "dark:bg-[#0A132F]",
+    green: "dark:bg-[#0F1B0E]",
+    teal: "dark:bg-[#072322]",
+    red: "dark:bg-[#1F1417]",
   };
-  return map[color] || "bg-gray-50";
+  return map[color] || "dark:bg-gray-800";
 };
 
 const textClass = (color) => {
   const map = {
-    blue: "text-blue-500",
-    green: "text-green-500",
-    teal: "text-teal-500",
-    red: "text-red-500",
+    blue: "text-blue-400",
+    green: "text-lime-400",
+    teal: "text-teal-400",
+    red: "text-red-400",
   };
-  return map[color] || "text-gray-600";
+  return map[color] || "text-gray-200";
 };
 </script>
-
 
 <template>
   <div class="grid grid-cols-2 gap-4">
     <div
       v-for="item in items"
       :key="item.label"
-      class="p-4 rounded-2xl border font-semibold space-y-1"
+      class="p-4 rounded-2xl border font-semibold space-y-1 transition-colors duration-300 bg-white dark:bg-opacity-100"
       :class="[borderClass(item.color), bgClass(item.color)]"
     >
-      <p class="text-gray-600">{{ item.label }}</p>
+      <p class="text-gray-600 dark:text-white">{{ item.label }}</p>
       <p :class="['text-xl font-semibold', textClass(item.color)]">
         {{ item.value }}
       </p>
