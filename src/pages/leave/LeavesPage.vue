@@ -113,25 +113,35 @@ const mockData = {
 
 
 <template>
-  <div class="bg-gray-100 min-h-screen flex flex-col items-center">
+  <div class="bg-gray-100 dark:bg-black min-h-screen flex flex-col items-center transition-colors duration-300">
     <!-- Navbar -->
     <Navbar />
-    <div class="bg-white w-full space-y-6 py-6 px-6 rounded-b-4xl">
+
+    <!-- Header Section -->
+    <div class="bg-white dark:bg-gray-900 w-full space-y-6 py-6 px-6 rounded-b-4xl transition-colors duration-300">
       <!-- Header -->
       <div class="flex items-center py-5 justify-between">
-        <h1 class="text-xl font-semibold">All Leaves</h1>
+        <h1 class="text-xl font-semibold text-gray-900 dark:text-white">All Leaves</h1>
         <div class="flex gap-2">
           <!-- Plus -->
           <router-link
             to="/apply"
-            class="p-2.5 border rounded-lg shadow-sm cursor-pointer"
+            class="p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm cursor-pointer
+                   bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
           >
             <Icon icon="mdi:plus" class="text-base" />
           </router-link>
+
           <!-- Filter -->
-          <button @click="showModal = true" class="p-2 cursor-pointer">
+          <button
+            @click="showModal = true"
+            class="p-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm cursor-pointer
+                   bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+          >
             <Icon icon="mdi:tune-variant" class="text-xl" />
           </button>
+
+          <!-- Modal -->
           <LeaveFitur v-if="showModal" @close="showModal = false" />
         </div>
       </div>
@@ -142,12 +152,15 @@ const mockData = {
         <TabSelector :options="tabs" v-model:activeTab="activeTab" />
       </div>
     </div>
-    <div class="w-full max-w-sm bg-gray-100 overflow-y-auto pb-24 max-h-[calc(100vh-260px)]">
 
+    <!-- Tab Content -->
+    <div class="w-full max-w-sm bg-gray-100 dark:bg-black overflow-y-auto pb-24 max-h-[calc(100vh-260px)] transition-colors duration-300">
       <TabContent :activeTab="activeTab" :data="mockData[activeTab]" mobile />
     </div>
   </div>
 </template>
+
+
 
 
 

@@ -14,15 +14,18 @@ const toggleConfirm = () => {
   showConfirm.value = !showConfirm.value;
 };
 </script>
+
 <template>
-  <div class="bg-white min-h-screen">
+  <div class="bg-white dark:bg-black min-h-screen transition-colors duration-300">
     <div class="max-w-sm mx-auto">
       <!-- Header -->
       <div class="flex items-center justify-between p-6">
-        <router-link to="/profile" class="text-2xl text-gray-700">
+        <router-link to="/profile" class="text-2xl text-gray-700 dark:text-white">
           <i class="fa-solid fa-angle-left"></i>
         </router-link>
-        <h1 class="text-xl font-semibold text-gray-800">Change Password</h1>
+        <h1 class="text-xl font-semibold text-gray-800 dark:text-white">
+          Change Password
+        </h1>
         <div class="w-6"></div>
       </div>
 
@@ -30,19 +33,17 @@ const toggleConfirm = () => {
       <div class="px-6 space-y-6">
         <!-- Password -->
         <div class="relative">
-          <label class="block text-blue-500 mb-1 text-sm font-medium"
-            >Password</label
-          >
+          <label class="block text-blue-500 mb-1 text-sm font-medium">Password</label>
           <input
             :type="showPassword ? 'text' : 'password'"
             v-model="password"
-            class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300"
+            class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
             placeholder="Enter new password"
           />
           <button
             type="button"
             @click="togglePassword"
-            class="absolute right-4 top-[42px] text-gray-500"
+            class="absolute right-4 top-[42px] text-gray-500 dark:text-gray-400"
           >
             <i :class="showPassword ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
           </button>
@@ -50,19 +51,17 @@ const toggleConfirm = () => {
 
         <!-- Confirm Password -->
         <div class="relative">
-          <label class="block text-blue-500 mb-1 text-sm font-medium"
-            >Confirm Password</label
-          >
+          <label class="block text-blue-500 mb-1 text-sm font-medium">Confirm Password</label>
           <input
             :type="showConfirm ? 'text' : 'password'"
             v-model="confirmPassword"
-            class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300"
+            class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
             placeholder="Confirm password"
           />
           <button
             type="button"
             @click="toggleConfirm"
-            class="absolute right-4 top-[42px] text-gray-500"
+            class="absolute right-4 top-[42px] text-gray-500 dark:text-gray-400"
           >
             <i :class="showConfirm ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
           </button>
@@ -71,8 +70,7 @@ const toggleConfirm = () => {
 
       <!-- Update Button -->
       <div
-        class="w-full bg-blue-500 mt-40 hover:bg-blue-600 text-white text-xl text-center py-3 cursor-pointer rounded-xl"
-      >
+        class="w-full bg-blue-500 mt-40 hover:bg-blue-600 text-white text-xl text-center py-3 cursor-pointer rounded-xl transition-colors duration-300">
         Update
       </div>
     </div>

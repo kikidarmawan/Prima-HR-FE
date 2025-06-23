@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import ppp from "../../assets/images/ppp.jpg";
+import verifikasi from "../../assets/images/verifikasi.png";
 
 const otpInputs = ref([]); // untuk mengakses input DOM
 
@@ -27,23 +27,23 @@ const handleBackspace = (e, index) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-white flex flex-col p-6 justify-between">
-    <router-link to="/forgot-password" class="mb-4 text-2xl">
+  <div class="min-h-screen bg-white dark:bg-black text-gray-800 dark:text-white flex flex-col p-6 justify-between transition-colors duration-300">
+    <!-- Back Button -->
+    <router-link to="/forgot-password" class="mb-4 text-2xl text-gray-700 dark:text-gray-300">
       <i class="fa-solid fa-angle-left"></i>
     </router-link>
 
+    <!-- Title & Subtitle -->
     <div>
-      <h1 class="text-3xl font-bold text-gray-800 mb-1">
-        Enter verification Code
-      </h1>
-      <p class="text-gray-500 mb-4">
+      <h1 class="text-3xl font-bold mb-1">Enter verification Code</h1>
+      <p class="text-gray-500 dark:text-gray-400 mb-4">
         We have sent the code verification to your mobile number
       </p>
     </div>
 
     <!-- Image -->
     <div class="flex justify-center mb-4">
-      <img :src="ppp" alt="" class="h-auto" />
+      <img :src="verifikasi" alt="OTP Image" class="h-auto" />
     </div>
 
     <!-- OTP Inputs -->
@@ -53,7 +53,7 @@ const handleBackspace = (e, index) => {
         :key="index"
         type="text"
         maxlength="1"
-        class="w-16 h-16 text-center border border-gray-300 rounded-lg text-2xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+        class="w-16 h-16 text-center border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-2xl text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
         ref="otpInputs"
         @input="(e) => handleInput(e, index)"
         @keydown="(e) => handleBackspace(e, index)"
@@ -61,7 +61,7 @@ const handleBackspace = (e, index) => {
     </div>
 
     <!-- Countdown + Resend -->
-    <div class="text-base text-gray-500 text-right mb-6">
+    <div class="text-base text-gray-500 dark:text-gray-400 text-right mb-6">
       <span class="mr-2">00:30</span>
       <button class="text-blue-500 hover:underline">Resend it</button>
     </div>
@@ -69,8 +69,9 @@ const handleBackspace = (e, index) => {
     <!-- Verify Button -->
     <a
       href="new-password"
-      class="bg-blue-500 text-center text-white text-lg font-medium w-full py-3 rounded-lg shadow-md hover:bg-blue-600 transition-all duration-200"
-      >Verify</a
+      class="bg-blue-500 hover:bg-blue-600 text-white text-center text-lg font-medium w-full py-3 rounded-lg shadow-md transition"
     >
+      Verify
+    </a>
   </div>
 </template>

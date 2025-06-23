@@ -2,13 +2,13 @@
 
 <template>
   <div
-    class="fixed inset-0 flex items-end justify-center bg-black/50 backdrop-blur-xs pb-"
+    class="fixed inset-0 flex items-end justify-center bg-black/50 backdrop-blur-xs"
   >
     <div
-      class="bg-white rounded-t-2xl p-6 w-full max-w-md text-center shadow-xl"
+      class="bg-white dark:bg-black rounded-t-2xl p-6 w-full max-w-md text-center shadow-xl"
     >
       <div class="flex items-center justify-center mb-4">
-        <div class="bg-blue-100 rounded-full p-4">
+        <div class="bg-blue-100 dark:bg-blue-900 rounded-full p-4">
           <div class="bg-blue-500 rounded-full p-4">
             <svg
               class="w-6 h-6 text-white"
@@ -27,11 +27,12 @@
           </div>
         </div>
       </div>
-      <h2 class="text-lg font-semibold text-gray-900">
+
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
         Leave Applied Successfully
       </h2>
-      <p class="text-sm text-gray-600 mt-1">
-        Your Leave has been applied successfully
+      <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+        Your leave has been applied successfully
       </p>
 
       <button

@@ -1,5 +1,6 @@
 <script setup>
 import Oren from "../../assets/images/Oren.jpg";
+
 const notifications = [
   {
     id: 1,
@@ -53,13 +54,13 @@ const notifications = [
 </script>
 
 <template>
-  <div class="min-h-screen bg-white p-5">
+  <div class="min-h-screen bg-white dark:bg-black transition-colors duration-300 p-5">
     <!-- Topbar -->
     <div class="flex items-center justify-between mb-5">
-      <router-link to="/home" class="text-xl">
+      <router-link to="/home" class="text-xl text-gray-800 dark:text-white">
         <i class="fa-solid fa-angle-left"></i>
       </router-link>
-      <h1 class="text-lg font-semibold">Notification</h1>
+      <h1 class="text-lg font-semibold text-gray-900 dark:text-white">Notification</h1>
       <div class="w-6"></div>
     </div>
 
@@ -68,7 +69,7 @@ const notifications = [
       <div
         v-for="item in notifications"
         :key="item.id"
-        class="flex items-start gap-4 border-b border-gray-200 pb-4 mb-4"
+        class="flex items-start gap-4 border-b pb-4 mb-4 border-gray-200 dark:border-gray-700"
       >
         <!-- Icon -->
         <div>
@@ -81,7 +82,7 @@ const notifications = [
           </template>
           <template v-else>
             <div
-              class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-100 text-blue-500"
+              class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-100 dark:bg-blue-500/20 text-blue-500 dark:text-blue-400"
             >
               <i :class="['fas', item.icon]"></i>
             </div>
@@ -90,13 +91,13 @@ const notifications = [
 
         <!-- Content -->
         <div class="flex-1">
-          <p class="text-sm font-semibold text-gray-900">
+          <p class="text-sm font-semibold text-gray-900 dark:text-white">
             {{ item.title }}
           </p>
-          <p class="text-sm text-gray-500">
+          <p class="text-sm text-gray-500 dark:text-gray-300">
             {{ item.message }}
           </p>
-          <p class="text-xs text-gray-400 mt-1">
+          <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
             {{ item.time }}
           </p>
         </div>
@@ -104,4 +105,3 @@ const notifications = [
     </div>
   </div>
 </template>
-

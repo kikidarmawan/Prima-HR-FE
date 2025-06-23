@@ -1,9 +1,8 @@
 <template>
-  <div class="flex flex-col h-screen bg-gray-50">
+  <div class="flex flex-col h-screen bg-gray-50 dark:bg-black transition-colors duration-300">
     <!-- Scrollable content -->
     <div class="flex-1 overflow-y-auto p-5 pb-28">
-      <!-- tambahkan pb-28 -->
-      <h1 class="text-xl font-bold mb-5">Holiday List</h1>
+      <h1 class="text-xl font-bold mb-5 text-gray-900 dark:text-white">Holiday List</h1>
 
       <HolidayList date="January 26, 2023" day="Thursday" name="Republic Day" />
       <HolidayList date="March 08, 2023" day="Friday" name="Holi" />

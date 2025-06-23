@@ -1,75 +1,99 @@
 <script setup>
-import Oren from "../../assets/images/Oren.jpg";
+import { ref } from "vue";
 import Navbar from "../../components/Navbar.vue";
+import Oren from "../../assets/images/Oren.jpg";
+
+const avatar = ref(Oren); // gambar awal
+
+const updateProfilePic = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      avatar.value = reader.result; // ganti preview
+    };
+    reader.readAsDataURL(file);
+  }
+};
 </script>
 
 <template>
-  <div class="min-h-screen bg-white flex flex-col justify-between pb-20">
+  <div class="min-h-screen bg-white dark:bg-black flex flex-col justify-between pb-20 transition-colors duration-300">
     <!-- Profile -->
-    <div class="flex flex-col items-center p-10">
-      <img :src="Oren" class="rounded-full w-24 h-24" alt="" />
-      <h1 class="font-semibold text-xl mt-4">Michael Mitc</h1>
-      <h2 class="text-base text-gray-500">Lead UI/UX Designer</h2>
+    <div class="flex flex-col items-center p-10 relative">
+      <!-- Foto + Kamera -->
+      <div class="relative w-24 h-24">
+        <img :src="avatar" class="rounded-full w-24 h-24 object-cover" alt="User Avatar" />
+      <label
+  for="fileInput"
+  class="absolute -bottom-1 -right-1 bg-blue-500 hover:bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center shadow-md cursor-pointer"
+>
+  <i class="fa-solid fa-camera text-xs"></i>
+  <input
+    id="fileInput"
+    type="file"
+    accept="image/*"
+    class="hidden"
+    @change="updateProfilePic"
+  />
+</label>
+
+      </div>
+
+      <h1 class="font-semibold text-xl mt-4 text-gray-900 dark:text-white">
+        Michael Mitc
+      </h1>
+      <h2 class="text-base text-gray-500 dark:text-gray-400">
+        Lead UI/UX Designer
+      </h2>
 
       <!-- Edit Profile -->
       <button
-        class="mt-4 bg-blue-500 w-full text-lg text-white px-6 py-2 rounded-xl cursor-pointer"
+        class="mt-4 bg-blue-500 w-full text-lg text-white px-6 py-2 rounded-xl cursor-pointer hover:bg-blue-600 transition"
       >
         Edit Profile
       </button>
     </div>
 
-    <!-- list -->
-    <!-- My Profile -->
+    <!-- Menu list -->
     <div>
       <div class="px-6">
+        <!-- My Profile -->
         <router-link to="/profile/details">
-          <div
-            class="flex items-center justify-between px-2 py-5 border-b border-gray-200"
-          >
+          <div class="flex items-center justify-between px-2 py-5 border-b border-gray-200 dark:border-gray-700">
             <div class="flex items-center gap-4">
-              <div
-                class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center"
-              >
-                <i class="fa-regular fa-user text-2xl text-gray-600"></i>
+              <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                <i class="fa-regular fa-user text-2xl text-gray-600 dark:text-gray-300"></i>
               </div>
-              <span class="text-base font-medium">My Profile</span>
+              <span class="text-base font-medium text-gray-800 dark:text-gray-200">My Profile</span>
             </div>
-            <i class="fa-solid fa-angle-right text-gray-400"></i>
+            <i class="fa-solid fa-angle-right text-gray-400 dark:text-gray-500"></i>
           </div>
         </router-link>
 
-        <!-- Settings -->
+        <!-- Change Password -->
         <router-link to="/change-password">
-          <div
-            class="flex items-center justify-between px-2 py-5 border-b border-gray-200"
-          >
+          <div class="flex items-center justify-between px-2 py-5 border-b border-gray-200 dark:border-gray-700">
             <div class="flex items-center gap-4">
-              <div
-                class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center"
-              >
-                <i class="fa-solid fa-lock text-2xl text-gray-600"></i>
+              <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                <i class="fa-solid fa-lock text-2xl text-gray-600 dark:text-gray-300"></i>
               </div>
-              <span class="text-base font-medium">Change Password</span>
+              <span class="text-base font-medium text-gray-800 dark:text-gray-200">Change Password</span>
             </div>
-            <i class="fa-solid fa-angle-right text-gray-400"></i>
+            <i class="fa-solid fa-angle-right text-gray-400 dark:text-gray-500"></i>
           </div>
         </router-link>
 
         <!-- Terms & Conditions -->
         <router-link to="/conditions">
-          <div
-            class="flex items-center justify-between px-2 py-5 border-b border-gray-200"
-          >
+          <div class="flex items-center justify-between px-2 py-5 border-b border-gray-200 dark:border-gray-700">
             <div class="flex items-center gap-4">
-              <div
-                class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center"
-              >
-                <i class="fa-regular fa-file-lines text-2xl text-gray-600"></i>
+              <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                <i class="fa-regular fa-file-lines text-2xl text-gray-600 dark:text-gray-300"></i>
               </div>
-              <span class="text-base font-medium">Terms & Conditions</span>
+              <span class="text-base font-medium text-gray-800 dark:text-gray-200">Terms & Conditions</span>
             </div>
-            <i class="fa-solid fa-angle-right text-gray-400"></i>
+            <i class="fa-solid fa-angle-right text-gray-400 dark:text-gray-500"></i>
           </div>
         </router-link>
 
@@ -77,33 +101,30 @@ import Navbar from "../../components/Navbar.vue";
         <router-link to="/privacy">
           <div class="flex items-center justify-between px-2 py-5">
             <div class="flex items-center gap-4">
-              <div
-                class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center"
-              >
-                <i class="fa-solid fa-shield-halved text-2xl text-gray-600"></i>
+              <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                <i class="fa-solid fa-shield-halved text-2xl text-gray-600 dark:text-gray-300"></i>
               </div>
-              <span class="text-base font-medium">Privacy Policy</span>
+              <span class="text-base font-medium text-gray-800 dark:text-gray-200">Privacy Policy</span>
             </div>
-            <i class="fa-solid fa-angle-right text-gray-400"></i>
+            <i class="fa-solid fa-angle-right text-gray-400 dark:text-gray-500"></i>
           </div>
         </router-link>
       </div>
     </div>
 
     <!-- Logout -->
-    <router-link to="/login">
-      <div class="flex items-center gap-4 h-15 p-7 text-2xl text-red-500 mt-4">
-        <div
-          class="w-10 h-10 rounded-full jus bg-red-100 justify-center items-center flex p-6"
-        >
-          <i class="fa-solid fa-arrow-right-from-bracket text-xl"></i>
-        </div>
-        <span class="text-xl items-center justify-center font-medium"
-          >Log out</span
-        >
-      </div>
-    </router-link>
+   <router-link to="/login">
+  <div class="flex items-center gap-5 px-9 py-5 mt-2 text-red-500">
+    <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center">
+      <i class="fa-solid fa-arrow-right-from-bracket text-base"></i>
+    </div>
+    <span class="text-base font-medium">Log out</span>
+  </div>
+</router-link>
 
+
+
+    <!-- Bottom Navbar -->
     <Navbar />
   </div>
 </template>

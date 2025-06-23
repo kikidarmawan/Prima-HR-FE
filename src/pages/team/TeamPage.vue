@@ -1,3 +1,37 @@
+<template>
+  <div class="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white mx-auto overflow-scroll py-6 px-4 transition-colors duration-300">
+    <div class="flex items-center justify-between mb-4">
+      <h1 class="text-lg font-semibold">Team Members</h1>
+      <button class="cursor-pointer text-gray-400 dark:text-gray-300 text-xl">
+        <Icon icon="mdi:dots-vertical" />
+      </button>
+    </div>
+
+    <SearchBar v-model="search" />
+
+    <div class="divide-y divide-gray-200 dark:divide-gray-700 mt-6">
+      <TeamMemberCard
+        v-for="member in filteredMembers"
+        :key="member.id"
+        :name="member.name"
+        :email="member.email"
+        :avatar="member.avatar"
+        @open-options="openModal"
+      />
+
+      <AddMemberButton />
+      <Navbar />
+
+      <MemberActionModal
+        v-model="showModal"
+        :member="selectedMember"
+        @call="handleCall"
+        @delete="handleDelete"
+      />
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { ref, computed } from "vue";
 import SearchBar from "./components/SearchBar.vue";
@@ -55,37 +89,3 @@ const handleDelete = (member) => {
   console.log("Delete", member.name);
 };
 </script>
-
-<template>
-  <div class="min-h-screen bg-white mx-auto overflow-scroll py-6 px-4">
-    <div class="flex items-center justify-between mb-4">
-      <h1 class="text-lg font-semibold">Team Members</h1>
-      <button class="cursor-pointer text-gray-400 text-xl">
-        <Icon icon="mdi:dots-vertical" />
-      </button>
-    </div>
-
-    <SearchBar v-model="search" />
-
-    <div class="divide-y mt-6">
-      <TeamMemberCard
-        v-for="member in filteredMembers"
-        :key="member.id"
-        :name="member.name"
-        :email="member.email"
-        :avatar="member.avatar"
-        @open-options="openModal"
-      />
-
-      <AddMemberButton />
-      <Navbar />
-
-      <MemberActionModal
-        v-model="showModal"
-        :member="selectedMember"
-        @call="handleCall"
-        @delete="handleDelete"
-      />
-    </div>
-  </div>
-</template>
