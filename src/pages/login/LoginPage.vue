@@ -63,11 +63,13 @@ const togglePassword = () => {
         </div>
 
         <!-- login -->
-        <button
+        <router-link to="/home">
+          <button
           type="submit"
-          class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md font-medium">
+          class="w-full cursor-pointer bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md font-medium">
           Login
         </button>
+        </router-link>
       </form>
     </div>
   </div>

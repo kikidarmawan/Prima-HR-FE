@@ -26,7 +26,7 @@ const resetFilter = () => {
         <div class="flex items-center">
           <button
             @click="emit('close')"
-            class="w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 bg-gray-100 text-gray-500 hover:bg-gray-200 transition">
+            class="cursor-pointer w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 bg-gray-100 text-gray-500 hover:bg-gray-200 transition">
             &times;
           </button>
         </div>

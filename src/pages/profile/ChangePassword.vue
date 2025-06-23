@@ -16,10 +16,8 @@ const toggleConfirm = () => {
 </script>
 
 <template>
-    <div class="h-full">
-
-    </div>
-  <div class="flex items-center justify-between p-6 ">
+    <div class="h-full bg-white">
+  <div class="flex  items-center justify-between p-6 ">
     <a href="/profile" class="text-2xl text-gray-700">
       <i class="fa-solid fa-angle-left"></i>
     </a>
@@ -64,4 +62,5 @@ const toggleConfirm = () => {
       Update
     </div>
   </div>
+    </div>
 </template>

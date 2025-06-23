@@ -18,17 +18,17 @@
       <!-- Icons -->
       <div class="flex justify-between items-center w-full">
         <!-- Left 2 -->
-        <div class="flex gap-15.5 items-center pl-2">
-          <a href="/home">
+        <div class="flex gap-18 items-center pl-2">
+          <router-link to="/home">
             <i
               class="fa-solid fa-house text-gray-500 text-xl hover:text-blue-600 transition-colors cursor-pointer"
             ></i>
-          </a>
-          <a href="/leaves">
+          </router-link>
+          <router-link to="/leaves">
             <i
               class="fa-regular fa-calendar text-xl text-gray-500 hover:text-blue-600 transition-colors cursor-pointer"
             ></i>
-          </a>
+          </router-link>
         </div>
 
         <!-- Spacer Tengah -->
@@ -38,17 +38,17 @@
         <div class="w-16"></div>
 
         <!-- Right 2 -->
-        <div class="flex gap-15.5 items-center pr-2">
-          <a href="/holiday">
+        <div class="flex gap-18 items-center pr-2">
+          <router-link to="/holiday">
             <i
               class="fa-solid fa-umbrella-beach text-xl text-gray-500 hover:text-blue-600 transition-colors cursor-pointer"
             ></i>
-          </a>
-          <a href="/profile">
+          </router-link>
+          <router-link to="/profile">
             <i
               class="fa-regular fa-user text-xl text-gray-500 hover:text-blue-600 transition-colors cursor-pointer"
             ></i>
-          </a>
+          </router-link>
         </div>
       </div>
     </div>

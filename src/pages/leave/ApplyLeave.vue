@@ -51,7 +51,7 @@ const goToHome = () => {
       <!-- Contact Number -->
       <div class="border border-blue-500 rounded-lg p-2 w-full">
         <label class="text-xs text-blue-500">Contact Number</label>
-        <input type="text" placeholder="(603) 555-0123" class="w-full outline-none" />
+       <input type="number" placeholder="(+62)" class="w-full outline-none" />
       </div>
 
       <!-- Start Date -->
@@ -79,7 +79,7 @@ const goToHome = () => {
       <!-- Button apply -->
       <button
         type="submit"
-        class="w-full mt-5 bg-blue-500 text-white font-semibold py-3 rounded-xl hover:bg-blue-600 transition"
+        class="w-full mt-5 cursor-pointer bg-blue-500 text-white font-semibold py-3 rounded-xl hover:bg-blue-600 transition"
       >
         Apply Leave
       </button>
