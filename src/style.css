@@ -1,5 +1,5 @@
 @import "tailwindcss";
-/* @custom-variant dark (&:where(.dark, .dark *)); */
+@custom-variant dark (&:where(.dark, .dark *));
 body {
   background-color: #b3b3b3;
   max-width:425px;
