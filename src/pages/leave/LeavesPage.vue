@@ -84,6 +84,18 @@ const mockData = {
       approvedByValue: "Martin Doe",
       status: "Approved",
     },
+    {
+      id: 5,
+      type: "Date",
+      date: "Mar 10, 2023 - Mar 12, 2023",
+      applyDays: "Apply days",
+      day: "2 days",
+      leaveBalance: "Leave balance",
+      leaveBalanceValue: 19,
+      approvedBy: "Approved by",
+      approvedByValue: "Martin Doe",
+      status: "Approved",
+    },
   ],
   "Team Leave": [
     {
@@ -154,7 +166,7 @@ const mockData = {
     </div>
 
     <!-- Tab Content -->
-    <div class="w-full max-w-sm bg-gray-100 dark:bg-black overflow-y-auto pb-24 max-h-[calc(100vh-260px)] transition-colors duration-300">
+    <div class="w-full max-w-sm bg-gray-100 dark:bg-black overflow-scroll pb-24 max-h-[calc(100vh-260px)] transition-colors duration-300">
       <TabContent :activeTab="activeTab" :data="mockData[activeTab]" mobile />
     </div>
   </div>
