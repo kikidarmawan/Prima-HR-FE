@@ -32,7 +32,7 @@ import ForgotP from "../../assets/images/ForgotP.png";
         <input
           type="radio"
           name="resetOption"
-          class="form-radio h-5 w-5 text-blue-500"
+          class="cursor-pointer form-radio h-5 w-5 text-blue-500"
           checked
         />
       </div>
@@ -51,7 +51,7 @@ import ForgotP from "../../assets/images/ForgotP.png";
         <input
           type="radio"
           name="resetOption"
-          class="form-radio h-5 w-5 text-blue-500"
+          class="cursor-pointer form-radio h-5 w-5 text-blue-500"
           checked
         />
       </div>

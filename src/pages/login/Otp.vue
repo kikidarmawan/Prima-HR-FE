@@ -63,15 +63,15 @@ const handleBackspace = (e, index) => {
     <!-- Countdown + Resend -->
     <div class="text-base text-gray-500 dark:text-gray-400 text-right mb-6">
       <span class="mr-2">00:30</span>
-      <button class="text-blue-500 hover:underline">Resend it</button>
+      <button class="cursor-pointer text-blue-500 hover:underline">Resend it</button>
     </div>
 
     <!-- Verify Button -->
-    <a
-      href="new-password"
+    <router-link
+      to="/new-password"
       class="bg-blue-500 hover:bg-blue-600 text-white text-center text-lg font-medium w-full py-3 rounded-lg shadow-md transition"
     >
       Verify
-    </a>
+    </router-link>
   </div>
 </template>

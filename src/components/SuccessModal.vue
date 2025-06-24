@@ -5,34 +5,18 @@
     <transition name="modal-fade">
       <div
         v-show="visible"
-        class="bg-white rounded-2xl p-6 w-80 text-center shadow-xl"
+        class="bg-white dark:bg-gray-900 rounded-2xl p-6 w-80 text-center shadow-xl transition-colors duration-300"
       >
         <img :src="img" alt="Success" class="mx-auto w-40 mb-4" />
-        <h2 class="text-lg font-bold text-blue-500 mb-1">Congratulations 🎉</h2>
-        <p class="text-sm text-gray-600 mb-6">Your account is ready to use</p>
+        <h2 class="text-lg font-bold text-blue-500 mb-1 dark:text-blue-400">
+          🎉 Congratulations
+        </h2>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-6">
+          Your account is ready to use
+        </p>
         <button
           @click="$emit('close')"
           class="bg-blue-500 hover:bg-blue-600 text-white w-full py-2 rounded-lg text-sm font-semibold cursor-pointer"
-        >
-          Back to Home
-        </button>
-      </div>
-    </transition>
-  </div>
-  <div
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs"
-  >
-    <transition name="modal-fade">
-      <div
-        v-show="visible"
-        class="bg-white rounded-2xl p-6 w-80 text-center shadow-xl"
-      >
-        <img :src="img" alt="Success" class="mx-auto w-40 mb-4" />
-        <h2 class="text-lg font-bold text-blue-500 mb-1">🎉 Congratulations</h2>
-        <p class="text-sm text-gray-600 mb-6">Your account is ready to use</p>
-        <button
-          @click="$router.push('/login')"
-          class="bg-blue-500 cursor-pointer hover:bg-blue-600 text-white w-full py-2 rounded-lg text-sm font-semibold"
         >
           Back to Login
         </button>
