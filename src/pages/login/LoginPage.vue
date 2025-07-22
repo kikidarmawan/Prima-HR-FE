@@ -1,44 +1,34 @@
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import axios from "axios";
-import { Icon } from "@iconify/vue";
-import Login from "../../assets/images/prime.jpeg";
+import { ref, computed } from "vue"
+import { useStore } from "vuex"
+import { useRouter } from "vue-router"
+import { Icon } from "@iconify/vue"
+import Login from "../../assets/images/prime.jpeg"
 
-const router = useRouter();
+const router = useRouter()
+const store = useStore()
 
-const showPassword = ref(false);
+const showPassword = ref(false)
 const togglePassword = () => {
-  showPassword.value = !showPassword.value;
-};
+  showPassword.value = !showPassword.value
+}
 
-// Form data
-const username = ref("");
-const password = ref("");
-const errorMessage = ref("");
+const username = ref("")
+const password = ref("")
+
+const errorMessage = computed(() => store.getters["auth/errorMessage"])
 
 const handleLogin = async () => {
-  try {
-    const response = await axios.post(
-      "https://sunbeam-proper-pipefish.ngrok-free.app/api/login",
-      {
-        username: username.value,
-        password: password.value,
-      }
-    );
+  const success = await store.dispatch("auth/login", {
+    username: username.value,
+    password: password.value
+  })
 
-    console.log("Login berhasil:", response.data);
-
-    router.push("/home");
-  } catch (error) {
-    console.error("Login gagal:", error);
-    errorMessage.value =
-      error.response?.data?.message || "Login gagal. Coba periksa data.";
+  if (success) {
+    router.push("/home")
   }
-};
+}
 </script>
-
-
 
 <template>
   <div

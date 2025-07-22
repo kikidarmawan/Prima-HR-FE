@@ -56,7 +56,7 @@ const onNumberInput = (e) => {
       <div class="border border-blue-500 rounded-lg px-1 pt-5 pb-2 bg-white dark:bg-gray-900 relative">
         <label class="text-xs text-blue-500 absolute top-1 left-2">Title</label>
         <input type="text" placeholder="Sick Leave"
-          class="w-full outline-none bg-transparent text-gray-900 dark:text-white" />
+          class="w-full outline-none bg-transparent pl-2 text-gray-900 dark:text-white" />
       </div>
 
       <!-- Leave Type -->
@@ -64,7 +64,7 @@ const onNumberInput = (e) => {
         <label for="leaveType" class="text-xs text-blue-500 absolute top-1 left-2">Jenis Absen</label>
         <select v-model="kategoriAbsensiId" id="leaveType"
           class="w-full outline-none bg-transparent text-gray-900 dark:text-white mt-1.5">
-          <option disabled value="">Pilih Jenis Absen</option>
+          <option disabled value="" class="text">Pilih Jenis Absen</option>
           <option value="1" class="text-black dark:text-white bg-white dark:bg-gray-900">Sakit</option>
           <option value="2" class="text-black dark:text-white bg-white dark:bg-gray-900">Cuti</option>
           <option value="3" class="text-black dark:text-white bg-white dark:bg-gray-900">Izin</option>
@@ -75,7 +75,7 @@ const onNumberInput = (e) => {
       <div class="border border-blue-500 rounded-lg px-1 pt-5 pb-2 bg-white dark:bg-gray-900 relative">
         <label for="tanggal" class="text-xs text-blue-500 absolute top-1 left-2">Tanggal Absen</label>
         <input type="date" id="tanggal" v-model="tanggal"
-          class="w-full outline-none bg-transparent text-gray-900 dark:text-white mt-1.5" />
+          class="w-full outline-none bg-transparent text-gray-900 pl-2 dark:text-white mt-1.5" />
       </div>
 
       <!-- Keterangan -->
