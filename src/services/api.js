@@ -1,8 +1,12 @@
+// services/api.js
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://jsonplaceholder.typicode.com",
-  timeout: 1000,
+  baseURL: "https://sunbeam-proper-pipefish.ngrok-free.app",
+  timeout: 5000,
+  headers: {
+    "ngrok-skip-browser-warning": "true",
+  },
 });
 
 export default api;
