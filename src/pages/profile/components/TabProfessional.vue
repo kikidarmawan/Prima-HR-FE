@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-4">
+  <div class="space-y-4 px-4">
     <Item label="Employee ID" value="7879087" />
     <Item label="Designation" value="Lead UI/UX Designer" />
     <Item label="Company Email Address" value="michael.mitc@example.com" />
