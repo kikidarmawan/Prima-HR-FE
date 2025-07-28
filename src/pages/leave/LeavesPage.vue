@@ -6,7 +6,7 @@ import StatsGrid from "@/pages/leave/components/StatsGrid.vue";
 import TabSelector from "@/pages/leave/components/TabSelector.vue";
 import TabContent from "@/pages/leave/components/TabContent.vue";
 import Navbar from "@/components/Navbar.vue";
-import LeaveFitur from "../../components/LeaveFitur.vue";
+import LeaveFitur from "./components/LeaveFitur.vue";
 
 const showModal = ref(false);
 const tabs = ["Upcoming", "Past", "Team Leave"];

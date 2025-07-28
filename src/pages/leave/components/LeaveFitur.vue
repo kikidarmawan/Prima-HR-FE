@@ -13,10 +13,9 @@ const resetFilter = () => {
   teamMember.value = "";
 };
 </script>
-
 <template>
   <div class="fixed inset-0 z-50 flex items-end justify-center bg-black/30 backdrop-blur-sm">
-    <div class="bg-white dark:bg-gray-900 w-full max-w-md rounded-t-3xl px-6 pt-4 pb-6 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <div class="bg-white dark:bg-gray-900 w-105 max-w-md rounded-t-3xl px-6 pt-4 pb-6 text-gray-900 dark:text-gray-100 transition-colors duration-300">
       <!-- Garis indikator -->
       <div class="w-12 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mb-4"></div>
 
