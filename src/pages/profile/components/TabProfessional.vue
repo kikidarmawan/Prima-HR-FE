@@ -1,16 +1,20 @@
-<template>
-  <div class="space-y-4 px-4">
-    <Item label="Employee ID" value="7879087" />
-    <Item label="Designation" value="Lead UI/UX Designer" />
-    <Item label="Company Email Address" value="michael.mitc@example.com" />
-    <Item label="Employee Type" value="Permanent" />
-    <Item label="Department" value="Design" />
-    <Item label="Reporting Manager" value="Robert Fox" />
-    <Item label="Company Experience" value="2 Year 5 Months" />
-    <Item label="Office Time" value="10:00 am to 07:00 pm" />
-  </div>
-</template>
-
 <script setup>
 import Item from './Item.vue'
+
+const props = defineProps({
+  data: Object
+})
+
+console.log("PROPS PROFESSIONAL TAB:", props.data)
 </script>
+
+<template>
+  <div class="space-y-4 px-4" v-if="data">
+    <Item label="Jabatan" :value="data.jabatan?.nama_jabatan ?? '-'" />
+    <Item label="Divisi ID" :value="data.jabatan?.divisi_id ?? '-'" />
+    <Item label="Tanggal Masuk" :value="data.tgl_masuk ?? '-'" />
+    <Item label="Status Karyawan" :value="data.status ?? '-'" />
+    <Item label="Pendidikan Terakhir" :value="data.pendidikan_terkhir ?? '-'" />
+    <!-- Tambah data lainnya sesuai kebutuhan -->
+  </div>
+</template>
