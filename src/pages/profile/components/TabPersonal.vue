@@ -1,12 +1,20 @@
-<template>
-  <div class="space-y-4 px-4">
-    <Item label="Full Name" value="Michael Mitc" />
-    <Item label="Email Address" value="michael.mitc@example.com" />
-    <Item label="Phone Number" value="(603) 555-0123" />
-    <Item label="Address" value="3517 W. Gray St. Utica, Pennsylvania 57867" />
-  </div>
-</template>
-
 <script setup>
 import Item from './Item.vue'
+
+const props = defineProps({
+  data: Object
+})
+
+console.log("PROPS PERSONAL TAB:", props.data)
 </script>
+
+<template>
+  <div class="space-y-4 px-4" v-if="data">
+    <Item label="Nama" :value="data.nama_karyawan" />
+    <Item label="Jenis Kelamin" :value="data.jk" />
+    <Item label="Email" :value="data.email" />
+    <Item label="Nomor HP" :value="data.no_hp" />
+    <Item label="Alamat" :value="data.alamat" />
+    <Item label="Tempat, Tanggal Lahir" :value="`${data.tmp_lahir}, ${data.tgl_lahir}`" />
+  </div>
+</template>
