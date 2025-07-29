@@ -8,7 +8,6 @@ export default {
   mutations: {
     setHolidays(state, holidays) {
       state.holidays = holidays;
-      console.log(holidays);
     },
   },
   actions: {
