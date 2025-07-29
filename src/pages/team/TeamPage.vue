@@ -25,7 +25,7 @@
       <MemberActionModal
         v-model="showModal"
         :member="selectedMember"
-        @call="handleCall"
+        @DELETE="handleCall"
         @delete="handleDelete"
       />
     </div>

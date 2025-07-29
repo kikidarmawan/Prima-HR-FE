@@ -1,21 +1,32 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import Navbar from "../../components/Navbar.vue";
 import Oren from "../../assets/images/Oren.jpg";
 
-const avatar = ref(Oren); // gambar awal
+// Ref gambar profil
+const avatar = ref(Oren);
+
+// Cek localStorage saat mount
+onMounted(() => {
+  const savedImage = localStorage.getItem("profileImage");
+  if (savedImage) {
+    avatar.value = savedImage;
+  }
+});
 
 const updateProfilePic = (event) => {
   const file = event.target.files[0];
   if (file) {
     const reader = new FileReader();
     reader.onload = () => {
-      avatar.value = reader.result; // ganti preview
+      avatar.value = reader.result;
+      localStorage.setItem("profileImage", reader.result); // simpan permanen
     };
     reader.readAsDataURL(file);
   }
 };
 </script>
+
 
 <template>
   <div

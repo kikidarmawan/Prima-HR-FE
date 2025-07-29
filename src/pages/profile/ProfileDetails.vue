@@ -9,7 +9,8 @@ const activeTab = ref("Personal");
 </script>
 
 <template>
-  <div class="p-5 max-w-sm mx-auto min-h-screen bg-white dark:bg-black transition-colors duration-300">
+  <div class="min-h-screen bg-white dark:bg-black px-4 sm:px-6 py-6 max-w-md mx-auto transition-colors duration-300">
+
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
       <router-link to="/profile" class="text-2xl text-gray-700 dark:text-gray-200">
