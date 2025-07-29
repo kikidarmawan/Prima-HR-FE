@@ -10,7 +10,6 @@ import TabDocuments from "./components/TabDocuments.vue";
 // Tabs
 const tabs = ["Personal", "Professional", "Documents"];
 const activeTab = ref("Personal");
-
 const store = useStore();
 const karyawan = ref(null);
 
@@ -28,13 +27,13 @@ watchEffect(async () => {
     }
   }
 
-  console.warn("✅ userId sekarang:", userId);
+  console.warn("userId sekarang:", userId);
   if (!userId) return;
 
-  // Ambil token dari localStorage
+  // Ambil token localStorage
   const token = localStorage.getItem("token");
   if (!token) {
-    console.warn("❌ Token tidak ditemukan. Apakah sudah login?");
+    console.warn("Token tidak ditemukan. Apakah sudah login?");
     return;
   }
 
@@ -44,13 +43,11 @@ watchEffect(async () => {
     Authorization: `Bearer ${token}`,
   },
 });
-
-// ✅ HARUS ambil dari .data.data
 karyawan.value = res.data.data;
 
-    console.log("🎯 DATA KARYAWAN:", karyawan.value);
+    console.log("DATA KARYAWAN:", karyawan.value);
   } catch (err) {
-    console.error("❌ Gagal ambil data karyawan:", err);
+    console.error("Gagal ambil data karyawan:", err);
   }
 });
 </script>
