@@ -30,7 +30,7 @@ watchEffect(async () => {
   console.warn("userId sekarang:", userId);
   if (!userId) return;
 
-  // Ambil token localStorage
+  //token localStorage
   const token = localStorage.getItem("token");
   if (!token) {
     console.warn("Token tidak ditemukan. Apakah sudah login?");
@@ -39,11 +39,13 @@ watchEffect(async () => {
 
   try {
     const res = await api.get(`/api/detail-karyawan/${userId}`, {
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-});
-karyawan.value = res.data.data;
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    karyawan.value = res.data.data;
+    localStorage.setItem("karyawan", JSON.stringify(karyawan.value));
+
 
     console.log("DATA KARYAWAN:", karyawan.value);
   } catch (err) {
@@ -70,17 +72,12 @@ karyawan.value = res.data.data;
 
     <!-- Tabs -->
     <div class="flex justify-around mb-5">
-      <button
-        v-for="tab in tabs"
-        :key="tab"
-        @click="activeTab = tab"
-        :class="[
-          'px-4 py-2 rounded-lg dark:text-gray-100 text-sm font-medium cursor-pointer transition',
-          activeTab === tab
-            ? 'bg-blue-500 text-white'
-            : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-100',
-        ]"
-      >
+      <button v-for="tab in tabs" :key="tab" @click="activeTab = tab" :class="[
+        'px-4 py-2 rounded-lg dark:text-gray-100 text-sm font-medium cursor-pointer transition',
+        activeTab === tab
+          ? 'bg-blue-500 text-white'
+          : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-100',
+      ]">
         {{ tab }}
       </button>
     </div>
