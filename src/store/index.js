@@ -7,6 +7,6 @@ export default createStore({
   modules: {
     auth,
     holiday,
-    karyawan, // tambahkan ini
+    karyawan,
   }
 })
