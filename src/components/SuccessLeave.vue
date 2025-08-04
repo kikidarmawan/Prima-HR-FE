@@ -5,7 +5,7 @@
     class="fixed inset-0 flex items-end justify-center bg-black/50 backdrop-blur-xs"
   >
     <div
-      class="bg-white dark:bg-black rounded-t-2xl p-6 w-full max-w-md text-center shadow-xl"
+      class="bg-white dark:bg-black rounded-t-2xl p-6 w-105 max-w-md text-center shadow-xl"
     >
       <div class="flex items-center justify-center mb-4">
         <div class="bg-blue-100 dark:bg-blue-900 rounded-full p-4">
