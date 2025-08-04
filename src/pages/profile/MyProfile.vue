@@ -226,7 +226,7 @@ const handleLogout = () => {
               class="fa-solid fa-angle-right text-gray-400 dark:text-gray-500"
             ></i>
           </div>
-        </router-link>
+    
 
         <!-- Settings (Switch Mode) -->
         <div
@@ -273,9 +273,7 @@ const handleLogout = () => {
         </div>
       </button>
 
-    </div>
-      </router-link>
-    </div>
+ 
     <!-- Bottom Navbar -->
     <Navbar />
   </div>
