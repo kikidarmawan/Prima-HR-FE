@@ -21,7 +21,6 @@ const holidays = computed(() => store.state.holiday.holidays);
       <h1 class="text-xl font-bold mb-5 text-gray-900 dark:text-white">
         Holiday List
       </h1>
-
       <HolidayList
         v-for="(holiday, index) in holidays"
         :key="index"
@@ -31,7 +30,6 @@ const holidays = computed(() => store.state.holiday.holidays);
         :highlight="holiday.highlight"
       />
     </div>
-
     <Navbar />
   </div>
 </template>

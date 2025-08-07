@@ -3,7 +3,7 @@
     <!-- Strip warna di kiri -->
     <div
       class="absolute left-0 top-0 bottom-0 w-3 rounded-l-xl"
-      :class="highlight ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-700'"
+      :class="highlight ? 'bg-red-500' : 'bg-gray-300 dark:bg-gray-700'"
     ></div>
 
     <div class="pl-4 flex flex-col w-full">
