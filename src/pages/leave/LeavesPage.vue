@@ -9,8 +9,8 @@ import Navbar from "@/components/Navbar.vue";
 import LeaveFitur from "./components/LeaveFitur.vue";
 
 const showModal = ref(false);
-const tabs = ["Upcoming", "Past", "Team Leave"];
-const activeTab = ref("Upcoming");
+const tabs = ["Approved", "Rejected", "Team Leave"];
+const activeTab = ref("Approved");
 
 // Dummy data
 const stats = [
@@ -21,7 +21,7 @@ const stats = [
 ];
 
 const mockData = {
-  Upcoming: [
+  Approved: [
     {
       id: 1,
       type: "Date",
@@ -47,7 +47,7 @@ const mockData = {
       status: "Approved",
     },
   ],
-  Past: [
+  Rejected: [
     {
       id: 1,
       type: "Date",
