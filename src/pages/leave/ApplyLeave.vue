@@ -49,7 +49,8 @@ const applyLeave = async () => {
     const res = await store.dispatch("p_absen/ajukanAbsen", payload);
     console.log("Response dari store:", res);
     showSuccessLeave.value = true;
-    
+
+    await store.dispatch("absensi/getAllAbsensiData");
   } catch (error) {
     console.error("Gagal absen (dari ApplyLeave.vue):", error);
     alert(
