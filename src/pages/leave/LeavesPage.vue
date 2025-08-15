@@ -2,7 +2,6 @@
 import { ref, onMounted, computed } from "vue";
 import { Icon } from "@iconify/vue";
 import { useStore } from "vuex";
-
 import StatsGrid from "@/pages/leave/components/StatsGrid.vue";
 import TabSelector from "@/pages/leave/components/TabSelector.vue";
 import TabContent from "@/pages/leave/components/TabContent.vue";
@@ -11,7 +10,7 @@ import LeaveFitur from "./components/LeaveFitur.vue";
 
 const store = useStore();
 const showModal = ref(false);
-const tabs = ["Approved", "Rejected", "Team Leave"];
+const tabs = ["Pending","Approved", "Rejected", "Team Leave"];
 const activeTab = ref("Approved");
 
 // Get data from Vuex store
@@ -36,17 +35,14 @@ const absensiCount = computed(
 // Stats data
 const stats = computed(() => [
   { label: "Leave Balance", value: 20, color: "blue" },
-  {
-    label: "Leave Approved",
-    value: absensiCount.value.disetujui,
-    color: "green",
-  },
   { label: "Leave Pending", value: absensiCount.value.pending, color: "teal" },
+  { label: "Leave Approved",value: absensiCount.value.disetujui, color: "green",},
   { label: "Leave Cancelled", value: absensiCount.value.ditolak, color: "red" },
 ]);
 
 
 const tabData = computed(() => ({
+   Pending: formatAbsensiData(absensiData.value.pending, "Pending"), 
   Approved: formatAbsensiData(absensiData.value.disetujui, "Approved"),
   Rejected: formatAbsensiData(absensiData.value.ditolak, "Rejected"),
   "Team Leave": formatTeamLeaveData(absensiData.value.disetujui),
@@ -63,8 +59,8 @@ function formatAbsensiData(data, status) {
     day: calculateDays(item.tanggal, item.tanggal_selesai) + " day(s)",
     leaveBalance: "Leave balance",
     leaveBalanceValue: 0,
-    approvedBy: "Approved by",
-    approvedByValue: item.verified_by || "Admin",
+    approvedBy: status === "Pending" ? "Waiting approval" : "Approved by", // Perubahan ini
+    approvedByValue: status === "Pending" ? "Not yet approved" : item.verified_by || "Admin", // Perubahan ini
     status: status,
     rawData: item,
   }));
