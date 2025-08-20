@@ -12,6 +12,7 @@ const borderClass = (color) => {
     green: "border-lime-400",
     teal: "border-teal-400",
     red: "border-red-400",
+    orange: "border-orange-400", 
   };
   return map[color] || "border-gray-600";
 };
@@ -22,6 +23,8 @@ const bgClass = (color) => {
     green: "dark:bg-[#0F1B0E]",
     teal: "dark:bg-[#072322]",
     red: "dark:bg-[#1F1417]",
+    orange: "dark:bg-[#2B1706]", 
+
   };
   return map[color] || "dark:bg-gray-800";
 };
@@ -32,6 +35,7 @@ const textClass = (color) => {
     green: "text-lime-400",
     teal: "text-teal-400",
     red: "text-red-400",
+    orange: "border-orange-400", 
   };
   return map[color] || "text-gray-200";
 };
