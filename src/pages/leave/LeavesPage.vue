@@ -35,8 +35,8 @@ const absensiCount = computed(
 // Stats data
 const stats = computed(() => [
   { label: "Leave Balance", value: 20, color: "blue" },
-  { label: "Leave Pending", value: absensiCount.value.pending, color: "teal" },
-  { label: "Leave Approved",value: absensiCount.value.disetujui, color: "green",},
+  { label: "Leave Pending", value: absensiCount.value.pending, color: "green" },
+  { label: "Leave Approved",value: absensiCount.value.disetujui, color: "teal",},
   { label: "Leave Cancelled", value: absensiCount.value.ditolak, color: "red" },
 ]);
 
@@ -59,8 +59,8 @@ function formatAbsensiData(data, status) {
     day: calculateDays(item.tanggal, item.tanggal_selesai) + " day(s)",
     leaveBalance: "Leave balance",
     leaveBalanceValue: 0,
-    approvedBy: status === "Pending" ? "Waiting approval" : "Approved by", // Perubahan ini
-    approvedByValue: status === "Pending" ? "Not yet approved" : item.verified_by || "Admin", // Perubahan ini
+    approvedBy: status === "Pending" ? "Waiting approval" : "Approved by", 
+    approvedByValue: status === "Pending" ? "Not yet approved" : item.verified_by || "Admin", 
     status: status,
     rawData: item,
   }));
