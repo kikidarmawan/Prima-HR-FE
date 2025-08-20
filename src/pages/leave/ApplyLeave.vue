@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import SuccessLeave from "@/components/SuccessLeave.vue";
@@ -8,7 +8,7 @@ const router = useRouter();
 const store = useStore();
 const showSuccessLeave = ref(false);
 
-//  Ambil karyawan dari localStorage
+// Ambil karyawan dari localStorage
 const karyawan = JSON.parse(localStorage.getItem("karyawan"));
 const karyawanId = ref(karyawan?.id || null);
 
@@ -17,6 +17,15 @@ const title = ref("");
 const tanggal = ref("");
 const kategoriAbsensiId = ref("");
 const keterangan = ref("");
+
+// Fetch kategori absensi saat komponen dimount
+onMounted(async () => {
+  try {
+    await store.dispatch("kategori_absen/fetchKategoriAbsensi");
+  } catch (error) {
+    console.error("Gagal memuat kategori absensi:", error);
+  }
+});
 
 // Fungsi submit
 const applyLeave = async () => {
@@ -43,11 +52,11 @@ const applyLeave = async () => {
     keterangan: keterangan.value,
   };
 
-  console.log("Payload yang dikirim:", payload);
+ 
 
   try {
     const res = await store.dispatch("p_absen/ajukanAbsen", payload);
-    console.log("Response dari store:", res);
+   
     showSuccessLeave.value = true;
 
     await store.dispatch("absensi/getAllAbsensiData");
@@ -59,7 +68,7 @@ const applyLeave = async () => {
   }
 };
 
-// Navigasi balik ke halaman utama
+
 const goToHome = () => {
   router.push("/leaves");
 };
@@ -85,11 +94,11 @@ const goToHome = () => {
       <div
         class="border border-blue-500 rounded-lg px-1 pt-5 pb-2 bg-white dark:bg-gray-900 relative"
       >
-        <label class="text-xs text-blue-500 absolute top-1 left-2">Title</label>
+        <label class="text-xs text-blue-500 absolute top-1 left-2">Judul</label>
         <input
           v-model="title"
           type="text"
-          placeholder="Sick Leave"
+          placeholder="Cuti Sakit"
           class="w-full outline-none bg-transparent pl-2 text-gray-900 dark:text-white"
           required
         />
@@ -109,22 +118,14 @@ const goToHome = () => {
         >
           <option disabled value="">Pilih Jenis Absen</option>
           <option
-            value="1"
+            v-for="kategori in $store.getters[
+              'kategori_absen/allKategoriAbsensi'
+            ]"
+            :key="kategori.id"
+            :value="kategori.id"
             class="text-black dark:text-white bg-white dark:bg-gray-900"
           >
-            Sakit
-          </option>
-          <option
-            value="2"
-            class="text-black dark:text-white bg-white dark:bg-gray-900"
-          >
-            Cuti
-          </option>
-          <option
-            value="3"
-            class="text-black dark:text-white bg-white dark:bg-gray-900"
-          >
-            Izin
+            {{ kategori.nama }}
           </option>
         </select>
       </div>

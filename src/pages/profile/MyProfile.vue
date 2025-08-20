@@ -83,30 +83,9 @@ const handleLogout = () => {
       </router-link>
 
       <!-- Terms & Conditions -->
-      <router-link to="/conditions">
-        <div class="flex items-center justify-between px-2 py-5 border-b border-gray-200 dark:border-gray-700">
-          <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-              <i class="fa-regular fa-file-lines text-2xl text-gray-600 dark:text-gray-300"></i>
-            </div>
-            <span class="text-base font-medium text-gray-800 dark:text-gray-200">Terms & Conditions</span>
-          </div>
-          <i class="fa-solid fa-angle-right text-gray-400 dark:text-gray-500"></i>
-        </div>
-      </router-link>
+     
 
-      <!-- Privacy Policy -->
-      <router-link to="/privacy">
-        <div class="flex items-center justify-between px-2 py-5 border-b border-gray-200 dark:border-gray-700">
-          <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-              <i class="fa-solid fa-shield-halved text-2xl text-gray-600 dark:text-gray-300"></i>
-            </div>
-            <span class="text-base font-medium text-gray-800 dark:text-gray-200">Privacy Policy</span>
-          </div>
-          <i class="fa-solid fa-angle-right text-gray-400 dark:text-gray-500"></i>
-        </div>
-      </router-link>
+ 
 
       <!-- Settings (Switch Mode) -->
       <div class="flex items-center justify-between px-2 py-5 border-b border-gray-200 dark:border-gray-700"
@@ -127,6 +106,7 @@ const handleLogout = () => {
     </div>
 
     <!-- Logout -->
+  
     <button @click="handleLogout" class="w-full text-left cursor-pointer">
       <div class="flex items-center gap-5 px-9 py-5 mt-2 text-red-500">
         <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center">
