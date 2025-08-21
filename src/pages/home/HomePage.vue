@@ -212,7 +212,7 @@ const maxDrag = 200;
               ? 'bg-gradient-to-r from-pink-400 to-rose-400'
               : 'bg-gradient-to-r from-blue-500 to-[#4893fc]'
           "
-          @pointerdown="startDrag"
+          @pointerdown="startDrag"                        
           @pointermove="onDrag"
           @pointerup="endDrag"
           @pointerleave="endDrag"
