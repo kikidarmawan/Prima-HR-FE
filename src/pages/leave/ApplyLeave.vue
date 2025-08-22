@@ -7,6 +7,7 @@ import SuccessLeave from "@/components/SuccessLeave.vue";
 const router = useRouter();
 const store = useStore();
 const showSuccessLeave = ref(false);
+const showLoadingModal = ref(false);
 
 // Ambil karyawan dari localStorage
 const karyawan = JSON.parse(localStorage.getItem("karyawan"));
@@ -27,7 +28,7 @@ onMounted(async () => {
   }
 });
 
-// Fungsi submit
+// submit
 const applyLeave = async () => {
   if (!karyawanId.value) {
     alert("ID Karyawan tidak ditemukan. Silakan login ulang.");
@@ -53,18 +54,23 @@ const applyLeave = async () => {
   };
 
  
+  showLoadingModal.value = true;
 
   try {
-    const res = await store.dispatch("p_absen/ajukanAbsen", payload);
-   
-    showSuccessLeave.value = true;
-
+    await store.dispatch("p_absen/ajukanAbsen", payload);
     await store.dispatch("absensi/getAllAbsensiData");
+
+    // jeda aimasi loading
+    setTimeout(() => {
+      showLoadingModal.value = false;
+      showSuccessLeave.value = true;
+    }, 1000);
   } catch (error) {
     console.error("Gagal absen (dari ApplyLeave.vue):", error);
     alert(
       `Pengajuan gagal: ${error?.response?.data?.message || error.message}`
     );
+    showLoadingModal.value = false; 
   }
 };
 
@@ -169,6 +175,54 @@ const goToHome = () => {
         Apply Leave
       </button>
     </form>
+
+   <!-- Modal Loading (rapi + overlay non-clickable) -->
+<transition
+  enter-active-class="transition-opacity duration-300 ease-out"
+  enter-from-class="opacity-0"
+  enter-to-class="opacity-100"
+  leave-active-class="transition-opacity duration-300 ease-in"
+  leave-from-class="opacity-100"
+  leave-to-class="opacity-0"
+>
+  <div
+    v-if="showLoadingModal"
+    class="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50 pointer-events-none"
+  >
+    <div
+      class="bg-white dark:bg-gray-900 rounded-2xl p-6 max-w-sm w-full mx-4 flex flex-col items-center shadow-xl pointer-events-auto"
+    >
+      <!-- Spinner -->
+      <svg
+        class="animate-spin h-12 w-12 text-blue-500 mb-4"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+        Loading...
+      </h3>
+      <p class="text-gray-600 dark:text-gray-300 text-center text-sm">
+        Processing Request
+      </p>
+    </div>
+  </div>
+</transition>
+
 
     <!-- Modal Sukses -->
     <SuccessLeave v-if="showSuccessLeave" @close="goToHome" />
