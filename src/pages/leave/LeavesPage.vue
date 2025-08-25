@@ -47,7 +47,7 @@ const absensiCount = computed(
 
 // Stats data
 const stats = computed(() => [
-  { label: "Leave Balance", value: 20, color: "blue" },
+  { label: "Leave Total", value: 20, color: "blue" },
   { label: "Leave Pending", value: absensiCount.value.pending, color: "green" },
   { label: "Leave Approved",value: absensiCount.value.disetujui, color: "teal"},
   { label: "Leave Cancelled", value: absensiCount.value.ditolak, color: "red" },
