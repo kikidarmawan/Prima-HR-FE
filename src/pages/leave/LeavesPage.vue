@@ -8,10 +8,23 @@ import TabContent from "@/pages/leave/components/TabContent.vue";
 import Navbar from "@/components/Navbar.vue";
 import LeaveFitur from "./components/LeaveFitur.vue";
 
+
 const store = useStore();
 const showModal = ref(false);
 const tabs = ["Pending","Approved", "Rejected", "Team Leave"];
 const activeTab = ref("Approved");
+
+// ambil kategori absensi dari vuex
+const kategoriAbsensi = computed(() => store.getters["kategori_absen/allKategoriAbsensi"] || []);
+
+
+const kategoriMap = computed(() => {
+  const map = {};
+  kategoriAbsensi.value.forEach((item) => {
+    map[item.id] = item.nama; 
+  });
+  return map;
+});
 
 // Get data from Vuex store
 const absensiData = computed(
@@ -36,34 +49,48 @@ const absensiCount = computed(
 const stats = computed(() => [
   { label: "Leave Balance", value: 20, color: "blue" },
   { label: "Leave Pending", value: absensiCount.value.pending, color: "green" },
-  { label: "Leave Approved",value: absensiCount.value.disetujui, color: "teal",},
+  { label: "Leave Approved",value: absensiCount.value.disetujui, color: "teal"},
   { label: "Leave Cancelled", value: absensiCount.value.ditolak, color: "red" },
 ]);
 
-
 const tabData = computed(() => ({
-   Pending: formatAbsensiData(absensiData.value.pending, "Pending"), 
+  Pending: formatAbsensiData(absensiData.value.pending, "Pending"), 
   Approved: formatAbsensiData(absensiData.value.disetujui, "Approved"),
   Rejected: formatAbsensiData(absensiData.value.ditolak, "Rejected"),
   "Team Leave": formatTeamLeaveData(absensiData.value.disetujui),
 }));
 
-
 function formatAbsensiData(data, status) {
   if (!data || !Array.isArray(data)) return [];
-  return data.map((item) => ({
-    id: item.id,
-    type: "Date",
-    date: formatDate(item.tanggal),
-    applyDays: "Apply days",
-    day: calculateDays(item.tanggal, item.tanggal_selesai) + " day(s)",
-    leaveBalance: "Leave balance",
-    leaveBalanceValue: 0,
-    approvedBy: status === "Pending" ? "Waiting approval" : "Approved by", 
-    approvedByValue: status === "Pending" ? "Not yet approved" : item.verified_by || "Admin", 
-    status: status,
-    rawData: item,
-  }));
+  return data.map((item) => {
+    let approvedByLabel = "";
+    let approvedByValue = "";
+    if (status === "Pending") {
+      approvedByLabel = "Waiting approval";
+      approvedByValue = "Not yet approved";
+    } else if (status === "Approved") {
+      approvedByLabel = "Approved by";
+      approvedByValue = item.verified_by || "Admin";
+    } else if (status === "Rejected") {
+      approvedByLabel = "Rejected by";
+      approvedByValue = item.verified_by || "Admin";
+    }
+    return {
+      id: item.id,
+      type: "Date",
+      date: formatDate(item.tanggal),
+      applyDays: "Apply days",
+      day:
+        calculateDays(item.tanggal, item.tanggal_selesai) +
+        ` ${calculateDays(item.tanggal, item.tanggal_selesai) > 1 ? "days" : "day"}`,
+      leaveBalance: "Jenis Absen",
+      leaveBalanceValue: kategoriMap.value[item.kategori_absensi_id] || "-", // kategoriMap dari store
+      approvedBy: approvedByLabel,
+      approvedByValue: approvedByValue,
+      status: status,
+      rawData: item,
+    };
+  });
 }
 
 function formatTeamLeaveData(data) {
@@ -112,20 +139,20 @@ function getAvatarUrl(employeeId) {
   return `https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg?employee=${employeeId}`;
 }
 
-
 onMounted(async () => {
   try {
-    await store.dispatch("absensi/getAllAbsensiData");
+    await store.dispatch("kategori_absen/fetchKategoriAbsensi"); 
+    await store.dispatch("absensi/getAllAbsensiData"); 
   } catch (error) {
-    console.error("Failed to load attendance data:", error);
+    error("Failed to load data:", error);
   }
 });
 </script>
 
+
 <template>
   <div
-    class="bg-gray-100 dark:bg-black min-h-screen flex flex-col items-center transition-colors duration-300"
-  >
+    class="bg-gray-100 dark:bg-black min-h-screen flex flex-col items-center transition-colors duration-300">
     <!-- Navbar -->
     <Navbar />
 

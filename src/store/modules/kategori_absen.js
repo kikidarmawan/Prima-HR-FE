@@ -28,6 +28,7 @@ const actions = {
       commit("CLEAR_ERROR");
 
       const response = await api.get("/api/kategori-absensi");
+      // console.log("Response kategori absensi:", response.data);
 
       // Sesuaikan dengan struktur response API Anda
       // Contoh jika response langsung array:
