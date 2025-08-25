@@ -62,7 +62,7 @@ const getters = {
   approvedCount: (state) => state.absensiCount.disetujui,
   rejectedCount: (state) => state.absensiCount.ditolak,
 
-  // Getter gabungan
+  
   absensiData: (state) => state.absensiData,
   absensiCount: (state) => state.absensiCount,
 };
