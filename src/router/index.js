@@ -15,6 +15,7 @@ import Notifications from "../pages/home/Notifications.vue";
 import Conditions from "../pages/profile/Conditions.vue";
 import Privacy from "../pages/profile/Privacy.vue";
 import ChangePassword from "../pages/profile/ChangePassword.vue";
+import EditProfile from "../pages/profile/EditProfile.vue";
 
 
 const routes = [
@@ -102,6 +103,11 @@ const routes = [
     name: "ChangePassword",
     component: ChangePassword,
   },
+  {
+    path: "/edit-profile",
+    name: "EditProfile",
+    component: EditProfile,
+  }
 ];
 
 const router = createRouter({

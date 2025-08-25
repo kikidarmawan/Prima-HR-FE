@@ -49,9 +49,11 @@ const handleLogout = () => {
       <h1 class="font-semibold text-xl mt-4 text-gray-900 dark:text-white">Michael Mitc</h1>
       <h2 class="text-base text-gray-500 dark:text-gray-400">Lead UI/UX Designer</h2>
 
-      <button class="mt-4 bg-blue-500 w-full text-lg text-white px-6 py-2 rounded-xl cursor-pointer hover:bg-blue-600 transition">
+      <router-link to="/edit-profile">
+        <button class="mt-4 bg-blue-500 w-full text-lg text-white px-6 py-2 rounded-xl cursor-pointer hover:bg-blue-600 transition">
         Edit Profile
       </button>
+      </router-link> 
     </div>
 
     <!-- Menu list -->

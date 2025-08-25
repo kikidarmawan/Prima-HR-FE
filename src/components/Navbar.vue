@@ -8,13 +8,12 @@
       <div
         class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white dark:bg-gray-900 rounded-full z-10 flex items-center justify-center"
       >
-        <div
-          class="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-md"
+        <button
+          class="cursor-pointer w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-md"
+          @click="openCamera"
         >
-          <router-link to="/team">
-            <i class="fa-solid fa-users text-xl"></i>
-          </router-link>
-        </div>
+          <i class="fa-solid fa-camera text-xl"></i>
+        </button>
       </div>
 
       <!-- Icons -->
@@ -49,4 +48,22 @@
       </div>
     </div>
   </div>
+
+  <!-- Camera Modal -->
+  <CameraModal v-if="isCameraOpen" @close="closeCamera" />
 </template>
+
+<script setup>
+import { ref } from 'vue'
+import CameraModal from './CameraModal.vue'
+
+const isCameraOpen = ref(false)
+
+const openCamera = () => {
+  isCameraOpen.value = true
+}
+
+const closeCamera = () => {
+  isCameraOpen.value = false
+}
+</script>
