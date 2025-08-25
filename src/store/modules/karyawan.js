@@ -25,12 +25,23 @@ export default {
 
     async updateKaryawan({ commit, state }, { id, data }) {
       try {
-        // Jika data adalah FormData (upload foto), langsung kirim
         let payload = data;
-        let headers = { "Accept": "application/json" };
+        let headers = { Accept: "application/json" };
 
-        // Jika bukan FormData, merge dengan data lama
-        if (!(data instanceof FormData)) {
+        // Cek apakah ada foto berupa File
+        const hasFile = data.foto instanceof File;
+
+        if (hasFile) {
+          // Buat FormData
+          payload = new FormData();
+          Object.keys(data).forEach((key) => {
+            if (data[key] !== null && data[key] !== undefined) {
+              payload.append(key, data[key]);
+            }
+          });
+          headers["Content-Type"] = "multipart/form-data";
+        } else if (!(data instanceof FormData)) {
+          // merge dengan data lama
           let currentKaryawan = state.karyawan;
           if (!currentKaryawan) {
             const storedKaryawan = localStorage.getItem("karyawan");
@@ -39,7 +50,7 @@ export default {
             }
           }
           if (!currentKaryawan) {
-            await this.dispatch('karyawan/fetchKaryawanById', id);
+            await this.dispatch("karyawan/fetchKaryawanById", id);
             currentKaryawan = state.karyawan;
           }
 
@@ -52,24 +63,18 @@ export default {
             tgl_lahir: data.tgl_lahir ?? currentKaryawan.tgl_lahir,
             tmp_lahir: data.tmp_lahir ?? currentKaryawan.tmp_lahir,
             jk: data.jk ?? currentKaryawan.jk,
-            pendidikan_terkhir: data.pendidikan_terkhir ?? currentKaryawan.pendidikan_terkhir,
+            pendidikan_terkhir:
+              data.pendidikan_terkhir ?? currentKaryawan.pendidikan_terkhir,
             status: data.status ?? currentKaryawan.status,
             alamat: data.alamat ?? currentKaryawan.alamat,
             jabatan_id: data.jabatan_id ?? currentKaryawan.jabatan_id,
-            foto: data.foto ?? undefined
           };
-
-          Object.keys(payload).forEach(key => {
-            if (payload[key] === undefined) {
-              delete payload[key];
-            }
-          });
-        } else {
-          // Jika FormData, set header untuk upload file
-          headers["Content-Type"] = "multipart/form-data";
         }
 
-        const response = await api.put(`/api/update-karyawan/${id}`, payload, { headers });
+        const response = await api.put(`/api/update-karyawan/${id}`, payload, {
+          headers,
+        });
+
         const updated = response.data.data;
         commit("SET_KARYAWAN", updated);
         localStorage.setItem("karyawan", JSON.stringify(updated));

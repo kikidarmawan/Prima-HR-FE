@@ -7,20 +7,19 @@ const store = useStore();
 const router = useRouter();
 
 const karyawan = JSON.parse(localStorage.getItem("karyawan"));
-const id = karyawan?.user_id; // Pastikan ini sesuai backend
+const id = karyawan?.user_id;
 
 const form = ref({
   nama_karyawan: "",
   email: "",
   no_hp: "",
-  foto: null, // Untuk file foto
+  foto: null, // File kalau upload baru
 });
 
 const defaultAvatar = "https://via.placeholder.com/150";
 const previewImage = ref(null);
 const existingData = ref(null);
 
-// Ambil data awal karyawan
 onMounted(async () => {
   if (!id) return;
   await store.dispatch("karyawan/fetchKaryawanById", id);
@@ -36,36 +35,58 @@ onMounted(async () => {
   }
 });
 
-// Handle upload foto
+// Handle file input
 const handleImageUpload = (event) => {
   const file = event.target.files[0];
   if (file) {
-    previewImage.value = URL.createObjectURL(file);
-    form.value.foto = file; // Gunakan field 'foto'
+    form.value.foto = file; // simpan File
+    previewImage.value = URL.createObjectURL(file); // preview langsung
   }
 };
 
 // Update profile
 const updateProfile = async () => {
-  const formData = new FormData();
-  formData.append("nama_karyawan", form.value.nama_karyawan);
-  formData.append("email", form.value.email);
-  formData.append("no_hp", form.value.no_hp);
+  let payload;
 
-  // Tambahkan field lain dari data lama agar backend tidak error
-  formData.append("jam_kerja_id", existingData.value.jam_kerja_id);
-  formData.append("jabatan_id", existingData.value.jabatan_id);
-  formData.append("departemen_id", existingData.value.departemen_id);
-  formData.append("status", existingData.value.status);
+  if (form.value.foto instanceof File) {
+    // Pakai FormData kalau ada foto baru
+    payload = new FormData();
 
-  // Tambahkan foto jika ada
-  if (form.value.foto) {
-    formData.append("foto", form.value.foto);
+    // Gabungkan data existing + form input
+    const merged = {
+      ...existingData.value,    // semua field lama
+      ...form.value             // overwrite sama input baru
+    };
+
+    // Append semua key ke FormData
+    Object.keys(merged).forEach((key) => {
+      if (merged[key] !== null && merged[key] !== undefined) {
+        payload.append(key, merged[key]);
+      }
+    });
+  } else {
+    // JSON biasa
+    payload = {
+      ...existingData.value,
+      ...form.value,
+    };
+  }
+  if (payload instanceof FormData) {
+    for (let [key, value] of payload.entries()) {
+      console.log(key, value);
+    }
+  } else {
+    console.log("Payload JSON:", payload);
   }
 
   try {
-    await store.dispatch("karyawan/updateKaryawan", { id, data: formData });
-    await store.dispatch("karyawan/fetchKaryawanById", id);
+    const karyawanId = existingData.value.id;
+    await store.dispatch("karyawan/updateKaryawan", {
+      id: karyawanId,
+      data: payload,
+    });
+    await store.dispatch("karyawan/fetchKaryawanById", existingData.value.user_id);
+
     alert("Profile berhasil diupdate ✅");
     router.push("/profile");
   } catch (err) {
@@ -73,6 +94,7 @@ const updateProfile = async () => {
     console.error(err.response?.data || err);
   }
 };
+
 </script>
 
 <template>
@@ -92,24 +114,13 @@ const updateProfile = async () => {
       <!-- Avatar Upload -->
       <div class="flex flex-col items-center mb-6">
         <div class="relative">
-          <img
-            :src="previewImage || defaultAvatar"
-            alt="Profile"
-            class="w-28 h-28 rounded-full object-cover border-4 border-blue-400 shadow-md"
-          />
-          <label
-            for="avatar"
-            class="absolute bottom-0 right-0 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full cursor-pointer shadow-md"
-          >
+          <img :src="previewImage || defaultAvatar" alt="Profile"
+            class="w-28 h-28 rounded-full object-cover border-4 border-blue-400 shadow-md" />
+          <label for="avatar"
+            class="absolute bottom-0 right-0 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full cursor-pointer shadow-md">
             <i class="fa-solid fa-camera"></i>
           </label>
-          <input
-            id="avatar"
-            type="file"
-            accept="image/*"
-            class="hidden"
-            @change="handleImageUpload"
-          />
+          <input id="avatar" type="file" accept="image/*" class="hidden" @change="handleImageUpload" />
         </div>
         <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">
           Tap icon to change photo
@@ -121,31 +132,23 @@ const updateProfile = async () => {
         <!-- Name -->
         <div>
           <label class="block text-blue-500 mb-1 text-sm font-medium">Name</label>
-          <input
-            type="text"
-            v-model="form.nama_karyawan"
+          <input type="text" v-model="form.nama_karyawan"
             class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 
-                   text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
-            placeholder="Enter your name" />
+                   text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500" placeholder="Enter your name" />
         </div>
 
         <!-- Email -->
         <div>
           <label class="block text-blue-500 mb-1 text-sm font-medium">Email</label>
-          <input
-            type="email"
-            v-model="form.email"
+          <input type="email" v-model="form.email"
             class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 
-                   text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
-            placeholder="Enter your email" />
+                   text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500" placeholder="Enter your email" />
         </div>
 
         <!-- Phone -->
         <div>
           <label class="block text-blue-500 mb-1 text-sm font-medium">Phone</label>
-          <input
-            type="text"
-            v-model="form.no_hp"
+          <input type="text" v-model="form.no_hp"
             class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 
                    text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
             placeholder="Enter your phone number" />
@@ -159,4 +162,4 @@ const updateProfile = async () => {
       </form>
     </div>
   </div>
-</template>   
+</template>
