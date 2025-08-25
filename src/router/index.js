@@ -13,6 +13,7 @@ import HolidayPage from "../pages/holiday/HolidayPage.vue";
 import ProfileDetails from "../pages/profile/ProfileDetails.vue";
 import Notifications from "../pages/home/Notifications.vue";
 import ChangePassword from "../pages/profile/ChangePassword.vue";
+import EditProfile from "../pages/profile/EditProfile.vue";
 
 
 const routes = [
@@ -90,6 +91,11 @@ const routes = [
     name: "ChangePassword",
     component: ChangePassword,
   },
+  {
+    path: "/edit-profile",
+    name: "EditProfile",
+    component: EditProfile,
+  }
 ];
 
 const router = createRouter({

@@ -1,84 +1,97 @@
-import axios from "axios"
+import api from "@/services/api";
 
 export default {
   namespaced: true,
   state: () => ({
-    token: null,
-    user: null,
+    token: localStorage.getItem("token") || null,
+    user: JSON.parse(localStorage.getItem("user")) || null,
+    karyawan: JSON.parse(localStorage.getItem("karyawan")) || null,
     errorMessage: null,
-    isLoggedIn: false
+    isLoggedIn: !!localStorage.getItem("token"),
   }),
+
   mutations: {
     SET_TOKEN(state, token) {
-      state.token = token
-      state.isLoggedIn = true
+      state.token = token;
+      state.isLoggedIn = !!token;
     },
     SET_USER(state, user) {
-      state.user = user
+      state.user = user;
+    },
+    SET_KARYAWAN(state, karyawan) {
+      state.karyawan = karyawan;
     },
     SET_ERROR(state, error) {
-      state.errorMessage = error
+      state.errorMessage = error;
     },
     LOGOUT(state) {
-      state.token = null
-      state.user = null
-      state.isLoggedIn = false
-    }
+      state.token = null;
+      state.user = null;
+      state.karyawan = null;
+      state.isLoggedIn = false;
+    },
   },
+
   actions: {
-    async login({ commit, dispatch }, credentials) {
+    async login({ commit }, { username, password }) {
       try {
-        const response = await axios.post(
-          "https://sunbeam-proper-pipefish.ngrok-free.app/api/login",
-          {
-            username: credentials.username,
-            password: credentials.password
-          }
-        )
+        const { data } = await api.post("/api/login", { username, password });
 
-        const responseData = response.data
-        const user = responseData.data || responseData.user
+        const token = data.token;
+        const user = data.data || data.user;
 
-        // Set token dan user ke state dan localStorage
-        commit("SET_TOKEN", responseData.token)
-        commit("SET_USER", user)
-        localStorage.setItem("token", responseData.token)
-        localStorage.setItem("user", JSON.stringify(user))
+        // Simpan token & user
+        commit("SET_TOKEN", token);
+        commit("SET_USER", user);
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
 
-        // Set header default axios
-        axios.defaults.headers.common["Authorization"] = `Bearer ${responseData.token}`
+        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-        // Ambil data karyawan dan simpan ke localStorage
-        await dispatch("karyawan/fetchKaryawanById", user.id, { root: true })
+        const karyawanRes = await api.get(`/api/detail-karyawan/${user.id}`);
+        const karyawan = karyawanRes.data.data;
+        commit("SET_KARYAWAN", karyawan);
+        localStorage.setItem("karyawan", JSON.stringify(karyawan));
 
-        commit("SET_ERROR", null)
-        return true
+        commit("SET_ERROR", null);
+        return true;
       } catch (error) {
-        const msg = error.response?.data?.message || "Login gagal"
-        commit("SET_ERROR", msg)
-        return false
+        commit("SET_ERROR", error.response?.data?.message || "Login gagal");
+        return false;
       }
     },
 
     logout({ commit }) {
-      localStorage.removeItem("token")
-      localStorage.removeItem("user")
-      localStorage.removeItem("karyawan") // hapus juga data karyawan
-      delete axios.defaults.headers.common["Authorization"]
-      commit("LOGOUT")
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("karyawan");
+      delete api.defaults.headers.common["Authorization"];
+      commit("LOGOUT");
     },
 
     initializeToken({ commit }) {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user"));
+      const karyawan = JSON.parse(localStorage.getItem("karyawan"));
+
       if (token) {
-        commit("SET_TOKEN", token)
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
+        commit("SET_TOKEN", token);
+        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       }
-    }
+      if (user) {
+        commit("SET_USER", user);
+      }
+      if (karyawan) {
+        commit("SET_KARYAWAN", karyawan);
+      }
+    },
   },
+
   getters: {
-    errorMessage: state => state.errorMessage,
-    isLoggedIn: state => state.isLoggedIn,
-    user: state => state.user
-  }
-}
+    errorMessage: (state) => state.errorMessage,
+    isLoggedIn: (state) => state.isLoggedIn,
+    user: (state) => state.user,
+    karyawan: (state) => state.karyawan,
+    karyawanId: (state) => state.karyawan?.id, 
+  },
+};

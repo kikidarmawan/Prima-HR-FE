@@ -5,7 +5,6 @@ const props = defineProps({
   data: Object
 })
 
-console.log("PROPS PROFESSIONAL TAB:", props.data)
 </script>
 
 <template>

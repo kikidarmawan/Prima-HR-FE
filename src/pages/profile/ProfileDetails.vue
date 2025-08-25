@@ -27,8 +27,8 @@ watchEffect(async () => {
     }
   }
 
-  console.warn("userId sekarang:", userId);
-  if (!userId) return;
+  console.log("userId sekarang:", userId);
+  if (!userId) return;  
 
   //token localStorage
   const token = localStorage.getItem("token");
@@ -46,8 +46,6 @@ watchEffect(async () => {
     karyawan.value = res.data.data;
     localStorage.setItem("karyawan", JSON.stringify(karyawan.value));
 
-
-    console.log("DATA KARYAWAN:", karyawan.value);
   } catch (err) {
     console.error("Gagal ambil data karyawan:", err);
   }

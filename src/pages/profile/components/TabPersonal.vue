@@ -4,8 +4,6 @@ import Item from './Item.vue'
 const props = defineProps({
   data: Object
 })
-
-console.log("PROPS PERSONAL TAB:", props.data)
 </script>
 
 <template>

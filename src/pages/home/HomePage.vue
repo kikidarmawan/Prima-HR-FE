@@ -1,57 +1,43 @@
 <script setup>
-import { ref } from "vue";
-import Oren from "../../assets/images/Oren.jpg";
-import Navbar from "../../components/Navbar.vue";
+import { ref, computed, onMounted } from "vue";
+import { useStore } from "vuex";
 
-// Data tanggal statis
-const dates = [
-  { day: "06", weekday: "Thu" },
-  { day: "07", weekday: "Fri" },
-  { day: "08", weekday: "Sat" },
-  { day: "09", weekday: "Sun" },
-  { day: "10", weekday: "Mon" },
-  { day: "11", weekday: "Tue" },
-  { day: "12", weekday: "Wed" },
-];
+import Navbar from "@/components/Navbar.vue";
+import HeaderSection from "./components/HeaderSection.vue";
+import DateScroll from "./components/DateScroll.vue";
+import TodayShift from "./components/TodayShift.vue";
+import YourActivity from "./components/YourActivity.vue";
 
-const selectedDate = ref(3);
+const store = useStore();
+const selectedDate = ref(null);
+// ambil data kalender dari store
+const dates = computed(() => store.getters["kalender/getKalender"]);
 
-const toggleCheck = () => {
-  isCheckedIn.value = !isCheckedIn.value;
-};
+onMounted(() => {
+  store.dispatch("kalender/fetchKalender").then(() => {
+    if (dates.value.length > 0) {
+      const today = new Date().getDate();
+      const todayIndex = dates.value.findIndex(d => parseInt(d.day) === today);
 
-const isCheckedIn = ref(false);
-const isDragging = ref(false);
-const startX = ref(0);
-const thumbX = ref(0);
+      // kalau ketemu, pilih tanggal hari ini
+      if (todayIndex !== -1) {
+        selectedDate.value = todayIndex;
+      } else {
+        // fallback kalau tanggal hari ini gak ada di API
+        selectedDate.value = 0;
+      }
+    }
+  });
+});
 
-function startDrag(e) {
-  isDragging.value = true;
-  startX.value = e.clientX || e.touches?.[0]?.clientX;
-}
-// Saat drag berlangsung
-function onDrag(e) {
-  if (!isDragging.value) return;
-  const currentX = e.clientX || e.touches?.[0]?.clientX;
-  const dx = currentX - startX.value;
-  thumbX.value = Math.max(0, Math.min(dx, maxDrag));
-}
-// Akhir drag
-function endDrag() {
-  if (!isDragging.value) return;
-  isDragging.value = false;
-  const threshold = maxDrag / 2;
-  if (thumbX.value > threshold) {
-    isCheckedIn.value = !isCheckedIn.value;
-  }
-  thumbX.value = 0;
-}
-
-// Lebar maksimum drag (misal kalkulasi berdasarkan container)
-const maxDrag = 200;
 </script>
 
 <template>
+  <div class="min-h-screen bg-gray-50 dark:bg-black dark:text-white overflow-y-auto pb-28 transition-colors duration-300">
+    <HeaderSection />
+    <DateScroll :dates="dates" v-model:selectedDate="selectedDate" />
+    <TodayShift :selectedDate="dates[selectedDate]" />
+    <YourActivity />
   <div
     class="min-h-screen bg-gray-50 dark:bg-black dark:text-white overflow-y-auto pb-28 transition-colors duration-300"
   >
