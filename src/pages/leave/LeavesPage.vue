@@ -45,13 +45,21 @@ const absensiCount = computed(
     }
 );
 
-// Stats data
+const totalLeaveBalance = computed(() => {
+  return (
+    (absensiData.value.pending?.length || 0) +
+    (absensiData.value.disetujui?.length || 0) +
+    (absensiData.value.ditolak?.length || 0)
+  );
+});
+
 const stats = computed(() => [
-  { label: "Leave Balance", value: 20, color: "blue" },
+  { label: "Leave Balance", value: totalLeaveBalance.value, color: "blue" },
   { label: "Leave Pending", value: absensiCount.value.pending, color: "green" },
-  { label: "Leave Approved",value: absensiCount.value.disetujui, color: "teal"},
+  { label: "Leave Approved", value: absensiCount.value.disetujui, color: "teal" },
   { label: "Leave Cancelled", value: absensiCount.value.ditolak, color: "red" },
 ]);
+
 
 const tabData = computed(() => ({
   Pending: formatAbsensiData(absensiData.value.pending, "Pending"), 
