@@ -7,6 +7,7 @@ import absensi from "./modules/absensi_by_status";
 import kalender from "./modules/kalender"; 
 import shift from "./modules/shift";
 import kategori_absen from "./modules/kategori_absen";
+import team_leave from "./modules/team_leave";
 
 export default createStore({
   modules: {
@@ -18,5 +19,6 @@ export default createStore({
     kalender, 
     shift,
     kategori_absen,
+    team_leave,
   }
 });
