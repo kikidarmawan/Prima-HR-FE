@@ -59,16 +59,16 @@
 
         <!-- Description -->
         <p class="mt-2 text-center text-gray-700 dark:text-gray-300 text-sm">
-          Apakah Anda yakin ingin
+          Are you sure you want to
           <span
             :class="
               confirmType === 'approve'
                 ? 'text-green-500 font-semibold'
                 : 'text-red-500 font-semibold'
             ">
-            {{ confirmType === 'approve' ? 'Menyetujui' : 'Menolak' }}
+            {{ confirmType === 'approve' ? 'Approve' : 'Reject' }}
           </span>
-          request ini?
+          this request?
         </p>
 
         <!-- Actions -->
@@ -77,7 +77,7 @@
             @click="showConfirm = false"
             class="flex-1 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition"
           >
-            Batal
+            Cancel
           </button>
           <button
             @click="confirmAction"
@@ -88,7 +88,7 @@
                 : 'bg-red-500 hover:bg-red-600'
             "
           >
-            Ya, Lanjut
+            Yes
           </button>
         </div>
       </div>
