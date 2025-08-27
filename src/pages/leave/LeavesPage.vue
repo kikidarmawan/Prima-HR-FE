@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { Icon } from "@iconify/vue";
 import { useStore } from "vuex";
 import StatsGrid from "@/pages/leave/components/StatsGrid.vue";
@@ -11,27 +11,23 @@ import LeaveFitur from "./components/LeaveFitur.vue";
 const store = useStore();
 const showModal = ref(false);
 
-//  ambil user & karyawan dari auth store
+// ambil user & karyawan dari auth store
 const user = computed(() => store.state.auth?.user || {});
 const karyawan = computed(() => store.state.auth?.user?.karyawan || {});
-
-//  ini id yg bener buat cek manager (id karyawan, bukan user_id)
 const karyawanId = computed(() => karyawan.value.id);
 
-// tab list 
+// tab list
 const tabs = computed(() => {
   const baseTabs = ["Pending", "Approved", "Rejected"];
   baseTabs.push("Team Leave");
   return baseTabs;
 });
-
 const activeTab = ref("Approved");
 
-// ambil kategori absensi dari vuex
+// kategori absensi
 const kategoriAbsensi = computed(
   () => store.getters["kategori_absen/allKategoriAbsensi"] || []
 );
-
 const kategoriMap = computed(() => {
   const map = {};
   kategoriAbsensi.value.forEach((item) => {
@@ -40,7 +36,7 @@ const kategoriMap = computed(() => {
   return map;
 });
 
-// Get data from Vuex store
+// absensi dari store
 const absensiData = computed(
   () =>
     store.getters["absensi/absensiData"] || {
@@ -49,7 +45,6 @@ const absensiData = computed(
       ditolak: [],
     }
 );
-
 const absensiCount = computed(
   () =>
     store.getters["absensi/absensiCount"] || {
@@ -58,10 +53,9 @@ const absensiCount = computed(
       ditolak: 0,
     }
 );
-
-// mengambil teamLeave dari Vuex
 const teamLeave = computed(() => store.state.team_leave.teamLeave);
 
+// total stats
 const totalLeaveBalance = computed(() => {
   return (
     (absensiData.value.pending?.length || 0) +
@@ -69,32 +63,58 @@ const totalLeaveBalance = computed(() => {
     (absensiData.value.ditolak?.length || 0)
   );
 });
-
 const stats = computed(() => [
   { label: "Leave Balance", value: totalLeaveBalance.value, color: "blue" },
   { label: "Leave Pending", value: absensiCount.value.pending, color: "green" },
-  {
-    label: "Leave Approved",
-    value: absensiCount.value.disetujui,
-    color: "teal",
-  },
+  { label: "Leave Approved", value: absensiCount.value.disetujui, color: "teal" },
   { label: "Leave Cancelled", value: absensiCount.value.ditolak, color: "red" },
 ]);
 
-// tabData juga filter Team Leave
+const filters = ref({
+  status: [],
+  leaveType: [],
+  teamMember: ""
+});
+
+// data tab + filter
 const tabData = computed(() => {
+  const filterData = (data) => {
+    let result = data;
+    // filter leave type
+    if (filters.value.leaveType.length) {
+      result = result.filter((item) =>
+        filters.value.leaveType.includes(item.leaveBalanceValue)
+      );
+    }
+    // filter status (opsional, kalau nanti kepake)
+    if (filters.value.status.length) {
+      result = result.filter((item) =>
+        filters.value.status.includes(item.status)
+      );
+    }
+    // filter team member
+    if (filters.value.teamMember) {
+      result = result.filter(
+        (item) =>
+          item.rawData?.karyawan?.nama_karyawan
+            ?.toLowerCase()
+            .includes(filters.value.teamMember.toLowerCase()) ||
+          item.name?.toLowerCase().includes(filters.value.teamMember.toLowerCase())
+      );
+    }
+    return result;
+  };
+
   const data = {
-    Pending: formatAbsensiData(absensiData.value.pending, "Pending"),
-    Approved: formatAbsensiData(absensiData.value.disetujui, "Approved"),
-    Rejected: formatAbsensiData(absensiData.value.ditolak, "Rejected"),
-  
+    Pending: filterData(formatAbsensiData(absensiData.value.pending, "Pending")),
+    Approved: filterData(formatAbsensiData(absensiData.value.disetujui, "Approved")),
+    Rejected: filterData(formatAbsensiData(absensiData.value.ditolak, "Rejected")),
     "Team Leave":
-      karyawanId.value === 34
-        ? formatTeamLeaveData(teamLeave.value)
-        : [], 
+      karyawanId.value === 34 ? filterData(formatTeamLeaveData(teamLeave.value)) : [],
   };
   return data;
 });
+
 
 function formatAbsensiData(data, status) {
   if (!data || !Array.isArray(data)) return [];
@@ -118,9 +138,7 @@ function formatAbsensiData(data, status) {
       applyDays: "Apply days",
       day:
         calculateDays(item.tanggal, item.tanggal_selesai) +
-        ` ${
-          calculateDays(item.tanggal, item.tanggal_selesai) > 1 ? "days" : "day"
-        }`,
+        ` ${calculateDays(item.tanggal, item.tanggal_selesai) > 1 ? "days" : "day"}`,
       leaveBalance: "Jenis Absen",
       leaveBalanceValue: kategoriMap.value[item.kategori_absensi_id] || "-",
       approvedBy: approvedByLabel,
@@ -130,22 +148,18 @@ function formatAbsensiData(data, status) {
     };
   });
 }
-
 function formatTeamLeaveData(data) {
   if (!data || !Array.isArray(data)) return [];
-  return data.map((item) => {
-    return {
-      id: item.id,
-      karyawan_id: item.karyawan_id,
-      avatar: item.karyawan?.foto || "https://via.placeholder.com/150",
-      name: item.karyawan?.nama_karyawan || `Employee ${item.karyawan_id}`,
-      date: formatDate(item.tanggal),
-      status: item.status,
-      rawData: item,
-    };
-  });
+  return data.map((item) => ({
+    id: item.id,
+    karyawan_id: item.karyawan_id,
+    avatar: item.karyawan?.foto || "https://via.placeholder.com/150",
+    name: item.karyawan?.nama_karyawan || `Employee ${item.karyawan_id}`,
+    date: formatDate(item.tanggal),
+    status: item.status,
+    rawData: item,
+  }));
 }
-
 function formatDate(date) {
   if (!date) return null;
   const d = new Date(date);
@@ -154,12 +168,9 @@ function formatDate(date) {
   const day = String(d.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
-
-
 function calculateDays(startDate, endDate) {
   if (!startDate) return 1;
   if (!endDate || startDate === endDate) return 1;
-
   try {
     const start = new Date(startDate);
     const end = new Date(endDate);
@@ -170,34 +181,32 @@ function calculateDays(startDate, endDate) {
   }
 }
 
-function getAvatarUrl(employeeId) {
-  return `https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg?employee=${employeeId}`;
-}
-
 onMounted(async () => {
   try {
     await store.dispatch("kategori_absen/fetchKategoriAbsensi");
     await store.dispatch("absensi/getAllAbsensiData");
     if (karyawanId.value === 34) {
-      await store.dispatch("team_leave/getTeamLeaveData"); // hanya load kalau manager (id karyawan 34)
+      await store.dispatch("team_leave/getTeamLeaveData");
     }
   } catch (error) {
     console.error("Failed to load data:", error);
   }
 });
+
+
+function applyFilters(newFilters) {
+  filters.value = { ...newFilters };
+  showModal.value = false;
+}
 </script>
 
 <template>
-  <div
-    class="bg-gray-100 dark:bg-black min-h-screen flex flex-col items-center transition-colors duration-300"
-  >
+  <div class="bg-gray-100 dark:bg-black min-h-screen flex flex-col items-center transition-colors duration-300">
     <!-- Navbar -->
     <Navbar />
 
     <!-- Header Section -->
-    <div
-      class="bg-white dark:bg-gray-900 w-full space-y-6 py-6 px-6 rounded-b-4xl transition-colors duration-300"
-    >
+    <div class="bg-white dark:bg-gray-900 w-full space-y-6 py-6 px-6 rounded-b-4xl transition-colors duration-300">
       <!-- Header -->
       <div class="flex items-center py-5 justify-between">
         <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
@@ -220,8 +229,14 @@ onMounted(async () => {
             <Icon icon="mdi:tune-variant" class="text-xl" />
           </button>
 
-          <!-- Modal -->
-          <LeaveFitur v-if="showModal" @close="showModal = false" />
+          <!-- Modal Filter -->
+          <LeaveFitur
+            v-if="showModal"
+            :kategoriAbsensi="kategoriAbsensi"
+            :selected="filters.leaveType"
+            @apply="applyFilters"
+            @close="showModal = false"
+          />
         </div>
       </div>
 
@@ -240,5 +255,3 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-
-<style scoped></style>
