@@ -13,6 +13,7 @@ const form = ref({
   nama_karyawan: "",
   email: "",
   no_hp: "",
+  jk: "",
   foto: null, // File kalau upload baru
 });
 

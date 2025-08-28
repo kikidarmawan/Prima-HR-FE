@@ -5,44 +5,70 @@ const emit = defineEmits(["close", "submit"]);
 const videoRef = ref(null);
 const canvasRef = ref(null);
 const photo = ref(null);
+
 let stream = null;
 
+// Start camera
 async function startCamera() {
   try {
     stream = await navigator.mediaDevices.getUserMedia({ video: true });
     videoRef.value.srcObject = stream;
   } catch (err) {
     console.error("Tidak bisa akses kamera:", err);
+    alert("Kamera tidak bisa diakses. Pastikan izin sudah diberikan.");
   }
 }
 
-function capturePhoto() {
-  const context = canvasRef.value.getContext("2d");
-  canvasRef.value.width = videoRef.value.videoWidth;
-  canvasRef.value.height = videoRef.value.videoHeight;
-
-  // (mirror)
-  context.translate(canvasRef.value.width, 0);
-  context.scale(-1, 1);
-
-  context.drawImage(videoRef.value, 0, 0);
-  photo.value = canvasRef.value.toDataURL("image/png");
+// Stop camera
+function stopCamera() {
+  if (stream) {
+    stream.getTracks().forEach(track => track.stop());
+    stream = null;
+  }
 }
 
+// Capture photo
+function capturePhoto() {
+  const video = videoRef.value;
+  const canvas = canvasRef.value;
+  const context = canvas.getContext("2d");
+
+  if (!video || video.readyState < 2) return;
+
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  context.setTransform(1, 0, 0, 1, 0, 0);
+
+  // mirror
+  context.translate(canvas.width, 0);
+  context.scale(-1, 1);
+  context.drawImage(video, 0, 0, canvas.width, canvas.height);
+  photo.value = canvas.toDataURL("image/png");
+  // hentikan kamera
+  stopCamera();
+}
+
+// Retake
+async function retakePhoto() {
+  photo.value = null;
+  await startCamera();
+}
+
+// Submit
 function submitPhoto() {
+  if (!photo.value) return;
   emit("submit", photo.value);
   closeCamera();
 }
 
+// Close
 function closeCamera() {
-  if (stream) {
-    stream.getTracks().forEach(track => track.stop());
-  }
+  stopCamera();
   emit("close");
 }
 
 onMounted(startCamera);
-onUnmounted(closeCamera);
+onUnmounted(stopCamera);
 </script>
 
 <template>
@@ -53,7 +79,7 @@ onUnmounted(closeCamera);
     >
       <h2 class="text-lg font-bold mb-4">Ambil Foto</h2>
 
-      <!-- Preview mirror -->
+      <!-- Preview kamera -->
       <div v-if="!photo" class="relative">
         <video
           ref="videoRef"
@@ -63,33 +89,41 @@ onUnmounted(closeCamera);
         ></video>
       </div>
 
-      <canvas ref="canvasRef" class="hidden"></canvas>
-
-      <div v-if="photo" class="mb-3">
+      <!-- Foto hasil capture -->
+      <div v-else class="mb-3">
         <img :src="photo" class="w-full rounded-lg" />
       </div>
+      <canvas ref="canvasRef" class="hidden"></canvas>
 
-      <div class="flex justify-between mt-4">
+      <!-- Tombol -->
+      <div class="flex justify-between mt-4 gap-2">
         <button
           v-if="!photo"
           @click="capturePhoto"
-          class="cursor-pointer px-4 py-2 rounded-lg text-white bg-blue-500 hover:bg-blue-600"
+          class="flex-1 px-4 py-2 rounded-lg text-white bg-blue-500 hover:bg-blue-600"
         >
           Capture
         </button>
 
-        <button
-          v-if="photo"
-          @click="submitPhoto"
-          class="cursor-pointer px-4 py-2 rounded-lg text-white bg-green-500 hover:bg-green-600"
-        >
-          Submit
-        </button>
+        <template v-else>
+          <button
+            @click="retakePhoto"
+            class="flex-1 px-4 py-2 rounded-lg text-white bg-yellow-500 hover:bg-yellow-600"
+          >
+            Retake
+          </button>
+          <button
+            @click="submitPhoto"
+            class="flex-1 px-4 py-2 rounded-lg text-white bg-green-500 hover:bg-green-600"
+          >
+            Submit
+          </button>
+        </template>
 
         <button
           @click="closeCamera"
           class="px-4 py-2 rounded-lg text-white bg-gray-400 hover:bg-gray-500
-                 dark:bg-gray-700 dark:hover:bg-gray-600 cursor-pointer"
+                 dark:bg-gray-700 dark:hover:bg-gray-600"
         >
           Close
         </button>

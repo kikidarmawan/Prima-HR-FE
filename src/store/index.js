@@ -3,6 +3,9 @@ import auth from "./modules/auth";
 import holiday from "./modules/holiday";
 import karyawan from "./modules/karyawan";
 import p_absen from "./modules/p_absen";
+import absensi from "./modules/absensiByStatus"; 
+import shift from "./modules/shift";
+import presensi from "./modules/presensi";
 import absensi from "./modules/absensi_by_status"; 
 import kalender from "./modules/kalender"; 
 import shift from "./modules/shift";
@@ -16,8 +19,8 @@ export default createStore({
     karyawan,
     p_absen,
     absensi,
-    kalender, 
     shift,
+    presensi,
     kategori_absen,
     team_leave,
   }

@@ -1,33 +1,49 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useStore } from "vuex";
-
 import Navbar from "@/components/Navbar.vue";
 import HeaderSection from "./components/HeaderSection.vue";
 import DateScroll from "./components/DateScroll.vue";
 import TodayShift from "./components/TodayShift.vue";
 import YourActivity from "./components/YourActivity.vue";
+import { generateCalendar } from "@/store/modules/kalender.js";
+import { useStore } from "vuex";
 
-// Data store & kalender
 const store = useStore();
 const selectedDate = ref(null);
 const dates = computed(() => store.getters["kalender/getKalender"]);
 
+const selectedDate = ref(null);
+const dates = ref([]);
+const activities = computed(() => {
+  if (!store.state.presensi.todayPresensi) return [];
+  const p = store.state.presensi.todayPresensi;
+  const arr = [];
+  if (p.jam_masuk) arr.push({ type: "checkin", time: p.jam_masuk });
+  if (p.jam_keluar) arr.push({ type: "checkout", time: p.jam_keluar });
+  return arr;
+});
 onMounted(() => {
+  dates.value = generateCalendar(); 
+
+  if (dates.value.length > 0) {
+    const today = new Date().getDate();
+    const todayIndex = dates.value.findIndex(d => parseInt(d.day) === today);
+
+    if (todayIndex !== -1) {
+      selectedDate.value = todayIndex;
+    } else {
+      selectedDate.value = 0;
   store.dispatch("kalender/fetchKalender").then(() => {
     if (dates.value.length > 0) {
       const today = new Date().getDate();
       const todayIndex = dates.value.findIndex(d => parseInt(d.day) === today);
       selectedDate.value = todayIndex !== -1 ? todayIndex : 0;
     }
-  });
+  }
 });
-
-// Dummy untuk swipe button & profil
-const Oren = ref("/path/to/image.jpg"); // ganti sesuai path avatar
+const Oren = ref("/path/to/image.jpg"); 
 const isCheckedIn = ref(false);
 const thumbX = ref(0);
-
 const startDrag = () => {};
 const onDrag = () => {};
 const endDrag = () => {};
@@ -46,6 +62,7 @@ const toggleCheck = () => {
 
     <!-- Today Shift -->
     <TodayShift :selectedDate="dates[selectedDate]" />
+    <YourActivity :activities="activities" />
 
     <!-- Your Activity -->
     <YourActivity />
@@ -97,7 +114,7 @@ const toggleCheck = () => {
       </div>
     </div>
 
-    <!-- Navbar -->
+    <!-- Navbar -->\
     <Navbar />
   </div>
 </template>

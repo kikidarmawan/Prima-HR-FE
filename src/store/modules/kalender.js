@@ -1,46 +1,23 @@
-import api from "@/services/api";
+// utils/calendar.js
+export function generateCalendar(month = null, year = null) {
+  const now = new Date();
+  const y = year ?? now.getFullYear();
+  const m = month ?? now.getMonth(); // 0-11
 
-export default {
-  namespaced: true,
-  state: {
-    kalender: [],
-    loading: false,
-    error: null,
-  },
-  mutations: {
-    SET_KALENDER(state, data) {
-      state.kalender = data;
-    },
-    SET_LOADING(state, status) {
-      state.loading = status;
-    },
-    SET_ERROR(state, error) {
-      state.error = error;
-    },
-  },
-  actions: {
-    async fetchKalender({ commit }) {
-      commit("SET_LOADING", true);
-      try {
-        const res = await api.get("/api/kalender-presensi");
-        const mapped = res.data.data.map((item) => {
-          const [year, month, day] = item.tanggal.split("-");
-          return {
-            day: day,
-            weekday: item.hari,
-            isWeekend: item.is_weekend,
-            raw: item
-          };
-        });
-        commit("SET_KALENDER", mapped);
-      } catch (err) {
-        commit("SET_ERROR", err);
-      } finally {
-        commit("SET_LOADING", false);
-      }
-    },
-  },
-  getters: {
-    getKalender: (state) => state.kalender,
-  },
-};
+  // cari jumlah hari di bulan ini
+  const daysInMonth = new Date(y, m + 1, 0).getDate();
+
+  const result = [];
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(y, m, d);
+    const weekday = date.toLocaleDateString("id-ID", { weekday: "short" }); // Sen, Sel, Rab...
+    result.push({
+      day: d.toString().padStart(2, "0"),
+      weekday,
+      isWeekend: date.getDay() === 0 || date.getDay() === 6,
+      raw: { tanggal: `${y}-${(m + 1).toString().padStart(2, "0")}-${d.toString().padStart(2, "0")}` }
+    });
+  }
+
+  return result;
+}
