@@ -12,8 +12,6 @@ import MyProfile from "../pages/profile/MyProfile.vue";
 import HolidayPage from "../pages/holiday/HolidayPage.vue";
 import ProfileDetails from "../pages/profile/ProfileDetails.vue";
 import Notifications from "../pages/home/Notifications.vue";
-import Conditions from "../pages/profile/Conditions.vue";
-import Privacy from "../pages/profile/Privacy.vue";
 import ChangePassword from "../pages/profile/ChangePassword.vue";
 import EditProfile from "../pages/profile/EditProfile.vue";
 
@@ -87,16 +85,6 @@ const routes = [
     path: "/notif",
     name: "Notifications",
     component: Notifications,
-  },
-  {
-    path: "/conditions",
-    name: "Conditions",
-    component: Conditions,
-  },
-  {
-    path: "/privacy",
-    name: "Privacy",
-    component: Privacy,
   },
   {
     path: "/change-password",

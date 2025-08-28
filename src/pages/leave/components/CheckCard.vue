@@ -10,7 +10,8 @@
         class="text-xs px-2 py-0.5 rounded-full font-medium mt-1/2"
         :class="{
           'bg-green-100 dark:bg-green-700/20 text-green-600 dark:text-green-400': item.status === 'Approved',
-          'bg-red-100 dark:bg-red-700/20 text-red-600 dark:text-red-400': item.status === 'Rejected'
+          'bg-red-100 dark:bg-red-700/20 text-red-600 dark:text-red-400': item.status === 'Rejected',
+          'bg-red-100 dark:bg-yellow-700/20 text-yellow-600 dark:text-yellow-600': item.status === 'Pending'
         }"
       >
         {{ item.status }}
