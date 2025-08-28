@@ -1,35 +1,39 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useStore } from "vuex";
-
 import Navbar from "@/components/Navbar.vue";
 import HeaderSection from "./components/HeaderSection.vue";
 import DateScroll from "./components/DateScroll.vue";
 import TodayShift from "./components/TodayShift.vue";
 import YourActivity from "./components/YourActivity.vue";
+import { generateCalendar } from "@/store/modules/kalender.js";
+import { useStore } from "vuex";
 
 const store = useStore();
+
 const selectedDate = ref(null);
-// ambil data kalender dari store
-const dates = computed(() => store.getters["kalender/getKalender"]);
-
-onMounted(() => {
-  store.dispatch("kalender/fetchKalender").then(() => {
-    if (dates.value.length > 0) {
-      const today = new Date().getDate();
-      const todayIndex = dates.value.findIndex(d => parseInt(d.day) === today);
-
-      // kalau ketemu, pilih tanggal hari ini
-      if (todayIndex !== -1) {
-        selectedDate.value = todayIndex;
-      } else {
-        // fallback kalau tanggal hari ini gak ada di API
-        selectedDate.value = 0;
-      }
-    }
-  });
+const dates = ref([]);
+const activities = computed(() => {
+  if (!store.state.presensi.todayPresensi) return [];
+  const p = store.state.presensi.todayPresensi;
+  const arr = [];
+  if (p.jam_masuk) arr.push({ type: "checkin", time: p.jam_masuk });
+  if (p.jam_keluar) arr.push({ type: "checkout", time: p.jam_keluar });
+  return arr;
 });
+onMounted(() => {
+  dates.value = generateCalendar(); 
 
+  if (dates.value.length > 0) {
+    const today = new Date().getDate();
+    const todayIndex = dates.value.findIndex(d => parseInt(d.day) === today);
+
+    if (todayIndex !== -1) {
+      selectedDate.value = todayIndex;
+    } else {
+      selectedDate.value = 0;
+    }
+  }
+});
 </script>
 
 <template>
@@ -37,7 +41,7 @@ onMounted(() => {
     <HeaderSection />
     <DateScroll :dates="dates" v-model:selectedDate="selectedDate" />
     <TodayShift :selectedDate="dates[selectedDate]" />
-    <YourActivity />
+    <YourActivity :activities="activities" />
     <Navbar />
   </div>
 </template>

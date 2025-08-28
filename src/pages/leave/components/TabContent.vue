@@ -1,13 +1,10 @@
 <template>
   <div class="space-y-4 mt-3 transition-colors duration-300">
-    <!-- Kalau data kosong -->
     <p
       v-if="!data || data.length === 0"
       class="text-gray-500 dark:text-gray-400 text-center italic">
       No records for "{{ activeTab }}"
     </p>
-
-    <!-- Kalau ada data -->
     <div v-else>
       <!-- Upcoming & Past -->
       <div v-if="activeTab !== 'Team Leave'" class="space-y-3">

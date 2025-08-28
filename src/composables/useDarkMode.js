@@ -1,4 +1,3 @@
-// src/composables/useDarkMode.js
 import { ref, onMounted, watch } from 'vue'
 
 const isDark = ref(false)

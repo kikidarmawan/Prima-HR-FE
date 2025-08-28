@@ -1,71 +1,93 @@
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
   name: "TodayShift",
   props: {
-    selectedDate: { type: Object, default: null }, // 👈 dates[selectedIndex] dikirim dari parent
-  },
-  data() {
-    return {
-      loading: true,
-    };
+    selectedDate: { type: Object, default: null },
   },
   computed: {
-    ...mapState("shift", ["shift"]),
-  },
-  watch: {
-    // kalau props.selectedDate berubah, fetch lagi
-    async selectedDate(newDate) {
-      if (newDate?.raw) {
-        await this.fetchShift(newDate.raw);
-      }
-    },
+    ...mapState("presensi", ["loading", "error"]),
+    ...mapGetters("presensi", ["todayPresensi"]),
   },
   methods: {
-    async fetchShift(dateObj) {
+    formatTime(time) {
+      if (!time) return "-";
+      return time.slice(0, 5);
+    },
+    async fetchPresensi() {
       try {
-        let userId = this.$store.getters["auth/userId"];
-        if (!userId) {
-          const karyawan = JSON.parse(localStorage.getItem("karyawan"));
-          userId = karyawan?.user_id;
-        }
-        if (!userId) {
-          this.$router.push("/login");
-          return;
-        }
-
-        await this.$store.dispatch("karyawan/fetchKaryawanById", userId);
-        const karyawanId = this.$store.getters["karyawan/karyawanId"];
-        if (!karyawanId) throw new Error("Id karyawan tidak ditemukan");
-
-        // tanggal dari props (misalnya "2025-08-19")
-        const tanggal = dateObj.tanggal || dateObj.fullDate;
-
-        await this.$store.dispatch("shift/fetchShiftByDate", {
-          tanggal,
-          karyawan_id: karyawanId,
+        const karyawan = this.$store.state.auth.user?.karyawan_id;
+        if (!karyawan || !this.selectedDate?.raw) return;
+        await this.$store.dispatch("presensi/fetchPresensiByDate", {
+          karyawan_id: karyawan,
+          tanggal: this.selectedDate.raw,
         });
-      } catch (err) {
-        console.error("Gagal ambil shift:", err);
-      } finally {
-        this.loading = false;
+      } catch (e) {
+        console.error(e);
       }
     },
   },
-  async mounted() {
-    // pertama kali ambil shift untuk hari ini
-    if (this.selectedDate?.raw) {
-      await this.fetchShift(this.selectedDate.raw);
-    }
+  watch: {
+    selectedDate: {
+      handler(newDate) {
+        if (newDate?.raw) this.fetchPresensi();
+      },
+      immediate: true,
+    },
   },
 };
 </script>
 
+
 <template>
-  <div v-if="!loading">
-    <h3>Shift Hari Ini</h3>
-    <p>Jam Masuk: {{ shift?.jam_masuk || '-' }}</p>
-    <p>Jam Pulang: {{ shift?.jam_pulang || '-' }}</p>
+  <div v-if="!loading" class="p-5">
+    <div v-if="todayPresensi && todayPresensi.id">
+      <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
+        Today Attendance
+      </h3>
+      <div class="grid grid-cols-2 gap-4">
+        <!-- Check In -->
+        <div
+          class="bg-white dark:bg-gray-800 rounded-2xl shadow p-4 flex flex-col border border-gray-200 dark:border-gray-700"
+        >
+          <div class="flex items-center gap-2 mb-3">
+            <div class="bg-blue-100 dark:bg-blue-900 p-2 rounded-lg">
+              <i class="fa-solid fa-arrow-right text-[#4893fc]"></i>
+            </div>
+            <span class="text-gray-600 dark:text-gray-300 text-sm font-medium"
+              >Check In</span
+            >
+          </div>
+          <p class="text-xl font-bold text-gray-900 dark:text-gray-100">
+            {{ formatTime(todayPresensi?.jam_masuk) }}
+          </p>
+          <span class="text-sm text-gray-500 dark:text-gray-400">On Time</span>
+        </div>
+
+        <!-- Check Out -->
+        <div
+          class="bg-white dark:bg-gray-800 rounded-2xl shadow p-4 flex flex-col border border-gray-200 dark:border-gray-700"
+        >
+          <div class="flex items-center gap-2 mb-3">
+            <div class="bg-blue-100 dark:bg-blue-900 p-2 rounded-lg">
+              <i class="fa-solid fa-arrow-left text-[#4893fc]"></i>
+            </div>
+            <span class="text-gray-600 dark:text-gray-300 text-sm font-medium"
+              >Check Out</span
+            >
+          </div>
+          <p class="text-xl font-bold text-gray-900 dark:text-gray-100">
+            {{ formatTime(todayPresensi?.jam_keluar) }}
+          </p>
+          <span class="text-sm text-gray-500 dark:text-gray-400">Go Home</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- fallback jika belum ada presensi -->
+    <div v-else class="text-center text-gray-500 dark:text-gray-400 py-8">
+      <p>Belum ada absensi hari ini. Silakan absen dulu lewat kamera.</p>
+    </div>
   </div>
 </template>

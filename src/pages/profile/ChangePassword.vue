@@ -121,11 +121,7 @@ const updatePassword = async () => {
       </div>
 
 
-      <!-- Update Button -->
-      <div
-        class="w-full bg-blue-500 mt-100 hover:bg-blue-600 text-white text-xl text-center py-3 cursor-pointer rounded-xl transition-colors duration-300">
-        Update
-      </div>
+     
 
     </div>
   </div>

@@ -8,6 +8,13 @@ import { useRouter } from "vue-router";
 const store = useStore();
 const router = useRouter();
 const avatar = ref(Oren);
+const karyawan = JSON.parse(localStorage.getItem("karyawan"));
+const nama = karyawan?.nama_karyawan; 
+const jabatan = karyawan?.jabatan.nama_jabatan; 
+
+console.log(karyawan)
+console.log(nama, jabatan)
+
 
 onMounted(() => {
   const savedImage = localStorage.getItem("profileImage");
@@ -46,8 +53,8 @@ const handleLogout = () => {
         </label>
       </div>
 
-      <h1 class="font-semibold text-xl mt-4 text-gray-900 dark:text-white">Michael Mitc</h1>
-      <h2 class="text-base text-gray-500 dark:text-gray-400">Lead UI/UX Designer</h2>
+      <h1 class="font-semibold text-xl mt-4 text-gray-900 dark:text-white">{{ nama }}</h1>
+      <h2 class="text-base text-gray-500 dark:text-gray-400">{{ jabatan }}</h2>
 
       <router-link to="/edit-profile">
         <button class="mt-4 bg-blue-500 w-full text-lg text-white px-6 py-2 rounded-xl cursor-pointer hover:bg-blue-600 transition">

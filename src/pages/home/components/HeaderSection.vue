@@ -1,5 +1,12 @@
 <script setup>
 import Oren from "@/assets/images/Oren.jpg";
+
+const karyawan = JSON.parse(localStorage.getItem("karyawan"));
+const nama = karyawan?.nama_karyawan; 
+const jabatan = karyawan?.jabatan.nama_jabatan; 
+
+console.log(karyawan)
+console.log(nama, jabatan)
 </script>
 
 <template>
@@ -8,10 +15,10 @@ import Oren from "@/assets/images/Oren.jpg";
       <img :src="Oren" class="rounded-full w-[52px] h-[52px] object-cover" />
       <div>
         <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
-          Michael Mitc
+          {{ nama }}
         </h1>
         <p class="text-black text-xs dark:text-gray-300">
-          Lead UI/UX Designer
+          {{ jabatan }}
         </p>
       </div>
     </div>
