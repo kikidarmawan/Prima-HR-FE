@@ -100,7 +100,8 @@ async function handleSubmit(photoBase64) {
   try {
     const today = new Date();
     const tanggal = today.toISOString().split("T")[0];
-    const jamSekarang = formatHi(today); // ✅ ganti pakai H:i
+    const jamSekarang = formatHi(today); // format H:i
+    const token = localStorage.getItem("token");
 
     // Ambil lokasi
     const pos = await new Promise((resolve, reject) => {
@@ -111,13 +112,15 @@ async function handleSubmit(photoBase64) {
     });
     const { latitude, longitude } = pos.coords;
 
-    // cek data presensi hari ini
+    // 🔹 Cek presensi hari ini pakai token
     let checkRes;
     try {
-      checkRes = await api.get(`/api/get-presensi-today/${karyawanId}`);
+      checkRes = await api.get(`/api/presensi-today?tanggal=${tanggal}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       presensiData.value = checkRes.data.data;
     } catch (err) {
-      presensiData.value = null; 
+      presensiData.value = null;
     }
 
     const sudahCheckIn = !!presensiData.value?.jam_masuk;
@@ -135,13 +138,14 @@ async function handleSubmit(photoBase64) {
 
     // Upload foto
     const uploadForm = new FormData();
-    uploadForm.append("foto", fotoFile);
+    uploadForm.append(isCheckIn ? "foto_masuk" : "foto_keluar", fotoFile);
 
-    const uploadRes = await api.post(
-      "/api/upload-foto-karyawan",
-      uploadForm,
-      { headers: { "Content-Type": "multipart/form-data" } }
-    );
+    const uploadRes = await api.post("/api/upload-foto-karyawan", uploadForm, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     const fotoPath = uploadRes.data.foto_path;
 
@@ -149,26 +153,34 @@ async function handleSubmit(photoBase64) {
     const absensiPayload = {
       karyawan_id: karyawanId,
       tanggal,
-      jam_masuk: isCheckIn ? jamSekarang : undefined,
-      jam_keluar: !isCheckIn ? jamSekarang : undefined,
-      lat_masuk: isCheckIn ? latitude : undefined,
-      long_masuk: isCheckIn ? longitude : undefined,
-      lat_pulang: !isCheckIn ? latitude : undefined,
-      long_pulang: !isCheckIn ? longitude : undefined,
-      foto_masuk: isCheckIn ? fotoPath : undefined,
-      foto_keluar: !isCheckIn ? fotoPath : undefined,
+      ...(isCheckIn
+        ? {
+            jam_masuk: jamSekarang,
+            lat_masuk: latitude,
+            long_masuk: longitude,
+            foto_masuk: fotoPath,
+          }
+        : {
+            jam_keluar: jamSekarang,
+            lat_pulang: latitude,
+            long_pulang: longitude,
+            foto_keluar: fotoPath,
+          }),
     };
 
     const res = await api({
       method: isCheckIn ? "post" : "put",
       url: isCheckIn ? "/api/check-in" : "/api/check-out",
       data: absensiPayload,
+      headers: { Authorization: `Bearer ${token}` },
     });
 
     alert(res.data.message || "Presensi berhasil!");
 
-    // Refresh data presensi
-    const refresh = await api.get(`/api/get-presensi-today/${karyawanId}`);
+    // 🔹 Refresh data pakai endpoint baru
+    const refresh = await api.get(`/api/presensi-today?tanggal=${tanggal}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     presensiData.value = refresh.data.data;
 
     previewFoto.value = fotoPath;
@@ -180,4 +192,5 @@ async function handleSubmit(photoBase64) {
     closeCamera();
   }
 }
+
 </script>

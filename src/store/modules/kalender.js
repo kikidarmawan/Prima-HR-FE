@@ -1,4 +1,4 @@
-// utils/calendar.js
+
 export function generateCalendar(month = null, year = null) {
   const now = new Date();
   const y = year ?? now.getFullYear();

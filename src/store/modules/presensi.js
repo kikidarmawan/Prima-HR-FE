@@ -14,19 +14,19 @@ function dataURLtoFile(dataurl, filename) {
 export default {
   namespaced: true,
   state: () => ({
-    todayPresensi: null,
-    monthPresensi: [],
-    loading: false,
-    error: null,
-    previewFoto: null,
+  todayPresensi: null,
+  monthPresensi: [],
+  loading: false,
+  error: null,
+  previewFoto: null,
   }),
   mutations: {
     SET_TODAY_PRESENSI(state, payload) {
       state.todayPresensi = payload;
     },
-    SET_MOTH_PRESENSI(state, payload) {
-      state.monthPresensi = payload;
-    },
+    SET_MONTH_PRESENSI(state, payload) {
+    state.monthPresensi = payload;
+  },
     SET_LOADING(state, val) {
       state.loading = val;
     },
@@ -38,28 +38,44 @@ export default {
     },
   },
   actions: {
-    async fetchTodayPresensi({ commit }, karyawanId) {
-      commit("SET_LOADING", true);
-      commit("SET_ERROR", null);
-      try {
-        console.log("📡 Hit API:", `/api/get-presensi-today/${karyawanId}`);
-        const res = await api.get(`/api/get-presensi-today/${karyawanId}`);
+    async fetchTodayPresensi({ commit }, tanggal = null) {
+  commit("SET_LOADING", true);
+  commit("SET_ERROR", null);
+  try {
+    const token = localStorage.getItem("token");
 
-        const { status, data, message } = res.data;
-        if (status && data) {
-          commit("SET_TODAY_PRESENSI", data);
-        } else {
-          commit("SET_TODAY_PRESENSI", null);
-          console.log("ℹ️ Info presensi:", message);
-        }
-      } catch (err) {
-        const msg = err.response?.data?.message || err.message;
-        console.error("❌ Fetch presensi error:", msg);
-        commit("SET_ERROR", msg);
-      } finally {
-        commit("SET_LOADING", false);
-      }
-    },
+    let tgl;
+    if (tanggal && /^\d{4}-\d{2}-\d{2}$/.test(tanggal)) {
+      // kalau param valid format tanggal
+      tgl = tanggal;
+    } else {
+      // fallback → hari ini
+      tgl = new Date().toISOString().split("T")[0];
+    }
+
+    console.log("📡 Hit API:", `/api/presensi-today?tanggal=${tgl}`);
+    const res = await api.get(`/api/presensi-today?tanggal=${tgl}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const { status, data, message } = res.data;
+    if (status && data) {
+      commit("SET_TODAY_PRESENSI", data);
+    } else {
+      commit("SET_TODAY_PRESENSI", null);
+      console.log("ℹ️ Info presensi:", message);
+    }
+  } catch (err) {
+    const msg = err.response?.data?.message || err.message;
+    console.error("❌ Fetch presensi error:", msg);
+    commit("SET_ERROR", msg);
+  } finally {
+    commit("SET_LOADING", false);
+  }
+},
+
     async submitPresensi({ commit, state }, { karyawanId, photoBase64 }) {
       commit("SET_LOADING", true);
       commit("SET_ERROR", null);
@@ -100,17 +116,17 @@ export default {
           tanggal,
           ...(isCheckIn
             ? {
-              jam_masuk: jamSekarang,
-              lat_masuk: latitude,
-              long_masuk: longitude,
-              foto_masuk: fotoPath,
-            }
+                jam_masuk: jamSekarang,
+                lat_masuk: latitude,
+                long_masuk: longitude,
+                foto_masuk: fotoPath,
+              }
             : {
-              jam_keluar: jamSekarang,
-              lat_pulang: latitude,
-              long_pulang: longitude,
-              foto_keluar: fotoPath,
-            }),
+                jam_keluar: jamSekarang,
+                lat_pulang: latitude,
+                long_pulang: longitude,
+                foto_keluar: fotoPath,
+              }),
         };
 
         const apiUrl = isCheckIn ? "/api/check-in" : "/api/check-out";
@@ -134,30 +150,39 @@ export default {
         commit("SET_LOADING", false);
       }
     },
-    async fetchMonthPresensi({ commit }, karyawanId) {
-      commit("SET_LOADING", true);
-      commit("SET_ERROR", null);
-      try {
-        console.log("📡 Hit API:", `/api/get-presensi-month/${karyawanId}`);
-        const res = await api.get(`/api/get-presensi-month/${karyawanId}`);
-        commit("SET_MONTH_PRESENSI", res.data.data || []);
-      } catch (err) {
-        const msg = err.response?.data?.message || err.message;
-        console.error("❌ Fetch month presensi error:", msg);
-        commit("SET_ERROR", msg);
-      } finally {
-        commit("SET_LOADING", false);
-      }
-    },
+    async fetchMonthPresensi({ commit }, ) {
+    commit("SET_LOADING", true);
+    commit("SET_ERROR", null);
+    try {
+      
+        const token = localStorage.getItem('token')
+      console.log("📡 Hit API:", `/api/presensi-month`);
+      const res = await api.get(`/api/presensi-month`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      commit("SET_MONTH_PRESENSI", res.data.data || []);
+      return res.data.data || [];
+    } catch (err) {
+      const msg = err.response?.data?.message || err.message;
+      console.error("❌ Fetch month presensi error:", msg);
+      commit("SET_ERROR", msg);
+      return [];
+    } finally {
+      commit("SET_LOADING", false);
+    }
+  },
   },
   getters: {
-    todayPresensi: (state) => state.todayPresensi,
-    monthPresensi: (state) => state.monthPresensi,
-    presensiByDate: (state) => (tanggal) => {
-      if (!tanggal) return null;
-      if (state.todayPresensi?.tanggal === tanggal) return state.todayPresensi;
-      return state.monthPresensi.find((p) => p.tanggal === tanggal) || null;
-    },
+   presensiByDate: (state) => (tanggal) => {
+  if (!tanggal) return null;
+  if (state.todayPresensi?.tanggal === tanggal) {
+    return state.todayPresensi;
+  }
+  return state.monthPresensi.find(p => p.tanggal === tanggal) || null;
+},
+    // todayPresensi: (state) => state.todayPresensi,
     isLoading: (state) => state.loading,
     errorMessage: (state) => state.error,
     previewFoto: (state) => state.previewFoto,
