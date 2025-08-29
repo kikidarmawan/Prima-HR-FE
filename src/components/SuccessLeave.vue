@@ -1,9 +1,16 @@
-<script setup></script>
+<script setup>
+const emit = defineEmits(['close'])
+
+const handleDone = () => {
+  emit('close')
+}
+</script>
 
 <template>
   <div
     class="fixed inset-0 flex items-end justify-center bg-black/50 backdrop-blur-xs"
   >
+    <!-- Success Modal -->
     <div
       class="bg-white dark:bg-black rounded-t-2xl p-6 w-105 max-w-md text-center shadow-xl"
     >
@@ -36,8 +43,8 @@
       </p>
 
       <button
-        @click="$emit('close')"
-        class="mt-6 w-full bg-blue-500 cursor-pointer text-white rounded-lg py-2 text-sm hover:bg-blue-600 transition duration-200"
+        @click="handleDone"
+        class="mt-6 w-full bg-blue-500 text-white rounded-lg py-2 text-sm hover:bg-blue-600 transition duration-200"
       >
         Done
       </button>
