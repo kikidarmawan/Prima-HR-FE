@@ -156,6 +156,8 @@ function formatTeamLeaveData(data) {
     name: item.karyawan?.nama_karyawan || `Employee ${item.karyawan_id}`,
     date: formatDate(item.tanggal),
     status: item.status,
+    jenis_absen: kategoriMap.value[item.kategori_absensi_id] || "-",
+    keterangan: item.keterangan || "-",
     rawData: item,
   }));
 }
