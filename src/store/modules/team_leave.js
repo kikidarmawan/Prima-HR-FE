@@ -27,7 +27,9 @@ const actions = {
   
     try {
       const currentKaryawanId = store.state.auth.user.karyawan.id;
-      const res = await api.get(`/api/absensi-manager/${currentKaryawanId}`);
+      const res = await api.get(`/api/absensi-manager/${currentKaryawanId}`,
+      
+      );
   
       
       const mapped = res.data.data.map(item => {

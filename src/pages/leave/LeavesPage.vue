@@ -55,20 +55,19 @@ const absensiCount = computed(
 );
 const teamLeave = computed(() => store.state.team_leave.teamLeave);
 
-// total stats
-const totalLeaveBalance = computed(() => {
-  return (
-    (absensiData.value.pending?.length || 0) +
-    (absensiData.value.disetujui?.length || 0) +
-    (absensiData.value.ditolak?.length || 0)
-  );
-});
+
 const stats = computed(() => [
-  { label: "Leave Balance", value: totalLeaveBalance.value, color: "blue" },
-  { label: "Leave Pending", value: absensiCount.value.pending, color: "green" },
-  { label: "Leave Approved", value: absensiCount.value.disetujui, color: "teal" },
-  { label: "Leave Cancelled", value: absensiCount.value.ditolak, color: "red" },
+  { label: "Leave Balance", value: 
+      (tabData.value.Pending?.length || 0) +
+      (tabData.value.Approved?.length || 0) +
+      (tabData.value.Rejected?.length || 0),
+    color: "blue" 
+  },
+  { label: "Leave Pending", value: tabData.value.Pending?.length || 0, color: "green" },
+  { label: "Leave Approved", value: tabData.value.Approved?.length || 0, color: "teal" },
+  { label: "Leave Cancelled", value: tabData.value.Rejected?.length || 0, color: "red" },
 ]);
+
 
 const filters = ref({
   status: [],
@@ -139,7 +138,7 @@ function formatAbsensiData(data, status) {
       day:
         calculateDays(item.tanggal, item.tanggal_selesai) +
         ` ${calculateDays(item.tanggal, item.tanggal_selesai) > 1 ? "days" : "day"}`,
-      leaveBalance: "Jenis Absen",
+      leaveBalance: "Type",
       leaveBalanceValue: kategoriMap.value[item.kategori_absensi_id] || "-",
       approvedBy: approvedByLabel,
       approvedByValue: approvedByValue,
@@ -148,6 +147,7 @@ function formatAbsensiData(data, status) {
     };
   });
 }
+// === Format data team leave ===
 function formatTeamLeaveData(data) {
   if (!data || !Array.isArray(data)) return [];
   return data.map((item) => ({
@@ -157,9 +157,12 @@ function formatTeamLeaveData(data) {
     name: item.karyawan?.nama_karyawan || `Employee ${item.karyawan_id}`,
     date: formatDate(item.tanggal),
     status: item.status,
+    jenis_absen: kategoriMap.value[item.kategori_absensi_id] || "-",
+    keterangan: item.keterangan || "-",
     rawData: item,
   }));
 }
+
 function formatDate(date) {
   if (!date) return null;
   const d = new Date(date);

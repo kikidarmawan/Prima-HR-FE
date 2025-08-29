@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://192.168.0.155:8000/",
+  baseURL: "https://app.putratek.my.id/",
   timeout: 20000,
   withCredentials: true, 
   timeout: 15000,

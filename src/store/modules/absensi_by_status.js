@@ -23,7 +23,16 @@ const mutations = {
 const actions = {
   async getAbsensiByStatus({ commit }, status) {
     try {
-      const response = await api.get(`/api/absensi/${status}`);
+      const token = localStorage.getItem('token');
+      const response = await api.get(
+        `/api/absensi/${status}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}` // sertakan token
+          }
+        }
+      );
+      
 
       commit("SET_ABSENSI_DATA", {
         status: status.toLowerCase(),
