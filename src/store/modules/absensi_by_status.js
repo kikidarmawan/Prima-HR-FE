@@ -15,19 +15,25 @@ const state = {
 
 const mutations = {
   SET_ABSENSI_DATA(state, { status, data }) {
-    state.absensiData[status.toLowerCase()] = data;
-    state.absensiCount[status.toLowerCase()] = data.length;
+    state.absensiData[status] = data;
+    state.absensiCount[status] = data.length;
   },
 };
 
 const actions = {
   async getAbsensiByStatus({ commit }, status) {
     try {
-      const response = await api.get(`/api/absensi/${status}`);
+      const token = localStorage.getItem("token");
+      const response = await api.get(`/api/absensi/${status}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // sertakan token
+        },
+      });
 
+      // commit data ke state
       commit("SET_ABSENSI_DATA", {
         status: status.toLowerCase(),
-        data: response.data.data, // Asumsi response format { data: [...] }
+        data: response.data.data,
       });
 
       return response.data.data;
@@ -62,7 +68,6 @@ const getters = {
   approvedCount: (state) => state.absensiCount.disetujui,
   rejectedCount: (state) => state.absensiCount.ditolak,
 
-  
   absensiData: (state) => state.absensiData,
   absensiCount: (state) => state.absensiCount,
 };

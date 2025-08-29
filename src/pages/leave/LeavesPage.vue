@@ -55,20 +55,19 @@ const absensiCount = computed(
 );
 const teamLeave = computed(() => store.state.team_leave.teamLeave);
 
-// total stats
-const totalLeaveBalance = computed(() => {
-  return (
-    (absensiData.value.pending?.length || 0) +
-    (absensiData.value.disetujui?.length || 0) +
-    (absensiData.value.ditolak?.length || 0)
-  );
-});
+// ganti stats computed
 const stats = computed(() => [
-  { label: "Leave Balance", value: totalLeaveBalance.value, color: "blue" },
-  { label: "Leave Pending", value: absensiCount.value.pending, color: "green" },
-  { label: "Leave Approved", value: absensiCount.value.disetujui, color: "teal" },
-  { label: "Leave Cancelled", value: absensiCount.value.ditolak, color: "red" },
+  { label: "Leave Balance", value: 
+      (tabData.value.Pending?.length || 0) +
+      (tabData.value.Approved?.length || 0) +
+      (tabData.value.Rejected?.length || 0),
+    color: "blue" 
+  },
+  { label: "Leave Pending", value: tabData.value.Pending?.length || 0, color: "green" },
+  { label: "Leave Approved", value: tabData.value.Approved?.length || 0, color: "teal" },
+  { label: "Leave Cancelled", value: tabData.value.Rejected?.length || 0, color: "red" },
 ]);
+
 
 const filters = ref({
   status: [],
