@@ -15,6 +15,7 @@ export default {
   namespaced: true,
   state: () => ({
     todayPresensi: null,
+    monthPresensi: [],
     loading: false,
     error: null,
     previewFoto: null,
@@ -22,6 +23,9 @@ export default {
   mutations: {
     SET_TODAY_PRESENSI(state, payload) {
       state.todayPresensi = payload;
+    },
+    SET_MOTH_PRESENSI(state, payload) {
+      state.monthPresensi = payload;
     },
     SET_LOADING(state, val) {
       state.loading = val;
@@ -56,23 +60,6 @@ export default {
         commit("SET_LOADING", false);
       }
     },
-    async fetchMonthPresensi({ commit }, karyawanId) {
-  commit("SET_LOADING", true);
-  commit("SET_ERROR", null);
-  try {
-    console.log("📡 Hit API:", `/api/get-presensi-month/${karyawanId}`);
-    const res = await api.get(`/api/get-presensi-month/${karyawanId}`);
-
-    return res.data.data || [];
-  } catch (err) {
-    const msg = err.response?.data?.message || err.message;
-    console.error("❌ Fetch month presensi error:", msg);
-    commit("SET_ERROR", msg);
-    return [];
-  } finally {
-    commit("SET_LOADING", false);
-  }
-},
     async submitPresensi({ commit, state }, { karyawanId, photoBase64 }) {
       commit("SET_LOADING", true);
       commit("SET_ERROR", null);
@@ -113,17 +100,17 @@ export default {
           tanggal,
           ...(isCheckIn
             ? {
-                jam_masuk: jamSekarang,
-                lat_masuk: latitude,
-                long_masuk: longitude,
-                foto_masuk: fotoPath,
-              }
+              jam_masuk: jamSekarang,
+              lat_masuk: latitude,
+              long_masuk: longitude,
+              foto_masuk: fotoPath,
+            }
             : {
-                jam_keluar: jamSekarang,
-                lat_pulang: latitude,
-                long_pulang: longitude,
-                foto_keluar: fotoPath,
-              }),
+              jam_keluar: jamSekarang,
+              lat_pulang: latitude,
+              long_pulang: longitude,
+              foto_keluar: fotoPath,
+            }),
         };
 
         const apiUrl = isCheckIn ? "/api/check-in" : "/api/check-out";
@@ -147,9 +134,30 @@ export default {
         commit("SET_LOADING", false);
       }
     },
+    async fetchMonthPresensi({ commit }, karyawanId) {
+      commit("SET_LOADING", true);
+      commit("SET_ERROR", null);
+      try {
+        console.log("📡 Hit API:", `/api/get-presensi-month/${karyawanId}`);
+        const res = await api.get(`/api/get-presensi-month/${karyawanId}`);
+        commit("SET_MONTH_PRESENSI", res.data.data || []);
+      } catch (err) {
+        const msg = err.response?.data?.message || err.message;
+        console.error("❌ Fetch month presensi error:", msg);
+        commit("SET_ERROR", msg);
+      } finally {
+        commit("SET_LOADING", false);
+      }
+    },
   },
   getters: {
     todayPresensi: (state) => state.todayPresensi,
+    monthPresensi: (state) => state.monthPresensi,
+    presensiByDate: (state) => (tanggal) => {
+      if (!tanggal) return null;
+      if (state.todayPresensi?.tanggal === tanggal) return state.todayPresensi;
+      return state.monthPresensi.find((p) => p.tanggal === tanggal) || null;
+    },
     isLoading: (state) => state.loading,
     errorMessage: (state) => state.error,
     previewFoto: (state) => state.previewFoto,

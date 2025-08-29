@@ -86,17 +86,11 @@ function dataURLtoFile(dataurl, filename) {
   return new File([u8arr], filename, { type: mime })
 }
 
-// function formatHi(date) {
-  // const h = String(date.getHours()).padStart(2, "0");
-  // const m = String(date.getMinutes()).padStart(2, "0");
-  // return `${h}:${m}`;
-// }
-
-function formatHis(date) {
+// format jam sesuai H:i (contoh: 09:30)
+function formatHi(date) {
   const h = String(date.getHours()).padStart(2, "0");
   const m = String(date.getMinutes()).padStart(2, "0");
-  const s = String(date.getSeconds()).padStart(2, "0");
-  return `${h}:${m}:${s}`;
+  return `${h}:${m}`;
 }
 
 // submit presensi
@@ -106,7 +100,7 @@ async function handleSubmit(photoBase64) {
   try {
     const today = new Date();
     const tanggal = today.toISOString().split("T")[0];
-    const jamSekarang = formatHis(today); 
+    const jamSekarang = formatHi(today); // ✅ ganti pakai H:i
 
     // Ambil lokasi
     const pos = await new Promise((resolve, reject) => {
@@ -116,6 +110,8 @@ async function handleSubmit(photoBase64) {
       });
     });
     const { latitude, longitude } = pos.coords;
+
+    // cek data presensi hari ini
     let checkRes;
     try {
       checkRes = await api.get(`/api/get-presensi-today/${karyawanId}`);
@@ -184,7 +180,4 @@ async function handleSubmit(photoBase64) {
     closeCamera();
   }
 }
-
 </script>
-
-
