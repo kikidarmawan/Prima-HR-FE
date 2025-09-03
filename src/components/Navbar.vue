@@ -93,6 +93,16 @@ function formatHi(date) {
   return `${h}:${m}`;
 }
 
+// format jam sesuai H:i:s (contoh: 09:02:15)
+function formatHis(date) {
+  const h = String(date.getHours()).padStart(2, "0");
+  const m = String(date.getMinutes()).padStart(2, "0");
+  const s = String(date.getSeconds()).padStart(2, "0");
+  return `${h}:${m}:${s}`;
+}
+
+
+// submit presensi
 // submit presensi
 async function handleSubmit(photoBase64) {
   loading.value = true;
@@ -100,17 +110,7 @@ async function handleSubmit(photoBase64) {
   try {
     const today = new Date();
     const tanggal = today.toISOString().split("T")[0];
-    const jamSekarang = formatHi(today); // format H:i
     const token = localStorage.getItem("token");
-
-    // Ambil lokasi
-    const pos = await new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(resolve, (err) => {
-        alert("Lokasi harus diizinkan untuk presensi!");
-        reject(err);
-      });
-    });
-    const { latitude, longitude } = pos.coords;
 
     // 🔹 Cek presensi hari ini pakai token
     let checkRes;
@@ -133,12 +133,25 @@ async function handleSubmit(photoBase64) {
 
     // check-in atau check-out
     const isCheckIn = !sudahCheckIn;
+
+    // format jam sesuai kebutuhan
+    const jamSekarang = isCheckIn ? formatHi(today) : formatHis(today);
+
+    // Ambil lokasi
+    const pos = await new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, (err) => {
+        alert("Lokasi harus diizinkan untuk presensi!");
+        reject(err);
+      });
+    });
+    const { latitude, longitude } = pos.coords;
+
     // Ubah base64 → File
     const fotoFile = dataURLtoFile(photoBase64, "foto.png");
 
-    // Upload foto
+    // Upload foto (backend butuh field "foto")
     const uploadForm = new FormData();
-    uploadForm.append(isCheckIn ? "foto_masuk" : "foto_keluar", fotoFile);
+    uploadForm.append("foto", fotoFile);
 
     const uploadRes = await api.post("/api/upload-foto-karyawan", uploadForm, {
       headers: {
@@ -192,5 +205,6 @@ async function handleSubmit(photoBase64) {
     closeCamera();
   }
 }
+
 
 </script>
