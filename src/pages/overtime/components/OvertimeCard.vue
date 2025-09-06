@@ -5,7 +5,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="p-4 rounded-2xl shadow-md bg-white dark:bg-gray-800 border space-y-2">
+  <div class="p-4 rounded-2xl shadow-md bg-white dark:bg-gray-800 space-y-2">
     <!-- Date & Time -->
     <div class="flex justify-between items-center">
       <span class="font-semibold text-gray-800 dark:text-gray-200">
