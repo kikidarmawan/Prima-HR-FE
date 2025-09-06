@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import ForgotPassword from "../pages/login/ForgotPassword.vue";
 import LoginPage from "../pages/login/LoginPage.vue";
 import NewPassword from "../pages/login/NewPassword.vue";
-import Otp from "../pages/login/Otp.vue"
+import Otp from "../pages/login/Otp.vue";
 import HomePage from "../pages/home/HomePage.vue";
 import LeavesPage from "../pages/leave/LeavesPage.vue";
 import TeamPage from "../pages/team/TeamPage.vue";
@@ -14,7 +14,9 @@ import ProfileDetails from "../pages/profile/ProfileDetails.vue";
 import Notifications from "../pages/home/Notifications.vue";
 import ChangePassword from "../pages/profile/ChangePassword.vue";
 import EditProfile from "../pages/profile/EditProfile.vue";
-
+import OvertimePage from "../pages/overtime/OvertimePage.vue";
+import ApplyOvertime from "../pages/overtime/ApplyOvertime.vue";
+import OvertimeDetail from "../pages/overtime/OvertimeDetail.vue";
 
 const routes = [
   {
@@ -72,9 +74,9 @@ const routes = [
     component: MyProfile,
   },
   {
-    path: '/profile/details',
-    name: 'ProfileDetails',
-    component: ProfileDetails
+    path: "/profile/details",
+    name: "ProfileDetails",
+    component: ProfileDetails,
   },
   {
     path: "/holiday",
@@ -95,7 +97,24 @@ const routes = [
     path: "/edit-profile",
     name: "EditProfile",
     component: EditProfile,
-  }
+  },
+
+  // ✅ Tambahin route Overtime
+  {
+    path: "/overtime",
+    name: "OvertimePage",
+    component: OvertimePage,
+  },
+  {
+    path: "/apply_overtime",
+    name: "ApplyOvertime",
+    component: ApplyOvertime,
+  },
+  {
+    path: "/overtime/detail",
+    name: "OvertimeDetail",
+    component: OvertimeDetail,
+  },
 ];
 
 const router = createRouter({
