@@ -8,6 +8,8 @@ import shift from "./modules/shift";
 import presensi from "./modules/presensi"; 
 import kategori_absen from "./modules/kategori_absen";
 import team_leave from "./modules/team_leave";
+import p_lembur from "./modules/p_lembur"
+
 
 export default createStore({
   modules: {
@@ -20,5 +22,6 @@ export default createStore({
     presensi,
     kategori_absen,
     team_leave,
+    p_lembur,
   }
 });

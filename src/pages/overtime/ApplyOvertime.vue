@@ -1,17 +1,45 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import SuccessLeave from "@/components/SuccessLeave.vue"; 
+import { useStore } from "vuex";
+import SuccessLeave from "@/components/SuccessLeave.vue";
 
 const router = useRouter();
+const store = useStore();
+
 const showSuccess = ref(false);
 const showLoading = ref(false);
+
+// ambil karyawan dari localStorage
 const karyawan = JSON.parse(localStorage.getItem("karyawan"));
 const karyawanId = ref(karyawan?.id || null);
+
+// form state
 const tanggal = ref("");
 const startTime = ref("");
 const endTime = ref("");
 const description = ref("");
+
+// helper untuk hitung durasi lembur
+function hitungDurasi(masuk, keluar) {
+  if (!masuk || !keluar) return "0";
+  const [hm, mm] = masuk.split(":").map(Number);
+  const [hk, mk] = keluar.split(":").map(Number);
+  let durasi = hk * 60 + mk - (hm * 60 + mm);
+  if (durasi < 0) durasi += 24 * 60; // untuk karyawan yang lembur tengah malam
+  return Math.floor(durasi / 60).toString();
+}
+
+//  Watcher buat ngecek error dari Vuex module p_lembur
+watch(
+  () => store.getters["p_lembur/errorMessage"],
+  (val) => {
+    if (val) {
+      console.error(" Error dari Vuex p_lembur:", val);
+      alert(`Pengajuan gagal (Vuex): ${val}`);
+    }
+  }
+);
 
 // submit
 const applyOvertime = async () => {
@@ -28,26 +56,37 @@ const applyOvertime = async () => {
   const payload = {
     karyawan_id: parseInt(karyawanId.value),
     tanggal: tanggal.value,
-    start_time: startTime.value,
-    end_time: endTime.value,
-    description: description.value,
+    tanggal_keluar: tanggal.value,
+    jam_masuk: startTime.value,
+    jam_keluar: endTime.value,
+    durasi: hitungDurasi(startTime.value, endTime.value),
+    keterangan: description.value,
+    alasan_ditolak: null,
+    verified_by: null,
   };
-
-  console.log("Dummy payload overtime:", payload);
 
   showLoading.value = true;
 
-  // simulasi API
-  setTimeout(() => {
+  try {
+    await store.dispatch("p_lembur/addLembur", payload);
+
+    setTimeout(() => {
+      showLoading.value = false;
+      showSuccess.value = true;
+    }, 1000);
+  } catch (error) {
+    console.error(" Gagal lembur (dari ApplyOvertime.vue):", error);
+    alert(`Pengajuan gagal: ${error?.response?.data?.message || error.message}`);
     showLoading.value = false;
-    showSuccess.value = true;
-  }, 1200);
+  }
 };
 
 const goToOvertime = () => {
   router.push("/overtime");
 };
 </script>
+
+
 
 <template>
   <div
