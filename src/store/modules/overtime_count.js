@@ -20,7 +20,7 @@ const actions = {
         },
       });
 
-      // pake response.data.data karena API nya gitu
+  
       commit("SET_TOTAL_HOURS", response.data.data);
       return response.data.data;
     } catch (error) {
