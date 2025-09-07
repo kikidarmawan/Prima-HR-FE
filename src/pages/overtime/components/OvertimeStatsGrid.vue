@@ -1,11 +1,24 @@
 <script setup>
-const props = defineProps({
-  stats: {
-    type: Object,
-    default: () => ({ total: 0, pending: 0, approved: 0, rejected: 0 }),
-  },
+import { onMounted, computed } from "vue";
+import { useStore } from "vuex";
+
+const store = useStore();
+
+// ambil data pas komponen dipasang
+onMounted(() => {
+  store.dispatch("overtime_by_status/getAllOvertimeData");
+  store.dispatch("overtime_count/getTotalOvertimeHours");  // total jam lembur
 });
 
+// data dari store
+const stats = computed(() => ({
+  total: store.getters["overtime_count/totalHours"], 
+  pending: store.getters["overtime_by_status/pendingCount"],
+  approved: store.getters["overtime_by_status/approvedCount"],
+  rejected: store.getters["overtime_by_status/rejectedCount"],
+}));
+
+// util untuk class styling
 const borderClass = (color) => {
   const map = {
     blue: "border-blue-500",
@@ -37,8 +50,10 @@ const textClass = (color) => {
 };
 </script>
 
+
 <template>
   <div class="grid gap-3">
+    <!-- total -->
     <div
       class="flex justify-between rounded-xl p-3 border font-semibold transition-colors duration-300 bg-white dark:bg-opacity-100"
       :class="[borderClass('blue'), bgClass('blue')]"
@@ -47,6 +62,7 @@ const textClass = (color) => {
       <span :class="['font-bold', textClass('blue')]">{{ stats.total }}</span>
     </div>
 
+    <!-- pending -->
     <div
       class="flex justify-between rounded-xl p-3 border font-semibold transition-colors duration-300 bg-white dark:bg-opacity-100"
       :class="[borderClass('green'), bgClass('green')]"
@@ -55,6 +71,7 @@ const textClass = (color) => {
       <span :class="['font-bold', textClass('green')]">{{ stats.pending }}</span>
     </div>
 
+    <!-- approved -->
     <div
       class="flex justify-between rounded-xl p-3 border font-semibold transition-colors duration-300 bg-white dark:bg-opacity-100"
       :class="[borderClass('teal'), bgClass('teal')]"
@@ -63,6 +80,7 @@ const textClass = (color) => {
       <span :class="['font-bold', textClass('teal')]">{{ stats.approved }}</span>
     </div>
 
+    <!-- rejected -->
     <div
       class="flex justify-between rounded-xl p-3 border font-semibold transition-colors duration-300 bg-white dark:bg-opacity-100"
       :class="[borderClass('red'), bgClass('red')]"
