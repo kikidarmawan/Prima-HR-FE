@@ -4,11 +4,13 @@
   >
     <!-- Navbar -->
     <Navbar />
+
+    <!-- Header + Stats + Tabs -->
     <div
-      class="bg-white dark:bg-gray-900 w-full flex-1 flex flex-col space-y-6 py-6 px-6 rounded-b-4xl transition-colors duration-300"
+      class="bg-white dark:bg-gray-900 w-full space-y-6 py-6 px-6 rounded-b-4xl transition-colors duration-300"
     >
       <!-- Header -->
-      <div class="flex items-center py-5 justify-between">
+      <div class="flex items-center justify-between">
         <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
           Overtime
         </h1>
@@ -16,31 +18,32 @@
       </div>
 
       <!-- Stats -->
-      <OvertimeStatsGrid :stats="overtimeData.stats" />
+      <OvertimeStatsGrid :items="stats" />
 
       <!-- Tabs -->
-      <div class="flex justify-center">
-        <OvertimeTabSelector v-model:activeTab="activeTab" />
+      <OvertimeTabSelector v-model:activeTab="activeTab" class="mt-4" />
+    </div>
+
+    <!-- Tab Content (scroll area abu) -->
+    <div
+      class="w-full max-w-sm bg-gray-100 dark:bg-black overflow-scroll pb-24 max-h-[calc(100vh-260px)] transition-colors duration-300"
+    >
+      <!-- My Overtime -->
+      <div v-if="activeTab !== 'team'" class="space-y-3 mt-4 px-2">
+        <OvertimeCard
+          v-for="item in filteredItems"
+          :key="item.id"
+          :item="item"
+        />
       </div>
 
-      <div class="flex-1 overflow-y-auto mt-2 space-y-3 pb-20">
-        <!-- My Overtime -->
-        <div v-if="activeTab !== 'team'" class="space-y-2 overflow-scroll">
-          <OvertimeCard
-            v-for="item in filteredItems"
-            :key="item.id"
-            :item="item"
-          />
-        </div>
-
-        <!-- Team Overtime -->
-        <div v-else class="space-y-2 overflow-scroll">
-          <TeamOvertimeCard
-            v-for="member in overtimeData.team"
-            :key="member.id"
-            :member="member"
-          />
-        </div>
+      <!-- Team Overtime -->
+      <div v-else class="space-y-3 mt-4 px-2">
+        <TeamOvertimeCard
+          v-for="member in overtimeData.team"
+          :key="member.id"
+          :member="member"
+        />
       </div>
     </div>
   </div>
@@ -55,16 +58,18 @@ import TeamOvertimeCard from "@/pages/overtime/components/TeamOvertimeCard.vue";
 import OvertimeFitur from "@/pages/overtime/components/OvertimeFitur.vue";
 import Navbar from "@/components/Navbar.vue";
 
-const activeTab = ref("approved");
+const activeTab = ref("pending");
+
+// dummy stats
+const stats = [
+  { label: "Overtime Balance", value: 90, color: "blue" },
+  { label: "Overtime Pending", value: 2, color: "green" },
+  { label: "Overtime Approved", value: 2, color: "teal" },
+  { label: "Overtime Rejected", value: 2, color: "red" },
+];
 
 // dummy data
 const overtimeData = {
-  stats: {
-    total: 90,
-    pending: 2,
-    approved: 2,
-    rejected: 2,
-  },
   items: [
     {
       id: 1,
@@ -82,7 +87,7 @@ const overtimeData = {
       start: "19:00",
       end: "22:00",
       totalHours: "3h",
-      description: "Selesaikan laporan bulanan",
+      description: "Server maintenance",
       status: "Approved",
       approvedBy: "Admin",
     },
@@ -92,7 +97,7 @@ const overtimeData = {
       start: "19:00",
       end: "22:00",
       totalHours: "3h",
-      description: "Selesaikan laporan bulanan",
+      description: "Testing",
       status: "Rejected",
       approvedBy: "Admin",
     },
