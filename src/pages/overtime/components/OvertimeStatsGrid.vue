@@ -3,16 +3,18 @@ import { onMounted, computed } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
-
-// ambil data pas komponen dipasang
 onMounted(() => {
   store.dispatch("overtime_by_status/getAllOvertimeData");
-  store.dispatch("overtime_count/getTotalOvertimeHours");  // total jam lembur
+  store.dispatch("overtime_count/getTotalOvertimeHours");
 });
 
 // data dari store
 const stats = computed(() => ({
-  total: store.getters["overtime_count/totalHours"], 
+  totalRequest:
+    store.getters["overtime_by_status/pendingCount"] +
+    store.getters["overtime_by_status/approvedCount"] +
+    store.getters["overtime_by_status/rejectedCount"],
+  total: store.getters["overtime_count/totalHours"],
   pending: store.getters["overtime_by_status/pendingCount"],
   approved: store.getters["overtime_by_status/approvedCount"],
   rejected: store.getters["overtime_by_status/rejectedCount"],
@@ -21,6 +23,7 @@ const stats = computed(() => ({
 // util untuk class styling
 const borderClass = (color) => {
   const map = {
+    purple: "border-purple-400",
     blue: "border-blue-500",
     green: "border-lime-400",
     teal: "border-teal-400",
@@ -31,6 +34,7 @@ const borderClass = (color) => {
 
 const bgClass = (color) => {
   const map = {
+    purple: "dark:bg-[#1A132B]",
     blue: "dark:bg-[#0A132F]",
     green: "dark:bg-[#0F1B0E]",
     teal: "dark:bg-[#072322]",
@@ -41,6 +45,7 @@ const bgClass = (color) => {
 
 const textClass = (color) => {
   const map = {
+    purple: "text-purple-400",
     blue: "text-blue-400",
     green: "text-lime-400",
     teal: "text-teal-400",
@@ -50,10 +55,18 @@ const textClass = (color) => {
 };
 </script>
 
-
 <template>
   <div class="grid gap-3">
-    <!-- total -->
+    <!-- total request -->
+    <div
+      class="flex justify-between rounded-xl p-3 border font-semibold transition-colors duration-300 bg-white dark:bg-opacity-100"
+      :class="[borderClass('purple'), bgClass('purple')]"
+    >
+      <span class="text-gray-600 dark:text-white">Total Overtime Requests</span>
+      <span :class="['font-bold', textClass('purple')]">{{ stats.totalRequest }}</span>
+    </div>
+
+    <!-- total hours -->
     <div
       class="flex justify-between rounded-xl p-3 border font-semibold transition-colors duration-300 bg-white dark:bg-opacity-100"
       :class="[borderClass('blue'), bgClass('blue')]"

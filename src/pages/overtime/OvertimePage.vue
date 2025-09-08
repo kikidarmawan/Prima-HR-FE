@@ -4,10 +4,8 @@
   >
     <!-- Navbar -->
     <Navbar />
-
-    <!-- Header Section -->
     <div
-      class="bg-white dark:bg-gray-900 w-full space-y-6 py-6 px-6 rounded-b-4xl transition-colors duration-300"
+      class="bg-white dark:bg-gray-900 w-full flex-1 flex flex-col space-y-6 py-6 px-6 rounded-b-4xl transition-colors duration-300"
     >
       <!-- Header -->
       <div class="flex items-center py-5 justify-between">
@@ -17,32 +15,47 @@
         <OvertimeFitur />
       </div>
 
-      <!-- Stats + Tabs -->
+      <!-- Stats -->
       <OvertimeStatsGrid :stats="overtimeData.stats" />
-    </div>
 
-    <!-- Tab Content -->
-    <div
-      class="w-full max-w-sm bg-gray-100 mt-5 dark:bg-black overflow-scroll pb-24 max-h-[calc(100vh-260px)] transition-colors duration-300"
-    >
-      <OvertimeTabContent
-        :items="overtimeData.items"
-        :team="overtimeData.team"
-        :activeTab="activeTab"
-      />
+      <!-- Tabs -->
+      <div class="flex justify-center">
+        <OvertimeTabSelector v-model:activeTab="activeTab" />
+      </div>
+
+      <div class="flex-1 overflow-y-auto mt-2 space-y-3 pb-20">
+        <!-- My Overtime -->
+        <div v-if="activeTab !== 'team'" class="space-y-2 overflow-scroll">
+          <OvertimeCard
+            v-for="item in filteredItems"
+            :key="item.id"
+            :item="item"
+          />
+        </div>
+
+        <!-- Team Overtime -->
+        <div v-else class="space-y-2 overflow-scroll">
+          <TeamOvertimeCard
+            v-for="member in overtimeData.team"
+            :key="member.id"
+            :member="member"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import OvertimeStatsGrid from "@/pages/overtime/components/OvertimeStatsGrid.vue";
 import OvertimeTabSelector from "@/pages/overtime/components/OvertimeTabSelector.vue";
-import OvertimeTabContent from "@/pages/overtime/components/OvertimeTabContent.vue";
+import OvertimeCard from "@/pages/overtime/components/OvertimeCard.vue";
+import TeamOvertimeCard from "@/pages/overtime/components/TeamOvertimeCard.vue";
 import OvertimeFitur from "@/pages/overtime/components/OvertimeFitur.vue";
 import Navbar from "@/components/Navbar.vue";
 
-const activeTab = ref("Approved");
+const activeTab = ref("approved");
 
 // dummy data
 const overtimeData = {
@@ -90,4 +103,10 @@ const overtimeData = {
     { id: 3, name: "Nama Karyawan", date: "Apr 15 2025" },
   ],
 };
+
+const filteredItems = computed(() =>
+  overtimeData.items.filter(
+    (item) => item.status.toLowerCase() === activeTab.value
+  )
+);
 </script>
