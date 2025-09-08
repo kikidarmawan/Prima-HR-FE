@@ -146,6 +146,7 @@ async function handleSubmit(photoBase64) {
       });
     });
     const { latitude, longitude } = pos.coords;
+    console.log("📍 Device location:", latitude, longitude);
 
     // Ubah base64 → File
     const fotoFile = dataURLtoFile(photoBase64, "foto.png");
