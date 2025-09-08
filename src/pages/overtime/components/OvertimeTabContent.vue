@@ -21,7 +21,6 @@ const filteredItems = computed(() =>
 
 <template>
   <div class="flex flex-col h-full w-full">
-    <!-- Tabs (ikut container putih) -->
     <div class="space-y-3 text-sm">
       <OvertimeTabSelector v-model:activeTab="activeTab" />
     </div>
