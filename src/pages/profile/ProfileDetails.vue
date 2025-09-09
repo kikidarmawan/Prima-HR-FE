@@ -27,7 +27,6 @@ watchEffect(async () => {
     }
   }
 
-  console.log("userId sekarang:", userId);
   if (!userId) return;  
 
   //token localStorage

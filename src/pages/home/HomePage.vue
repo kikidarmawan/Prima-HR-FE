@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, watch, watchEffect } from "vue";
+import { ref, onMounted, watch } from "vue";
 import Navbar from "@/components/Navbar.vue";
 import HeaderSection from "./components/HeaderSection.vue";
 import DateScroll from "./components/DateScroll.vue";
@@ -11,15 +11,15 @@ import { useStore } from "vuex";
 const store = useStore();
 const selectedDate = ref(0);
 const dates = ref([]);
-const shiftData = ref(null); 
-const activities = ref([]); 
+const shiftData = ref(null);
+const activities = ref([]);
 
 function normalizeDate(dateStr) {
   const d = new Date(dateStr);
   const year = d.getFullYear();
   const month = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`; 
+  return `${year}-${month}-${day}`;
 }
 
 // load kalender
@@ -32,7 +32,7 @@ onMounted(async () => {
     selectedDate.value = todayIndex !== -1 ? todayIndex : 0;
   }
 
-  const karyawanId = localStorage.getItem("karyawanId"); 
+  const karyawanId = localStorage.getItem("karyawanId");
   if (karyawanId) {
     await store.dispatch("presensi/fetchTodayPresensi", karyawanId);
     await store.dispatch("presensi/fetchMonthPresensi", karyawanId);
@@ -61,14 +61,10 @@ watch(
     } else {
       await store.dispatch("presensi/fetchMonthPresensi", karyawanId);
       const monthData = store.state.presensi.monthPresensi || [];
-      console.log("📆 Semua monthPresensi:", monthData);
-      console.log("🔍 Cari tanggal (raw):", picked.raw);
 
       const tanggalStr =
         typeof picked.raw === "object" ? picked.raw.tanggal : picked.raw;
       const p = monthData.find((m) => m.tanggal === tanggalStr);
-
-      console.log("➡️ Ketemu presensi:", p);
 
       shiftData.value = p || null;
       activities.value = [
@@ -79,17 +75,12 @@ watch(
   },
   { immediate: true }
 );
-
-watchEffect(() => {
-  console.log("Isi todayPresensi:", store.state.presensi.todayPresensi);
-  console.log("Isi monthPresensi:", store.state.presensi.monthPresensi);
-});
-
 </script>
 
 <template>
   <div
-    class="min-h-screen bg-gray-50 dark:bg-black dark:text-white overflow-y-auto pb-28 transition-colors duration-300">
+    class="min-h-screen bg-gray-50 dark:bg-black dark:text-white overflow-y-auto pb-28 transition-colors duration-300"
+  >
     <HeaderSection />
     <DateScroll :dates="dates" v-model:selectedDate="selectedDate" />
     <TodayShift :selectedDate="dates[selectedDate]" />
