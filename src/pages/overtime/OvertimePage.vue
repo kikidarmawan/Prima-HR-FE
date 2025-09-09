@@ -44,16 +44,21 @@ const filteredItems = computed(() => {
   const items = overtimeData.value[key] || [];
 
   // Mapping data untuk OvertimeCard 
-  return items.map((item) => ({
-    ...item,
-    date: item.tanggal,
-    start: item.jam_masuk,
-    end: item.jam_keluar,
-    totalHours: item.durasi,
-    description: item.keterangan || "-",
-    approvedBy: item.verified_by || null,
-    normalizedStatus: item.status.toLowerCase(),
-  }));
+return items.map((item) => ({
+  ...item,
+  date: item.tanggal,
+  start: item.jam_masuk,
+  end: item.jam_keluar,
+  totalHours: item.durasi,
+  description: item.keterangan || "-",
+  approvedBy: item.verified_by || null,
+  status:
+    item.status.toLowerCase() === "disetujui"
+      ? "Approved"
+      : item.status.toLowerCase() === "ditolak"
+      ? "Rejected"
+      : "Pending",
+}));
 });
 
 // Watch tab aktif untuk debug

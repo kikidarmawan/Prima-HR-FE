@@ -20,7 +20,6 @@ const stats = computed(() => ({
   rejected: store.getters["overtime_by_status/rejectedCount"],
 }));
 
-// util untuk class styling
 const borderClass = (color) => {
   const map = {
     purple: "border-purple-400",
