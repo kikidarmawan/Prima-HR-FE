@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://app.putratek.my.id", //https://hris.theprime.id
+  baseURL: "/https://hris.theprime.id", //https://hris.theprime.id
   // withCredentials: true, 
   timeout: 15000,
 });
