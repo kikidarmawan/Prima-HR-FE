@@ -16,26 +16,41 @@ const todayIndex = computed(() => {
   const today = new Date().getDate();
   return props.dates.findIndex((d) => parseInt(d.day) === today);
 });
+
 const handleClick = (index) => {
   if (index <= todayIndex.value) {
     emit("update:selectedDate", index);
   }
 };
 
-// fungsi scroll ke index tertentu
+
 const scrollToIndex = (index) => {
   if (containerRef.value && itemRefs.value[index]) {
     const container = containerRef.value;
     const target = itemRefs.value[index];
 
-    const offset =
-      target.offsetLeft - container.clientWidth / 2 + target.clientWidth / 2;
+    let tries = 0;
+    const doScroll = () => {
+      const offset =
+        target.offsetLeft - (container.clientWidth / 2 - target.clientWidth / 2);
 
-    container.scrollTo({ left: offset, behavior: "smooth" });
+      container.scrollTo({ left: offset, behavior: "auto" });
+
+      if (tries < 3) {
+        tries++;
+        requestAnimationFrame(doScroll);
+      }
+    };
+
+    requestAnimationFrame(doScroll);
   }
 };
 
 onMounted(async () => {
+  if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+  }
+
   await nextTick();
   if (todayIndex.value !== -1) {
     scrollToIndex(todayIndex.value);
@@ -54,10 +69,11 @@ watch(
 </script>
 
 <template>
-  <div
-    ref="containerRef"
-    class="flex w-full gap-4 px-5 mt-2 overflow-x-scroll pb-2 scroll-smooth"
-  >
+<div
+  ref="containerRef"
+  class="scroll-x flex w-full gap-4 cursor-grab px-5 mt-2 overflow-x-scroll pb-2 scroll-smooth"
+>
+
     <div
       v-for="(date, index) in dates"
       :key="index"
@@ -80,3 +96,11 @@ watch(
     </div>
   </div>
 </template>
+
+<style>
+.scroll-x {
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+}
+
+</style>
