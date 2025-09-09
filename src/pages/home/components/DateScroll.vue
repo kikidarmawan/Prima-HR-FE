@@ -10,6 +10,14 @@ const emit = defineEmits(["update:selectedDate"]);
 
 const containerRef = ref(null);
 const itemRefs = ref([]);
+function formatFullDate(dateObj) {
+  if (!dateObj?.date) return "-";
+  return new Date(dateObj.date).toLocaleDateString("en-US", {
+    weekday: "long",  // Senin, Selasa
+    month: "long",    // Januari, Februari
+    day: "numeric",
+  });
+}
 
 // cari index hari ini
 const todayIndex = computed(() => {
