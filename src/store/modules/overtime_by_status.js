@@ -15,8 +15,9 @@ const state = {
 
 const mutations = {
   SET_OVERTIME_DATA(state, { status, data }) {
-    state.overtimeData[status] = data;
-    state.overtimeCount[status] = data.length;
+    const key = status.toLowerCase();
+    state.overtimeData[key] = data;
+    state.overtimeCount[key] = data.length;
   },
 };
 
@@ -30,12 +31,15 @@ const actions = {
         },
       });
 
+      const data = response.data?.data || [];
       commit("SET_OVERTIME_DATA", {
         status: status.toLowerCase(),
-        data: response.data.data,
+        data,
       });
 
-      return response.data.data;
+ 
+
+      return data;
     } catch (error) {
       console.error(`Error fetching ${status} overtime data:`, error);
       throw error;
@@ -44,16 +48,14 @@ const actions = {
 
   async getAllOvertimeData({ dispatch }) {
     try {
-      await Promise.all([
-        dispatch("getOvertimeByStatus", "Pending"),
-        dispatch("getOvertimeByStatus", "Disetujui"),
-        dispatch("getOvertimeByStatus", "Ditolak"),
-      ]);
+      const statuses = ["Pending", "Disetujui", "Ditolak"];
+      await Promise.all(statuses.map((s) => dispatch("getOvertimeByStatus", s)));
     } catch (error) {
       console.error("Error fetching all overtime data:", error);
       throw error;
     }
   },
+  
 };
 
 const getters = {
@@ -67,6 +69,7 @@ const getters = {
   approvedCount: (state) => state.overtimeCount.disetujui,
   rejectedCount: (state) => state.overtimeCount.ditolak,
 
+  // Full state
   overtimeData: (state) => state.overtimeData,
   overtimeCount: (state) => state.overtimeCount,
 };

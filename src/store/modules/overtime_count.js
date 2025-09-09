@@ -1,7 +1,7 @@
 import api from "@/services/api";
 
 const state = {
-  totalHours: 0,
+  totalHours: "00:00", 
 };
 
 const mutations = {
@@ -24,7 +24,6 @@ const actions = {
       commit("SET_TOTAL_HOURS", response.data.data);
       return response.data.data;
     } catch (error) {
-      console.error("Error fetching total overtime hours:", error);
       throw error;
     }
   },
