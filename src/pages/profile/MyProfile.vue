@@ -12,9 +12,6 @@ const karyawan = JSON.parse(localStorage.getItem("karyawan"));
 const nama = karyawan?.nama_karyawan; 
 const jabatan = karyawan?.jabatan.nama_jabatan; 
 
-console.log(karyawan)
-console.log(nama, jabatan)
-
 
 // Dark mode state
 const darkMode = ref(localStorage.getItem("theme") === "dark");

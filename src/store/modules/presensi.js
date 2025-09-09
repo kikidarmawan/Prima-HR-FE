@@ -1,4 +1,5 @@
 import api from "@/services/api";
+
 function dataURLtoFile(dataurl, filename) {
   const arr = dataurl.split(",");
   const mime = arr[0].match(/:(.*?);/)[1];
@@ -14,19 +15,19 @@ function dataURLtoFile(dataurl, filename) {
 export default {
   namespaced: true,
   state: () => ({
-  todayPresensi: null,
-  monthPresensi: [],
-  loading: false,
-  error: null,
-  previewFoto: null,
+    todayPresensi: null,
+    monthPresensi: [],
+    loading: false,
+    error: null,
+    previewFoto: null,
   }),
   mutations: {
     SET_TODAY_PRESENSI(state, payload) {
       state.todayPresensi = payload;
     },
     SET_MONTH_PRESENSI(state, payload) {
-    state.monthPresensi = payload;
-  },
+      state.monthPresensi = payload;
+    },
     SET_LOADING(state, val) {
       state.loading = val;
     },
@@ -39,42 +40,35 @@ export default {
   },
   actions: {
     async fetchTodayPresensi({ commit }, tanggal = null) {
-  commit("SET_LOADING", true);
-  commit("SET_ERROR", null);
-  try {
-    const token = localStorage.getItem("token");
+      commit("SET_LOADING", true);
+      commit("SET_ERROR", null);
+      try {
+        const token = localStorage.getItem("token");
 
-    let tgl;
-    if (tanggal && /^\d{4}-\d{2}-\d{2}$/.test(tanggal)) {
-      // kalau param valid format tanggal
-      tgl = tanggal;
-    } else {
-      // fallback → hari ini
-      tgl = new Date().toISOString().split("T")[0];
-    }
+        let tgl;
+        if (tanggal && /^\d{4}-\d{2}-\d{2}$/.test(tanggal)) {
+          tgl = tanggal;
+        } else {
+          tgl = new Date().toISOString().split("T")[0];
+        }
 
-    console.log("📡 Hit API:", `/api/presensi-today?tanggal=${tgl}`);
-    const res = await api.get(`/api/presensi-today?tanggal=${tgl}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+        const res = await api.get(`/api/presensi-today?tanggal=${tgl}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-    const { status, data, message } = res.data;
-    if (status && data) {
-      commit("SET_TODAY_PRESENSI", data);
-    } else {
-      commit("SET_TODAY_PRESENSI", null);
-      console.log("ℹ️ Info presensi:", message);
-    }
-  } catch (err) {
-    const msg = err.response?.data?.message || err.message;
-    console.error("❌ Fetch presensi error:", msg);
-    commit("SET_ERROR", msg);
-  } finally {
-    commit("SET_LOADING", false);
-  }
-},
+        const { status, data } = res.data;
+        if (status && data) {
+          commit("SET_TODAY_PRESENSI", data);
+        } else {
+          commit("SET_TODAY_PRESENSI", null);
+        }
+      } catch (err) {
+        const msg = err.response?.data?.message || err.message;
+        commit("SET_ERROR", msg);
+      } finally {
+        commit("SET_LOADING", false);
+      }
+    },
 
     async submitPresensi({ commit, state }, { karyawanId, photoBase64 }) {
       commit("SET_LOADING", true);
@@ -82,13 +76,16 @@ export default {
       try {
         const today = new Date();
         const tanggal = today.toISOString().split("T")[0];
-        const jamSekarang = today.toLocaleTimeString("id-ID", { hour12: false });
+        const jamSekarang = today.toLocaleTimeString("id-ID", {
+          hour12: false,
+        });
 
         // lokasi
         const pos = await new Promise((resolve, reject) =>
           navigator.geolocation.getCurrentPosition(resolve, reject)
         );
         const { latitude, longitude } = pos.coords;
+
         const sudahCheckIn = !!state.todayPresensi?.jam_masuk;
         const sudahCheckOut = !!state.todayPresensi?.jam_keluar;
         if (sudahCheckIn && sudahCheckOut) {
@@ -143,46 +140,40 @@ export default {
         return res.data;
       } catch (err) {
         const msg = err.response?.data?.message || err.message;
-        console.error("❌ Submit presensi error:", msg);
         commit("SET_ERROR", msg);
         throw err;
       } finally {
         commit("SET_LOADING", false);
       }
     },
-    async fetchMonthPresensi({ commit }, ) {
-    commit("SET_LOADING", true);
-    commit("SET_ERROR", null);
-    try {
-      
-        const token = localStorage.getItem('token')
-      console.log("📡 Hit API:", `/api/presensi-month`);
-      const res = await api.get(`/api/presensi-month`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      commit("SET_MONTH_PRESENSI", res.data.data || []);
-      return res.data.data || [];
-    } catch (err) {
-      const msg = err.response?.data?.message || err.message;
-      console.error("❌ Fetch month presensi error:", msg);
-      commit("SET_ERROR", msg);
-      return [];
-    } finally {
-      commit("SET_LOADING", false);
-    }
-  },
+
+    async fetchMonthPresensi({ commit }) {
+      commit("SET_LOADING", true);
+      commit("SET_ERROR", null);
+      try {
+        const token = localStorage.getItem("token");
+        const res = await api.get(`/api/presensi-month`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        commit("SET_MONTH_PRESENSI", res.data.data || []);
+        return res.data.data || [];
+      } catch (err) {
+        const msg = err.response?.data?.message || err.message;
+        commit("SET_ERROR", msg);
+        return [];
+      } finally {
+        commit("SET_LOADING", false);
+      }
+    },
   },
   getters: {
-   presensiByDate: (state) => (tanggal) => {
-  if (!tanggal) return null;
-  if (state.todayPresensi?.tanggal === tanggal) {
-    return state.todayPresensi;
-  }
-  return state.monthPresensi.find(p => p.tanggal === tanggal) || null;
-},
-    // todayPresensi: (state) => state.todayPresensi,
+    presensiByDate: (state) => (tanggal) => {
+      if (!tanggal) return null;
+      if (state.todayPresensi?.tanggal === tanggal) {
+        return state.todayPresensi;
+      }
+      return state.monthPresensi.find((p) => p.tanggal === tanggal) || null;
+    },
     isLoading: (state) => state.loading,
     errorMessage: (state) => state.error,
     previewFoto: (state) => state.previewFoto,

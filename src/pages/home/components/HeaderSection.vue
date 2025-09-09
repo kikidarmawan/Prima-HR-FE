@@ -4,9 +4,6 @@ import Oren from "@/assets/images/Oren.jpg";
 const karyawan = JSON.parse(localStorage.getItem("karyawan"));
 const nama = karyawan?.nama_karyawan; 
 const jabatan = karyawan?.jabatan.nama_jabatan; 
-
-console.log(karyawan)
-console.log(nama, jabatan)
 </script>
 
 <template>

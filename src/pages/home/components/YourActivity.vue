@@ -2,8 +2,8 @@
 import { watch } from "vue";
 
 const props = defineProps({
-  shiftData: { type: Object, default: null },   
-  activities: { type: Array, default: () => [] } 
+  shiftData: { type: Object, default: null },
+  activities: { type: Array, default: () => [] }
 });
 
 function formatDate(dateStr) {
@@ -23,15 +23,6 @@ function formatTime(timeStr) {
     minute: "2-digit",
   });
 }
-
-// Debug
-watch(() => props.shiftData, (val) => {
-  console.log("👀 shiftData di YourActivity:", val);
-}, { immediate: true });
-
-watch(() => props.activities, (val) => {
-  console.log("📅 activities di YourActivity:", val);
-}, { immediate: true, deep: true });
 </script>
 
 <template>
@@ -94,4 +85,3 @@ watch(() => props.activities, (val) => {
     <div v-else class="mt-3 text-gray-400">Belum ada aktivitas</div>
   </div>
 </template>
-
