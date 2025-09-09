@@ -8,7 +8,7 @@ const props = defineProps({
 
 function formatDate(dateStr) {
   if (!dateStr) return "-";
-  return new Date(dateStr).toLocaleDateString("id-ID", {
+  return new Date(dateStr).toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
     month: "long",
@@ -18,7 +18,7 @@ function formatDate(dateStr) {
 
 function formatTime(timeStr) {
   if (!timeStr) return null;
-  return new Date(`1970-01-01T${timeStr}`).toLocaleTimeString("id-ID", {
+  return new Date(`1970-01-01T${timeStr}`).toLocaleTimeString("en-US", {
     hour: "2-digit",
     minute: "2-digit",
   });
@@ -31,8 +31,6 @@ function formatTime(timeStr) {
       Your Activity
       <span class="text-blue-500 cursor-pointer">View All</span>
     </h1>
-
-    <!-- Jika ada activities -->
     <div v-if="activities.length" class="space-y-3 mt-3">
       <div v-for="(p, i) in activities" :key="i" class="space-y-3">
         <!-- Check In -->
@@ -81,7 +79,6 @@ function formatTime(timeStr) {
       </div>
     </div>
 
-    <!-- Kalau tidak ada data sama sekali -->
-    <div v-else class="mt-3 text-gray-400">Belum ada aktivitas</div>
+    <div v-else class="mt-3 text-gray-400">No activity yet</div>
   </div>
 </template>

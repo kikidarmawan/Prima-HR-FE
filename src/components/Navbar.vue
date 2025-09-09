@@ -4,45 +4,44 @@
     <div
       class="relative bg-white dark:bg-gray-900 shadow-xl h-16 rounded-t-3xl px-4 flex items-center justify-between w-106 mx-auto transition-colors duration-300">
 
-<!-- Curve Bulatan Tengah -->
-<div
-  class="absolute -top-14 left-1/2 -translate-x-1/2 w-16 h-16 bg-white dark:bg-gray-900 rounded-full z-30 flex items-center justify-center">
-  <button
-    class="cursor-pointer w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg disabled:opacity-50"
-    :disabled="loading" @click="openCamera">
-    <i v-if="!loading" class="fa-solid fa-camera text-lg"></i>
-    <span v-else class="text-xs">...</span>
-  </button>
-</div>
-<!-- Icons -->
-<div class="grid grid-cols-5 w-full text-center">
-  <router-link to="/home">
-    <i class="fa-solid fa-house text-xl text-gray-500 dark:text-gray-300 
-      hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"></i>
-  </router-link>
+      <!-- Curve Bulatan Tengah -->
+      <div
+        class="absolute -top-14 left-1/2 -translate-x-1/2 w-16 h-16 bg-white dark:bg-gray-900 rounded-full z-30 flex items-center justify-center">
+        <button
+          class="cursor-pointer w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg disabled:opacity-50"
+          :disabled="loading" @click="openCamera">
+          <i v-if="!loading" class="fa-solid fa-camera text-lg"></i>
+          <span v-else class="text-xs">...</span>
+        </button>
+      </div>
 
-  <router-link to="/leaves">
-    <i class="fa-regular fa-calendar text-xl text-gray-500 dark:text-gray-300 
-      hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"></i>
-  </router-link>
+      <!-- Icons -->
+      <div class="grid grid-cols-5 w-full text-center">
+        <router-link to="/home">
+          <i class="fa-solid fa-house text-xl text-gray-500 dark:text-gray-300 
+            hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"></i>
+        </router-link>
 
-  <router-link to="/overtime">
-    <i class="fa-regular fa-clock text-xl text-gray-500 dark:text-gray-300 
-      hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"></i>
-  </router-link>
+        <router-link to="/leaves">
+          <i class="fa-regular fa-calendar text-xl text-gray-500 dark:text-gray-300 
+            hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"></i>
+        </router-link>
 
-  <router-link to="/holiday">
-    <i class="fa-solid fa-umbrella-beach text-xl text-gray-500 dark:text-gray-300 
-      hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"></i>
-  </router-link>
+        <router-link to="/overtime">
+          <i class="fa-regular fa-clock text-xl text-gray-500 dark:text-gray-300 
+            hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"></i>
+        </router-link>
 
-  <router-link to="/profile">
-    <i class="fa-regular fa-user text-xl text-gray-500 dark:text-gray-300 
-      hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"></i>
-  </router-link>
-</div>
-    
+        <router-link to="/holiday">
+          <i class="fa-solid fa-umbrella-beach text-xl text-gray-500 dark:text-gray-300 
+            hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"></i>
+        </router-link>
 
+        <router-link to="/profile">
+          <i class="fa-regular fa-user text-xl text-gray-500 dark:text-gray-300 
+            hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"></i>
+        </router-link>
+      </div>
     </div>
   </div>
 
@@ -66,17 +65,20 @@ const presensiData = ref(null)
 const loading = ref(false)
 const previewFoto = ref(null)
 
-const karyawanId = 34 // nanti ambil dari auth
+// 🔹 Ambil data user dari localStorage
+const user = JSON.parse(localStorage.getItem("user"))
+const karyawanId = user?.id || null
 
-// Buka modal kamera langsung
-const openCamera = () => {
-  isCameraOpen.value = true
+//  user belum login
+if (!karyawanId) {
+  alert("User tidak ditemukan, silakan login ulang.")
 }
 
-const closeCamera = () => {
-  isCameraOpen.value = false
-}
+// Buka tutup modal kamera
+const openCamera = () => { isCameraOpen.value = true }
+const closeCamera = () => { isCameraOpen.value = false }
 
+// Konversi base64 ke File
 function dataURLtoFile(dataurl, filename) {
   const arr = dataurl.split(',')
   const mime = arr[0].match(/:(.*?);/)[1]
@@ -89,82 +91,75 @@ function dataURLtoFile(dataurl, filename) {
   return new File([u8arr], filename, { type: mime })
 }
 
-// format jam sesuai H:i (contoh: 09:30)
 function formatHi(date) {
-  const h = String(date.getHours()).padStart(2, "0");
-  const m = String(date.getMinutes()).padStart(2, "0");
-  return `${h}:${m}`;
+  const h = String(date.getHours()).padStart(2, "0")
+  const m = String(date.getMinutes()).padStart(2, "0")
+  return `${h}:${m}`
 }
 
-// format jam sesuai H:i:s (contoh: 09:02:15)
 function formatHis(date) {
-  const h = String(date.getHours()).padStart(2, "0");
-  const m = String(date.getMinutes()).padStart(2, "0");
-  const s = String(date.getSeconds()).padStart(2, "0");
-  return `${h}:${m}:${s}`;
+  const h = String(date.getHours()).padStart(2, "0")
+  const m = String(date.getMinutes()).padStart(2, "0")
+  const s = String(date.getSeconds()).padStart(2, "0")
+  return `${h}:${m}:${s}`
 }
 
-// submit presensi
+// Submit presensi
 async function handleSubmit(photoBase64) {
-  loading.value = true;
+  loading.value = true
 
   try {
-    const today = new Date();
-    const tanggal = today.toISOString().split("T")[0];
-    const token = localStorage.getItem("token");
+    const today = new Date()
+    const tanggal = today.toISOString().split("T")[0]
+    const token = localStorage.getItem("token")
 
-    // 🔹 Cek presensi hari ini pakai token
-    let checkRes;
+    // presensi hari ini
+    let checkRes
     try {
       checkRes = await api.get(`/api/presensi-today?tanggal=${tanggal}`, {
         headers: { Authorization: `Bearer ${token}` },
-      });
-      presensiData.value = checkRes.data.data;
+      })
+      presensiData.value = checkRes.data.data
     } catch (err) {
-      presensiData.value = null;
+      presensiData.value = null
     }
 
-    const sudahCheckIn = !!presensiData.value?.jam_masuk;
-    const sudahCheckOut = !!presensiData.value?.jam_keluar;
+    const sudahCheckIn = !!presensiData.value?.jam_masuk
+    const sudahCheckOut = !!presensiData.value?.jam_keluar
 
     if (sudahCheckIn && sudahCheckOut) {
-      alert("Anda sudah melakukan presensi hari ini.");
-      return;
+      alert("Anda sudah melakukan presensi hari ini.")
+      return
     }
 
     // check-in atau check-out
-    const isCheckIn = !sudahCheckIn;
-
-    // format jam sesuai kebutuhan
-    const jamSekarang = isCheckIn ? formatHi(today) : formatHis(today);
+    const isCheckIn = !sudahCheckIn
+    const jamSekarang = isCheckIn ? formatHi(today) : formatHis(today)
 
     // Ambil lokasi
     const pos = await new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resolve, (err) => {
-        alert("Lokasi harus diizinkan untuk presensi!");
-        reject(err);
-      });
-    });
-    const { latitude, longitude } = pos.coords;
-    console.log("📍 Device location:", latitude, longitude);
+        alert("Lokasi harus diizinkan untuk presensi!")
+        reject(err)
+      })
+    })
+    const { latitude, longitude } = pos.coords
+    const fotoFile = dataURLtoFile(photoBase64, "foto.png")
 
-    // Ubah base64 → File
-    const fotoFile = dataURLtoFile(photoBase64, "foto.png");
-
-    // Upload foto (backend butuh field "foto")
-    const uploadForm = new FormData();
-    uploadForm.append("foto", fotoFile);
+    // Upload foto
+    const uploadForm = new FormData()
+    uploadForm.append("foto", fotoFile)
 
     const uploadRes = await api.post("/api/upload-foto-karyawan", uploadForm, {
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
       },
-    });
+    })
 
-    const fotoPath = uploadRes.data.foto_path;
+    const fotoPath = uploadRes.data.foto_path
 
-    // absensi
+    // Payload absensi
     const absensiPayload = {
       karyawan_id: karyawanId,
       tanggal,
@@ -181,32 +176,31 @@ async function handleSubmit(photoBase64) {
             long_pulang: longitude,
             foto_keluar: fotoPath,
           }),
-    };
+    }
 
+    // Kirim absensi
     const res = await api({
       method: isCheckIn ? "post" : "put",
       url: isCheckIn ? "/api/check-in" : "/api/check-out",
       data: absensiPayload,
       headers: { Authorization: `Bearer ${token}` },
-    });
+    })
 
-    alert(res.data.message || "Presensi berhasil!");
+    alert(res.data.message || "Presensi berhasil!")
 
-    // 🔹 Refresh data pakai endpoint baru
+    // Refresh data
     const refresh = await api.get(`/api/presensi-today?tanggal=${tanggal}`, {
       headers: { Authorization: `Bearer ${token}` },
-    });
-    presensiData.value = refresh.data.data;
+    })
+    presensiData.value = refresh.data.data
 
-    previewFoto.value = fotoPath;
+    previewFoto.value = fotoPath
   } catch (err) {
-    console.error("❌ Error:", err.response?.data || err);
-    alert(err.response?.data?.message || "Presensi gagal!");
+    console.error("Error:", err.response?.data || err)
+    alert(err.response?.data?.message || "Presensi gagal!")
   } finally {
-    loading.value = false;
-    closeCamera();
+    loading.value = false
+    closeCamera()
   }
 }
-
-
 </script>
