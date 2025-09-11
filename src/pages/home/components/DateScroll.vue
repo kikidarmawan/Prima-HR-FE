@@ -10,11 +10,27 @@ const emit = defineEmits(["update:selectedDate"]);
 
 const containerRef = ref(null);
 const itemRefs = ref([]);
+
+// 🔹 Mapping singkatan hari Indonesia → Inggris
+const weekdayMap = {
+  sen: "Mon",
+  sel: "Tue",
+  rab: "Wed",
+  kam: "Thu",
+  jum: "Fri",
+  sab: "Sat",
+  min: "Sun",
+};
+
+function formatWeekday(shortDay) {
+  return weekdayMap[shortDay.toLowerCase()] || shortDay;
+}
+
 function formatFullDate(dateObj) {
   if (!dateObj?.date) return "-";
   return new Date(dateObj.date).toLocaleDateString("en-US", {
-    weekday: "long",  // Senin, Selasa
-    month: "long",    // Januari, Februari
+    weekday: "long",
+    month: "long",
     day: "numeric",
   });
 }
@@ -31,26 +47,14 @@ const handleClick = (index) => {
   }
 };
 
-
+// scroll langsung ke index tertentu
 const scrollToIndex = (index) => {
   if (containerRef.value && itemRefs.value[index]) {
-    const container = containerRef.value;
-    const target = itemRefs.value[index];
-
-    let tries = 0;
-    const doScroll = () => {
-      const offset =
-        target.offsetLeft - (container.clientWidth / 2 - target.clientWidth / 2);
-
-      container.scrollTo({ left: offset, behavior: "auto" });
-
-      if (tries < 3) {
-        tries++;
-        requestAnimationFrame(doScroll);
-      }
-    };
-
-    requestAnimationFrame(doScroll);
+    itemRefs.value[index].scrollIntoView({
+      behavior: "auto", // langsung berhenti (ubah ke "smooth" kalau mau animasi)
+      inline: "center", // biar di tengah horizontal
+      block: "nearest", // jangan ubah posisi vertical
+    });
   }
 };
 
@@ -65,6 +69,7 @@ onMounted(async () => {
   }
 });
 
+// kalau data dates berubah → scroll ke todayIndex
 watch(
   () => props.dates,
   async () => {
@@ -74,14 +79,22 @@ watch(
     }
   }
 );
+
+// kalau selectedDate berubah → scroll ke selectedDate
+watch(
+  () => props.selectedDate,
+  async (newIndex) => {
+    await nextTick();
+    scrollToIndex(newIndex);
+  }
+);
 </script>
 
 <template>
-<div
-  ref="containerRef"
-  class="scroll-x flex w-full gap-4 cursor-grab px-5 mt-2 overflow-x-scroll pb-2 scroll-smooth"
->
-
+  <div
+    ref="containerRef"
+    class="scroll-x flex w-full gap-4 cursor-grab px-5 mt-2 overflow-x-scroll pb-2 scroll-smooth"
+  >
     <div
       v-for="(date, index) in dates"
       :key="index"
@@ -96,11 +109,11 @@ watch(
           ? (index === props.selectedDate
               ? 'bg-blue-500 text-white border border-blue-500 cursor-pointer'
               : 'bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-300 dark:border-gray-600 cursor-pointer hover:bg-blue-100 dark:hover:bg-gray-700')
-          : 'bg-gray-200 dark:bg-gray-700 text-gray-400 border border-gray-300 dark:border-gray-600 cursor-not-allowed opacity-50'
+              : 'bg-gray-200 dark:bg-gray-700 text-gray-400 border border-gray-300 dark:border-gray-600 cursor-not-allowed opacity-50'
       ]"
     >
       <span class="text-base font-semibold">{{ date.day }}</span>
-      <span class="text-xs">{{ date.weekday }}</span>
+      <span class="text-xs">{{ formatWeekday(date.weekday) }}</span>
     </div>
   </div>
 </template>
@@ -109,6 +122,12 @@ watch(
 .scroll-x {
   -webkit-overflow-scrolling: touch;
   touch-action: pan-x;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE, Edge */
+}
+
+.scroll-x::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }
 
 </style>
