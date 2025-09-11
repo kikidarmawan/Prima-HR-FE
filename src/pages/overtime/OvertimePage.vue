@@ -99,7 +99,7 @@ const teamOvertime = ref([]);
     </div>
 
     <!-- Tab Content -->
-    <div class="w-full max-w-sm bg-gray-100 dark:bg-black overflow-scroll pb-24 max-h-[calc(100vh-260px)] transition-colors duration-300">
+    <div class="w-full max-w-sm bg-gray-100 dark:bg-black overflow-auto pb-24 max-h-[calc(100vh-260px)] transition-colors duration-300">
       <!-- My Overtime -->
       <div v-if="activeTab !== 'team'" class="space-y-3 mt-4 px-2">
         <OvertimeCard v-for="item in filteredItems" :key="item.id" :item="item" />
