@@ -54,7 +54,7 @@ const notifications = [
 </script>
 
 <template>
-  <div class="min-h-screen bg-white dark:bg-black transition-colors duration-300 p-5">
+  <div class="min-h-screen bg-white dark:bg-[#0c0e19] transition-colors duration-300 p-5">
     <!-- Topbar -->
     <div class="flex items-center justify-between mb-5">
       <router-link to="/home" class="text-xl text-gray-800 dark:text-white">

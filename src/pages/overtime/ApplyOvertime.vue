@@ -90,7 +90,7 @@ const goToOvertime = () => {
 
 <template>
   <div
-    class="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-300 p-6"
+    class="min-h-screen bg-white dark:bg-[#0c0e19] text-gray-900 dark:text-gray-100 transition-colors duration-300 p-6"
   >
     <!-- Header -->
     <div class="flex items-center mb-6">

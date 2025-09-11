@@ -37,7 +37,7 @@ const handleLogin = async () => {
 
 <template>
   <div
-    class="min-h-screen flex justify-center bg-white dark:bg-black px-3 text-gray-900 dark:text-white transition-colors duration-300">
+    class="min-h-screen flex justify-center bg-white dark:bg-[#0c0e19] px-3 text-gray-900 dark:text-white transition-colors duration-300">
     <div class="w-full max-w-sm mt-15 m-6">
       <!-- logo prime -->
       <div class="flex justify-start mb-6">

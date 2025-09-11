@@ -99,7 +99,7 @@ const updateProfile = async () => {
 </script>
 
 <template>
-  <div class="bg-white dark:bg-black min-h-screen transition-colors duration-300">
+  <div class="bg-white dark:bg-[#0c0e19] min-h-screen transition-colors duration-300">
     <div class="max-w-sm mx-auto">
       <!-- Header -->
       <div class="flex items-center justify-between p-6">
