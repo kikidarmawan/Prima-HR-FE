@@ -33,9 +33,9 @@ onMounted(async () => {
   }
 
   const karyawanId = localStorage.getItem("karyawanId");
+  store.dispatch("presensi/fetchMonthPresensi", karyawanId);
   if (karyawanId) {
-    await store.dispatch("presensi/fetchTodayPresensi", karyawanId);
-    await store.dispatch("presensi/fetchMonthPresensi", karyawanId);
+    store.dispatch("presensi/fetchTodayPresensi", karyawanId);
   }
 });
 
@@ -50,28 +50,16 @@ watch(
     const karyawan = JSON.parse(localStorage.getItem("karyawan"));
     const karyawanId = karyawan?.id || 34;
 
-    if (parseInt(picked.day) === today.getDate()) {
-      await store.dispatch("presensi/fetchTodayPresensi", karyawanId);
-      const p = store.state.presensi.todayPresensi;
-      shiftData.value = p;
-      activities.value = [
-        p?.jam_masuk ? { type: "checkin", time: p.jam_masuk } : null,
-        p?.jam_keluar ? { type: "checkout", time: p.jam_keluar } : null,
-      ].filter(Boolean);
-    } else {
-      await store.dispatch("presensi/fetchMonthPresensi", karyawanId);
-      const monthData = store.state.presensi.monthPresensi || [];
-
-      const tanggalStr =
-        typeof picked.raw === "object" ? picked.raw.tanggal : picked.raw;
-      const p = monthData.find((m) => m.tanggal === tanggalStr);
-
-      shiftData.value = p || null;
-      activities.value = [
-        p?.jam_masuk ? { type: "checkin", time: p.jam_masuk } : null,
-        p?.jam_keluar ? { type: "checkout", time: p.jam_keluar } : null,
-      ].filter(Boolean);
-    }
+    await store.dispatch("presensi/fetchTodayPresensi", karyawanId);
+    
+    const p = store.state.presensi.todayPresensi;
+    shiftData.value = p;
+    activities.value = [
+      p?.jam_masuk ? { type: "checkin", time: p.jam_masuk } : null,
+      p?.jam_keluar ? { type: "checkout", time: p.jam_keluar } : null,
+    ].filter(Boolean);
+    // if (parseInt(picked.day) === today.getDate()) {
+    // }
   },
   { immediate: true }
 );
@@ -79,7 +67,7 @@ watch(
 
 <template>
   <div
-    class="min-h-screen bg-gray-50 dark:bg-black dark:text-white overflow-y-auto pb-28 transition-colors duration-300"
+    class="min-h-screen bg-gray-50 dark:bg-[#0c0e19] dark:text-white overflow-y-auto pb-28 transition-colors duration-300"
   >
     <HeaderSection />
     <DateScroll :dates="dates" v-model:selectedDate="selectedDate" />
