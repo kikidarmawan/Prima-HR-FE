@@ -3,7 +3,7 @@ import ForgotP from "../../assets/images/ForgotP.png";
 </script>
 
 <template>
-  <div class="min-h-screen bg-white dark:bg-black flex flex-col p-6 text-gray-800 dark:text-white transition-colors duration-300">
+  <div class="min-h-screen bg-white dark:bg-[#0c0e19] flex flex-col p-6 text-gray-800 dark:text-white transition-colors duration-300">
     <router-link to="/login" class="mb-6 text-2xl text-gray-700 dark:text-gray-300">
       <i class="fa-solid fa-angle-left"></i>
     </router-link>

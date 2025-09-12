@@ -1,7 +1,7 @@
 <script setup></script>
 
 <template>
-  <div class="min-h-screen bg-white dark:bg-black text-gray-800 dark:text-white p-6 transition-colors duration-300">
+  <div class="min-h-screen bg-white dark:bg-[#0c0e19] text-gray-800 dark:text-white p-6 transition-colors duration-300">
     <!-- Header -->
     <div class="flex items-center mb-6">
       <router-link to="/leaves">

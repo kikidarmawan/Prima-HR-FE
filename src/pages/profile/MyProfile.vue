@@ -38,7 +38,7 @@ const handleLogout = () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-white dark:bg-black flex flex-col justify-between pb-20 transition-colors duration-300">
+  <div class="min-h-screen bg-white dark:bg-[#0c0e19] flex flex-col justify-between pb-20 transition-colors duration-300">
     <!-- Profile -->
     <div class="flex flex-col items-center p-10 relative">
       <div class="relative w-24 h-24">
@@ -49,7 +49,7 @@ const handleLogout = () => {
       <h2 class="text-base text-gray-500 dark:text-gray-400">{{ jabatan }}</h2>
 
       <router-link to="/edit-profile">
-        <button class="mt-4 bg-blue-500 w-full text-lg text-white px-6 py-2 rounded-xl cursor-pointer hover:bg-blue-600 transition">
+        <button class="mt-4 bg-blue-500 dark:bg-blue-800 w-full text-white px-4 py-2 rounded-xl text-base cursor-pointer hover:bg-blue-600 transition">
         Edit Profile
       </button>
       </router-link> 
@@ -103,7 +103,7 @@ const handleLogout = () => {
     <button @click="handleLogout" class="w-full text-left cursor-pointer">
       <div class="flex items-center gap-5 px-9 py-5 mt-2 text-red-500">
         <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center">
-          <i class="fa-solid fa-arrow-right-from-bracket text-base"></i>
+          <i class="fa-solid fa-arrow-right-from-bracket text-base text-red-500 dark:text-red-100"></i>
         </div>
         <span class="text-base font-medium">Log out</span>
       </div>

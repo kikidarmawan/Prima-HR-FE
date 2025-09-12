@@ -1,8 +1,6 @@
 <template>
   <div class="space-y-4 mt-3 transition-colors duration-300">
-    <p
-      v-if="!data || data.length === 0"
-      class="text-gray-500 dark:text-gray-400 text-center italic">
+    <p v-if="!data || data.length === 0" class="text-gray-500 dark:text-gray-400 text-center italic">
       No records for "{{ activeTab }}"
     </p>
     <div v-else>

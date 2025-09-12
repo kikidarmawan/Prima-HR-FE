@@ -27,7 +27,7 @@ const handleBackspace = (e, index) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-white dark:bg-black text-gray-800 dark:text-white flex flex-col p-6 justify-between transition-colors duration-300">
+  <div class="min-h-screen bg-white dark:bg-[#0c0e19] text-gray-800 dark:text-white flex flex-col p-6 justify-between transition-colors duration-300">
     <!-- Back Button -->
     <router-link to="/forgot-password" class="mb-4 text-2xl text-gray-700 dark:text-gray-300">
       <i class="fa-solid fa-angle-left"></i>

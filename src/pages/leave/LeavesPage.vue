@@ -202,7 +202,7 @@ function applyFilters(newFilters) {
 </script>
 
 <template>
-  <div class="bg-gray-100 dark:bg-black min-h-screen flex flex-col items-center transition-colors duration-300">
+  <div class="bg-gray-100 dark:bg-[#0c0e19] min-h-screen flex flex-col items-center transition-colors duration-300">
     <!-- Navbar -->
     <Navbar />
 
@@ -249,9 +249,7 @@ function applyFilters(newFilters) {
     </div>
 
     <!-- Tab Content -->
-    <div
-      class="w-full max-w-sm bg-gray-100 dark:bg-black overflow-scroll pb-24 max-h-[calc(100vh-260px)] transition-colors duration-300"
-    >
+    <div class="w-full max-w-sm bg-gray-100 dark:bg-[#0c0e19] overflow-auto pb-24 max-h-[calc(100vh-260px)] transition-colors duration-300" >
       <TabContent :activeTab="activeTab" :data="tabData[activeTab]" mobile />
     </div>
   </div>

@@ -37,13 +37,14 @@ watchEffect(async () => {
   }
 
   try {
-    const res = await api.get(`/api/detail-karyawan/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    karyawan.value = res.data.data;
-    localStorage.setItem("karyawan", JSON.stringify(karyawan.value));
+const res = await api.get(`/api/detail-karyawan`, {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
+karyawan.value = res.data.data;
+localStorage.setItem("karyawan", JSON.stringify(karyawan.value));
+
 
   } catch (err) {
     console.error("Gagal ambil data karyawan:", err);
@@ -51,20 +52,21 @@ watchEffect(async () => {
 });
 </script>
 
-
-
 <template>
-  <div class="min-h-screen bg-white dark:bg-black px-4 sm:px-6 py-6 max-w-md mx-auto transition-colors duration-300">
+  <div class="min-h-screen bg-white dark:bg-[#0c0e19] px-4 sm:px-6 py-6 max-w-md mx-auto transition-colors duration-300">
 
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
-      <router-link to="/profile" class="text-2xl text-gray-700 dark:text-gray-200">
-        <i class="fa-solid fa-angle-left"><span class="text-white dark:text-black">A</span></i>
+      <router-link to="/profile" class="text-2xl text-gray-700 dark:text-gray-200 cursor-pointer">
+        <i class="fa-solid fa-angle-left"><span class="text-white dark:text-black"></span></i>
       </router-link>
 
-      <h1 class="text-lg font-bold text-center flex-1 -ml-6 text-gray-900 dark:text-white">
+      <h1 class="text-lg font-bold text-center text-gray-900 dark:text-white -ml-10">
         My Profile
       </h1>
+      <div>
+
+      </div>
     </div>
 
     <!-- Tabs -->
