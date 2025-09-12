@@ -142,6 +142,7 @@ async function handleSubmit(photoBase64) {
     const tanggal = today.toISOString().split("T")[0]
     const token = localStorage.getItem("token")
 
+    // 🔎 cek status presensi hari ini
     let checkRes
     try {
       checkRes = await api.get(`/api/presensi-today?tanggal=${tanggal}`, {
@@ -152,17 +153,23 @@ async function handleSubmit(photoBase64) {
       presensiData.value = null
     }
 
-    const sudahCheckIn = !!presensiData.value?.jam_masuk
-    const sudahCheckOut = !!presensiData.value?.jam_keluar
+    const todayData = presensiData.value?.["0"] || null
+
+    const sudahCheckIn = !!todayData?.jam_masuk
+    const sudahCheckOut = !!todayData?.jam_keluar
+
     if (sudahCheckIn && sudahCheckOut) {
       alert("Anda sudah melakukan presensi hari ini.")
       return
     }
 
-    const isCheckIn = sudahCheckIn
+    // ✅ kalau belum checkin -> action checkin
+    // ✅ kalau sudah checkin tapi belum checkout -> action checkout
+    const isCheckIn = !sudahCheckIn
+
     const jamSekarang = isCheckIn ? formatHi(today) : formatHis(today)
 
-    // ambil lokasi
+    // 🔎 ambil lokasi user
     const pos = await new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resolve, (err) => {
         alert("Lokasi harus diizinkan untuk presensi!")
@@ -170,8 +177,9 @@ async function handleSubmit(photoBase64) {
       })
     })
     const { latitude, longitude } = pos.coords
-    const fotoFile = dataURLtoFile(photoBase64, "foto.png")
 
+    // 🔎 upload foto
+    const fotoFile = dataURLtoFile(photoBase64, "foto.png")
     const uploadForm = new FormData()
     uploadForm.append("foto", fotoFile)
 
@@ -183,6 +191,7 @@ async function handleSubmit(photoBase64) {
     })
     const fotoPath = uploadRes.data.foto_path
 
+    // 🔎 siapkan payload absensi
     const absensiPayload = {
       karyawan_id: karyawanId,
       tanggal,
@@ -190,34 +199,40 @@ async function handleSubmit(photoBase64) {
         ? { jam_masuk: jamSekarang, lat_masuk: latitude, long_masuk: longitude, foto_masuk: fotoPath }
         : { jam_keluar: jamSekarang, lat_pulang: latitude, long_pulang: longitude, foto_keluar: fotoPath }),
     }
-    console.log('check in', isCheckIn);
-    console.log('Absensi Payload', absensiPayload);
-    
+
+    console.log("Action:", isCheckIn ? "Check-in" : "Check-out")
+    console.log("Absensi Payload:", absensiPayload)
+
+    // 🔎 request ke API
     const res = await api({
       method: isCheckIn ? "post" : "put",
       url: isCheckIn ? "/api/check-in" : "/api/check-out",
       data: absensiPayload,
       headers: { 
         Authorization: `Bearer ${token}`,  
-        Accept: 'application/json',
+        Accept: "application/json",
       },
     })
 
-
     alert(res.data.message || "Presensi berhasil!")
 
+    previewFoto.value = fotoPath
     const refresh = await api.get(`/api/presensi-today?tanggal=${tanggal}`, {
-      headers: { Authorization: `Bearer ${token}`,  },
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    await api.get(`/api/presensi-month`, {
+      headers: { Authorization: `Bearer ${token}` },
     })
     presensiData.value = refresh.data.data
-
-    previewFoto.value = fotoPath
   } catch (err) {
     console.error("Error:", err.response?.data || err)
     alert(err.response?.data?.message || "Presensi gagal!")
   } finally {
     loading.value = false
     closeCamera()
+
+    // 🔎 refresh status presensi biar data terbaru langsung muncul
   }
 }
+
 </script>
