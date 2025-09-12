@@ -17,7 +17,10 @@ export default {
   state: () => ({
     todayPresensi: null,
     monthPresensi: [],
-    loading: false,
+    loading: {
+      loadingTodayPresensi : true,
+      loadingMonthPresensi : true,
+    },
     error: null,
     previewFoto: null,
   }),
@@ -29,7 +32,7 @@ export default {
       state.monthPresensi = payload;
     },
     SET_LOADING(state, val) {
-      state.loading = val;
+      // state.loading = val;
     },
     SET_ERROR(state, err) {
       state.error = err;
@@ -37,10 +40,16 @@ export default {
     SET_PREVIEW_FOTO(state, foto) {
       state.previewFoto = foto;
     },
+    SET_LOADING_TODAY_PRESENSI(state, loading) {
+      state.loading.loadingTodayPresensi = loading
+    },
+    SET_LOADING_MONTH_PRESENSI(state, loading) {
+      state.loading.loadingMonthPresensi = loading
+    },
   },
   actions: {
     async fetchTodayPresensi({ commit }, tanggal = null) {
-      commit("SET_LOADING", true);
+      commit("SET_LOADING_TODAY_PRESENSI", true);
       commit("SET_ERROR", null);
       try {
         const token = localStorage.getItem("token");
@@ -66,7 +75,7 @@ export default {
         const msg = err.response?.data?.message || err.message;
         commit("SET_ERROR", msg);
       } finally {
-        commit("SET_LOADING", false);
+        commit("SET_LOADING_TODAY_PRESENSI", false);
       }
     },
 
@@ -148,13 +157,15 @@ export default {
     },
 
     async fetchMonthPresensi({ commit }) {
-      commit("SET_LOADING", true);
+      commit("SET_LOADING_MONTH_PRESENSI", true);
       commit("SET_ERROR", null);
       try {
         const token = localStorage.getItem("token");
         const res = await api.get(`/api/presensi-month`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        console.log(res.data.data);
+        
         commit("SET_MONTH_PRESENSI", res.data.data || []);
         return res.data.data || [];
       } catch (err) {
@@ -162,7 +173,7 @@ export default {
         commit("SET_ERROR", msg);
         return [];
       } finally {
-        commit("SET_LOADING", false);
+        commit("SET_LOADING_MONTH_PRESENSI", false);
       }
     },
   },
@@ -174,7 +185,10 @@ export default {
       }
       return state.monthPresensi.find((p) => p.tanggal === tanggal) || null;
     },
+    presensiByMonth: (state) => { state.monthPresensi },
     isLoading: (state) => state.loading,
+    isLoadingTodayPresensi: (state) => state.loading.loadingTodayPresensi,
+    isLoadingMonthPresensi: (state) => state.loading.loadingMonthPresensi,
     errorMessage: (state) => state.error,
     previewFoto: (state) => state.previewFoto,
   },

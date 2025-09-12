@@ -35,7 +35,7 @@ const goToHome = () => router.push("/login");
 </script>
 
 <template>
-  <div class="min-h-screen bg-white dark:bg-black text-gray-800 dark:text-white p-6 transition-colors duration-300">
+  <div class="min-h-screen bg-white dark:bg-[#0c0e19] text-gray-800 dark:text-white p-6 transition-colors duration-300">
     <!-- Back Button -->
     <router-link to="/forgot-password" class="mb-6 text-2xl text-gray-800 dark:text-white inline-block">
       <i class="fa-solid fa-angle-left"></i>

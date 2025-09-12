@@ -17,29 +17,54 @@
 
       <!-- Icons -->
       <div class="grid grid-cols-5 w-full text-center">
-        <router-link to="/home">
-          <i class="fa-solid fa-house text-xl text-gray-500 dark:text-gray-300 
-            hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"></i>
+        <!-- Home -->
+        <router-link to="/home" class="flex flex-col items-center justify-center transition-colors group">
+          <i class="fa-solid fa-house text-xl transition-colors"
+             :class="getNavClass('/home')"></i>
+          <p class="text-xs font-medium transition-colors"
+             :class="getNavClass('/home')">
+            Home
+          </p>
         </router-link>
 
-        <router-link to="/leaves">
-          <i class="fa-regular fa-calendar text-xl text-gray-500 dark:text-gray-300 
-            hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"></i>
+        <!-- Leaves -->
+        <router-link to="/leaves" class="flex flex-col items-center justify-center transition-colors group">
+          <i class="fa-regular fa-calendar text-xl transition-colors"
+             :class="getNavClass('/leaves')"></i>
+          <p class="text-xs font-medium transition-colors"
+             :class="getNavClass('/leaves')">
+            Leaves
+          </p>
         </router-link>
 
-        <router-link to="/overtime">
-          <i class="fa-regular fa-clock text-xl text-gray-500 dark:text-gray-300 
-            hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"></i>
+        <!-- Overtime -->
+        <router-link to="/overtime" class="flex flex-col items-center justify-center transition-colors group">
+          <i class="fa-regular fa-clock text-xl transition-colors"
+             :class="getNavClass('/overtime')"></i>
+          <p class="text-xs font-medium transition-colors"
+             :class="getNavClass('/overtime')">
+            Overtime
+          </p>
         </router-link>
 
-        <router-link to="/holiday">
-          <i class="fa-solid fa-umbrella-beach text-xl text-gray-500 dark:text-gray-300 
-            hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"></i>
+        <!-- Holiday -->
+        <router-link to="/holiday" class="flex flex-col items-center justify-center transition-colors group">
+          <i class="fa-solid fa-umbrella-beach text-xl transition-colors"
+             :class="getNavClass('/holiday')"></i>
+          <p class="text-xs font-medium transition-colors"
+             :class="getNavClass('/holiday')">
+            Holiday
+          </p>
         </router-link>
 
-        <router-link to="/profile">
-          <i class="fa-regular fa-user text-xl text-gray-500 dark:text-gray-300 
-            hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"></i>
+        <!-- Profile -->
+        <router-link to="/profile" class="flex flex-col items-center justify-center transition-colors group">
+          <i class="fa-regular fa-user text-xl transition-colors"
+             :class="getNavClass('/profile')"></i>
+          <p class="text-xs font-medium transition-colors"
+             :class="getNavClass('/profile')">
+            Profile
+          </p>
         </router-link>
       </div>
     </div>
@@ -57,28 +82,33 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 import CameraModal from './CameraModal.vue'
-import api from "@/services/api";
+import api from "@/services/api"
 
+const route = useRoute()
 const isCameraOpen = ref(false)
 const presensiData = ref(null)
 const loading = ref(false)
 const previewFoto = ref(null)
 
-// 🔹 Ambil data user dari localStorage
 const user = JSON.parse(localStorage.getItem("user"))
 const karyawanId = user?.id || null
-
-//  user belum login
 if (!karyawanId) {
   alert("User tidak ditemukan, silakan login ulang.")
 }
 
-// Buka tutup modal kamera
 const openCamera = () => { isCameraOpen.value = true }
 const closeCamera = () => { isCameraOpen.value = false }
 
-// Konversi base64 ke File
+// 🔹 Helper untuk class active/hover nav
+const getNavClass = (path) => {
+  return route.path === path
+    ? "text-blue-600 dark:text-blue-400"
+    : "text-gray-500 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400"
+}
+
+// 🔹 Konversi base64 ke File
 function dataURLtoFile(dataurl, filename) {
   const arr = dataurl.split(',')
   const mime = arr[0].match(/:(.*?);/)[1]
@@ -104,16 +134,15 @@ function formatHis(date) {
   return `${h}:${m}:${s}`
 }
 
-// Submit presensi
+// 🔹 Submit presensi
 async function handleSubmit(photoBase64) {
   loading.value = true
-
   try {
     const today = new Date()
     const tanggal = today.toISOString().split("T")[0]
     const token = localStorage.getItem("token")
 
-    // presensi hari ini
+    // 🔎 cek status presensi hari ini
     let checkRes
     try {
       checkRes = await api.get(`/api/presensi-today?tanggal=${tanggal}`, {
@@ -124,19 +153,23 @@ async function handleSubmit(photoBase64) {
       presensiData.value = null
     }
 
-    const sudahCheckIn = !!presensiData.value?.jam_masuk
-    const sudahCheckOut = !!presensiData.value?.jam_keluar
+    const todayData = presensiData.value?.["0"] || null
+
+    const sudahCheckIn = !!todayData?.jam_masuk
+    const sudahCheckOut = !!todayData?.jam_keluar
 
     if (sudahCheckIn && sudahCheckOut) {
       alert("Anda sudah melakukan presensi hari ini.")
       return
     }
 
-    // check-in atau check-out
+    // ✅ kalau belum checkin -> action checkin
+    // ✅ kalau sudah checkin tapi belum checkout -> action checkout
     const isCheckIn = !sudahCheckIn
+
     const jamSekarang = isCheckIn ? formatHi(today) : formatHis(today)
 
-    // Ambil lokasi
+    // 🔎 ambil lokasi user
     const pos = await new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resolve, (err) => {
         alert("Lokasi harus diizinkan untuk presensi!")
@@ -144,9 +177,9 @@ async function handleSubmit(photoBase64) {
       })
     })
     const { latitude, longitude } = pos.coords
-    const fotoFile = dataURLtoFile(photoBase64, "foto.png")
 
-    // Upload foto
+    // 🔎 upload foto
+    const fotoFile = dataURLtoFile(photoBase64, "foto.png")
     const uploadForm = new FormData()
     uploadForm.append("foto", fotoFile)
 
@@ -156,51 +189,50 @@ async function handleSubmit(photoBase64) {
         Authorization: `Bearer ${token}`,
       },
     })
-
     const fotoPath = uploadRes.data.foto_path
 
-    // Payload absensi
+    // 🔎 siapkan payload absensi
     const absensiPayload = {
       karyawan_id: karyawanId,
       tanggal,
       ...(isCheckIn
-        ? {
-            jam_masuk: jamSekarang,
-            lat_masuk: latitude,
-            long_masuk: longitude,
-            foto_masuk: fotoPath,
-          }
-        : {
-            jam_keluar: jamSekarang,
-            lat_pulang: latitude,
-            long_pulang: longitude,
-            foto_keluar: fotoPath,
-          }),
+        ? { jam_masuk: jamSekarang, lat_masuk: latitude, long_masuk: longitude, foto_masuk: fotoPath }
+        : { jam_keluar: jamSekarang, lat_pulang: latitude, long_pulang: longitude, foto_keluar: fotoPath }),
     }
 
-    // Kirim absensi
+    console.log("Action:", isCheckIn ? "Check-in" : "Check-out")
+    console.log("Absensi Payload:", absensiPayload)
+
+    // 🔎 request ke API
     const res = await api({
       method: isCheckIn ? "post" : "put",
       url: isCheckIn ? "/api/check-in" : "/api/check-out",
       data: absensiPayload,
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { 
+        Authorization: `Bearer ${token}`,  
+        Accept: "application/json",
+      },
     })
 
     alert(res.data.message || "Presensi berhasil!")
 
-    // Refresh data
+    previewFoto.value = fotoPath
     const refresh = await api.get(`/api/presensi-today?tanggal=${tanggal}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
+    await api.get(`/api/presensi-month`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
     presensiData.value = refresh.data.data
-
-    previewFoto.value = fotoPath
   } catch (err) {
     console.error("Error:", err.response?.data || err)
     alert(err.response?.data?.message || "Presensi gagal!")
   } finally {
     loading.value = false
     closeCamera()
+
+    // 🔎 refresh status presensi biar data terbaru langsung muncul
   }
 }
+
 </script>

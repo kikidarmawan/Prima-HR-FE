@@ -11,7 +11,7 @@ const jabatan = karyawan?.jabatan.nama_jabatan;
     <div class="flex items-center gap-5">
       <img :src="Oren" class="rounded-full w-[52px] h-[52px] object-cover" />
       <div>
-        <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
+        <h1 class="text-base md:text-xl font-semibold text-gray-900 dark:text-white">
           {{ nama }}
         </h1>
         <p class="text-black text-xs dark:text-gray-300">

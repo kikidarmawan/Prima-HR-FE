@@ -3,13 +3,13 @@
     <div
       class="bg-white dark:bg-gray-900 rounded-2xl space-x-5 mx-3 p-4 shadow transition-colors duration-300"
     >
-      <!-- Nama, Tanggal, Jenis Absen & Keterangan -->
+      <!-- Name, Date, Type & Information -->
       <div>
         <p class="text-sm font-medium text-gray-900 dark:text-white">
           {{ item.name }}
         </p>
         <p class="text-xs font-bold text-gray-700 dark:text-gray-300">
-          {{ item.date }}
+          {{ formatDate(item.date) }}
         </p>
         <p class="text-xs text-gray-600 dark:text-gray-400">
           Type: {{ item.jenis_absen }}
@@ -19,7 +19,7 @@
         </p>
       </div>
 
-      <!-- Tombol Aksi -->
+      <!-- Action Buttons -->
       <div class="mt-3 flex gap-2 w-full">
         <!-- Reject -->
         <button
@@ -36,13 +36,13 @@
           class="flex-1 py-2 bg-green-500 hover:bg-green-600 text-white text-sm rounded-lg flex items-center justify-center cursor-pointer gap-2 transition"
         >
           <Icon icon="mdi:check-circle-outline" class="w-4 h-4" />
-          <span>Accept</span>
+          <span>Approve</span>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Modal Konfirmasi -->
+  <!-- Confirmation Modal -->
   <transition
     enter-active-class="transition ease-out duration-300 transform"
     enter-from-class="opacity-0 scale-95"
@@ -60,18 +60,16 @@
       >
         <!-- Title -->
         <h3 class="text-lg font-semibold text-center text-gray-900 dark:text-white">
-          Konfirmasi
+          Confirmation
         </h3>
 
         <!-- Description -->
         <p class="mt-2 text-center text-gray-700 dark:text-gray-300 text-sm">
           Are you sure you want to
           <span
-            :class="
-              confirmType === 'approve'
+            :class="confirmType === 'approve'
                 ? 'text-green-500 font-semibold'
-                : 'text-red-500 font-semibold'
-            "
+                : 'text-red-500 font-semibold'"
           >
             {{ confirmType === 'approve' ? 'Approve' : 'Reject' }}
           </span>
@@ -89,11 +87,9 @@
           <button
             @click="confirmAction"
             class="flex-1 py-2 rounded-lg text-white font-medium transition"
-            :class="
-              confirmType === 'approve'
+            :class="confirmType === 'approve'
                 ? 'bg-green-500 hover:bg-green-600'
-                : 'bg-red-500 hover:bg-red-600'
-            "
+                : 'bg-red-500 hover:bg-red-600'"
           >
             Yes
           </button>
@@ -102,7 +98,7 @@
     </div>
   </transition>
 
-  <!-- Modal Loading -->
+  <!-- Loading Modal -->
   <transition
     enter-active-class="transition-opacity duration-300 ease-out"
     enter-from-class="opacity-0"
@@ -142,10 +138,10 @@
           ></path>
         </svg>
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-          Loading...
+          Processing...
         </h3>
         <p class="text-gray-600 dark:text-gray-300 text-center text-sm">
-          Processing Request
+          Please wait, your request is being processed
         </p>
       </div>
     </div>
@@ -181,31 +177,41 @@ const openConfirm = (type) => {
   showConfirm.value = true;
 };
 
+// ✅ Format date to "September 11, 2025"
+const formatDate = (dateStr) => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+
 const confirmAction = async () => {
   showConfirm.value = false;
-  showLoadingModal.value = true; //  tampilkan loading
+  showLoadingModal.value = true;
 
   try {
     await store.dispatch("team_leave/updateLeaveStatus", {
       item: props.item,
-      status: confirmType.value === "approve" ? "Disetujui" : "Ditolak",
+      status: confirmType.value === "approve" ? "Approved" : "Rejected",
     });
 
     emit("action", { item: props.item, status: confirmType.value });
 
     setTimeout(() => {
       showLoadingModal.value = false;
-      alertMessage.value = `Request berhasil ${
-        confirmType.value === "approve" ? "disetujui" : "ditolak"
-      }!`;
+      alertMessage.value = `Request has been ${
+        confirmType.value === "approve" ? "approved" : "rejected"
+      } successfully!`;
       alertType.value = "success";
       showAlert.value = true;
       setTimeout(() => (showAlert.value = false), 2000);
     }, 1000);
   } catch (err) {
-    console.error("Gagal update status:", err);
+    console.error("Failed to update status:", err);
     showLoadingModal.value = false;
-    alertMessage.value = "Terjadi kesalahan!";
+    alertMessage.value = "An error occurred!";
     alertType.value = "error";
     showAlert.value = true;
     setTimeout(() => (showAlert.value = false), 2000);
