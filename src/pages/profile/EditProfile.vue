@@ -6,9 +6,6 @@ import { useRouter } from "vue-router";
 const store = useStore();
 const router = useRouter();
 
-const karyawan = JSON.parse(localStorage.getItem("karyawan"));
-const id = karyawan?.user_id;
-
 const form = ref({
   nama_karyawan: "",
   email: "",
@@ -22,8 +19,7 @@ const previewImage = ref(null);
 const existingData = ref(null);
 
 onMounted(async () => {
-  if (!id) return;
-  await store.dispatch("karyawan/fetchKaryawanById", id);
+  await store.dispatch("karyawan/fetchKaryawanById");
   const data = store.getters["karyawan/karyawan"];
   if (data) {
     existingData.value = data;
@@ -40,8 +36,8 @@ onMounted(async () => {
 const handleImageUpload = (event) => {
   const file = event.target.files[0];
   if (file) {
-    form.value.foto = file; // simpan File
-    previewImage.value = URL.createObjectURL(file); // preview langsung
+    form.value.foto = file;
+    previewImage.value = URL.createObjectURL(file);
   }
 };
 
@@ -50,43 +46,21 @@ const updateProfile = async () => {
   let payload;
 
   if (form.value.foto instanceof File) {
-    // Pakai FormData kalau ada foto baru
     payload = new FormData();
-
-    // Gabungkan data existing + form input
-    const merged = {
-      ...existingData.value,    // semua field lama
-      ...form.value             // overwrite sama input baru
-    };
-
-    // Append semua key ke FormData
-    Object.keys(merged).forEach((key) => {
-      if (merged[key] !== null && merged[key] !== undefined) {
-        payload.append(key, merged[key]);
+    Object.keys(form.value).forEach((key) => {
+      if (form.value[key] !== null && form.value[key] !== undefined) {
+        payload.append(key, form.value[key]);
       }
     });
   } else {
-    // JSON biasa
-    payload = {
-      ...existingData.value,
-      ...form.value,
-    };
-  }
-  if (payload instanceof FormData) {
-    for (let [key, value] of payload.entries()) {
-      console.log(key, value);
-    }
-  } else {
-    console.log("Payload JSON:", payload);
+    payload = { ...form.value };
   }
 
   try {
-    const karyawanId = existingData.value.id;
     await store.dispatch("karyawan/updateKaryawan", {
-      id: karyawanId,
       data: payload,
     });
-    await store.dispatch("karyawan/fetchKaryawanById", existingData.value.user_id);
+    await store.dispatch("karyawan/fetchKaryawanById");
 
     alert("Profile berhasil diupdate ✅");
     router.push("/profile");
@@ -95,7 +69,6 @@ const updateProfile = async () => {
     console.error(err.response?.data || err);
   }
 };
-
 </script>
 
 <template>

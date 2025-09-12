@@ -37,21 +37,20 @@ watchEffect(async () => {
   }
 
   try {
-    const res = await api.get(`/api/detail-karyawan/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    karyawan.value = res.data.data;
-    localStorage.setItem("karyawan", JSON.stringify(karyawan.value));
+const res = await api.get(`/api/detail-karyawan`, {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
+karyawan.value = res.data.data;
+localStorage.setItem("karyawan", JSON.stringify(karyawan.value));
+
 
   } catch (err) {
     console.error("Gagal ambil data karyawan:", err);
   }
 });
 </script>
-
-
 
 <template>
   <div class="min-h-screen bg-white dark:bg-[#0c0e19] px-4 sm:px-6 py-6 max-w-md mx-auto transition-colors duration-300">
