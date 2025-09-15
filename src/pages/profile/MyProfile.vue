@@ -1,34 +1,49 @@
 <script setup>
-import { ref, onMounted, watch } from "vue"; 
+import { ref, computed, onMounted, watch } from "vue";
 import Navbar from "../../components/Navbar.vue";
-import Oren from "../../assets/images/Oren.jpg";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
 const store = useStore();
 const router = useRouter();
-const avatar = ref(Oren);
-const karyawan = JSON.parse(localStorage.getItem("karyawan"));
-const nama = karyawan?.nama_karyawan; 
-const jabatan = karyawan?.jabatan.nama_jabatan; 
+const karyawan = computed(() => store.getters["karyawan/karyawan"]);
+const nama = computed(() => karyawan.value?.nama_karyawan || "");
+const jabatan = computed(() => karyawan.value?.jabatan?.nama_jabatan || "");
 
-
-// Dark mode state
+// Dark mode
 const darkMode = ref(localStorage.getItem("theme") === "dark");
 
-onMounted(() => {
+// fallback avatar
+const defaultAvatar = new URL("../../assets/images/Profile.png", import.meta.url).href;
+const avatar = ref(defaultAvatar);
+
+// apply darkmode + load avatar
+onMounted(async () => {
   const savedImage = localStorage.getItem("profileImage");
   if (savedImage) {
     avatar.value = savedImage;
   }
-  // apply initial theme
+
   document.documentElement.classList.toggle("dark", darkMode.value);
+
+  // ambil data terbaru dari backend
+  await store.dispatch("karyawan/fetchKaryawanById");
 });
 
-// update theme when darkMode changes
+// update theme
 watch(darkMode, (val) => {
   document.documentElement.classList.toggle("dark", val);
   localStorage.setItem("theme", val ? "dark" : "light");
+});
+
+// update avatar setiap kali data karyawan berubah
+watch(karyawan, (val) => {
+  if (val?.foto_url) {
+    avatar.value = `${val.foto_url}?t=${Date.now()}`; // 🔥 anti-cache
+    localStorage.setItem("profileImage", avatar.value);
+  } else {
+    avatar.value = defaultAvatar;
+  }
 });
 
 const handleLogout = () => {
@@ -37,64 +52,103 @@ const handleLogout = () => {
 };
 </script>
 
+
 <template>
-  <div class="min-h-screen bg-white dark:bg-[#0c0e19] flex flex-col justify-between pb-20 transition-colors duration-300">
+  <div
+    class="min-h-screen bg-white dark:bg-[#0c0e19] flex flex-col justify-between pb-20 transition-colors duration-300"
+  >
     <!-- Profile -->
     <div class="flex flex-col items-center p-10 relative">
       <div class="relative w-24 h-24">
-        <img :src="avatar" class="rounded-full w-24 h-24 object-cover" alt="User Avatar" />
+        <img :src="avatar" class="rounded-full w-24 h-24 object-cover" />
       </div>
 
-      <h1 class="font-semibold text-xl mt-4 text-gray-900 dark:text-white">{{ nama }}</h1>
+      <h1 class="font-semibold text-xl mt-4 text-gray-900 dark:text-white">
+        {{ nama }}
+      </h1>
       <h2 class="text-base text-gray-500 dark:text-gray-400">{{ jabatan }}</h2>
 
       <router-link to="/edit-profile">
-        <button class="mt-4 bg-blue-500 dark:bg-blue-800 w-full text-white px-4 py-2 rounded-xl text-base cursor-pointer hover:bg-blue-600 transition">
-        Edit Profile
-      </button>
-      </router-link> 
+        <button
+          class="mt-4 bg-blue-500 dark:bg-blue-800 w-full text-white px-4 py-2 rounded-xl text-base cursor-pointer hover:bg-blue-600 transition"
+        >
+          Edit Profile
+        </button>
+      </router-link>
     </div>
 
     <!-- Menu list -->
     <div class="px-6">
       <!-- My Profile -->
       <router-link to="/profile/details">
-        <div class="flex items-center justify-between px-2 py-5 border-b border-gray-200 dark:border-gray-700">
+        <div
+          class="flex items-center justify-between px-2 py-5 border-b border-gray-200 dark:border-gray-700"
+        >
           <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-              <i class="fa-regular fa-user text-2xl text-gray-600 dark:text-gray-300"></i>
+            <div
+              class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
+            >
+              <i
+                class="fa-regular fa-user text-2xl text-gray-600 dark:text-gray-300"
+              ></i>
             </div>
-            <span class="text-base font-medium text-gray-800 dark:text-gray-200">My Profile</span>
+            <span class="text-base font-medium text-gray-800 dark:text-gray-200"
+              >My Profile</span
+            >
           </div>
-          <i class="fa-solid fa-angle-right text-gray-400 dark:text-gray-500"></i>
+          <i
+            class="fa-solid fa-angle-right text-gray-400 dark:text-gray-500"
+          ></i>
         </div>
       </router-link>
 
       <!-- Change Password -->
       <router-link to="/change-password">
-        <div class="flex items-center justify-between px-2 py-5 border-b border-gray-200 dark:border-gray-700">
+        <div
+          class="flex items-center justify-between px-2 py-5 border-b border-gray-200 dark:border-gray-700"
+        >
           <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-              <i class="fa-solid fa-lock text-2xl text-gray-600 dark:text-gray-300"></i>
+            <div
+              class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
+            >
+              <i
+                class="fa-solid fa-lock text-2xl text-gray-600 dark:text-gray-300"
+              ></i>
             </div>
-            <span class="text-base font-medium text-gray-800 dark:text-gray-200">Change Password</span>
+            <span class="text-base font-medium text-gray-800 dark:text-gray-200"
+              >Change Password</span
+            >
           </div>
-          <i class="fa-solid fa-angle-right text-gray-400 dark:text-gray-500"></i>
+          <i
+            class="fa-solid fa-angle-right text-gray-400 dark:text-gray-500"
+          ></i>
         </div>
       </router-link>
 
       <!-- Settings (Switch Mode) -->
-      <div class="flex items-center justify-between px-2 py-5 border-b border-gray-200 dark:border-gray-700">
+      <div
+        class="flex items-center justify-between px-2 py-5 border-b border-gray-200 dark:border-gray-700"
+      >
         <div class="flex items-center gap-4">
-          <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-            <i class="fa-solid fa-gear text-2xl text-gray-600 dark:text-gray-300"></i>
+          <div
+            class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
+          >
+            <i
+              class="fa-solid fa-gear text-2xl text-gray-600 dark:text-gray-300"
+            ></i>
           </div>
-          <span class="text-base font-medium text-gray-800 dark:text-gray-200">Switch Mode</span>
+          <span class="text-base font-medium text-gray-800 dark:text-gray-200"
+            >Switch Mode</span
+          >
         </div>
         <label class="relative inline-flex items-center cursor-pointer">
           <input type="checkbox" v-model="darkMode" class="sr-only peer" />
-          <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:bg-blue-500 transition-all"></div>
-          <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white border border-gray-300 rounded-full transition-transform peer-checked:translate-x-full dark:border-gray-600"></div>
+          <div
+            class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:bg-blue-500 transition-all"
+          ></div>
+          <div
+            class="absolute left-0.5 top-0.5 w-5 h-5 bg-white border border-gray-300 rounded-full transition-transform peer-checked:translate-x-full dark:border-gray-600"
+          ></div>
         </label>
       </div>
     </div>

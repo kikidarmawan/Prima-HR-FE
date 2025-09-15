@@ -19,39 +19,50 @@ export default {
             Authorization: `Bearer ${token}`,
           },
         });
-        const karyawan = response.data.data;
-        commit("SET_KARYAWAN", karyawan);
-        localStorage.setItem("karyawan", JSON.stringify(karyawan));
+        // setelah dapet data dari API
+const karyawan = response.data.data;
+
+// kasih query param biar browser ambil ulang
+if (karyawan.foto_url) {
+  karyawan.foto_url = `${karyawan.foto_url}?t=${Date.now()}`;
+}
+
+commit("SET_KARYAWAN", karyawan);
+localStorage.setItem("karyawan", JSON.stringify(karyawan));
+
       } catch (err) {
         console.error("Gagal ambil data karyawan:", err.response?.data || err);
       }
     },
 
-  async updateKaryawan({ commit }, { data }) {
+
+    async updateKaryawan({ commit }, { data }) {
   try {
     const token = localStorage.getItem("token");
     let headers = { Authorization: `Bearer ${token}` };
 
     if (data instanceof FormData) {
       headers["Content-Type"] = "multipart/form-data";
-    } else {
-      headers["Accept"] = "application/json";
     }
 
-    // gunakan PUT bukan POST
-    const response = await api.put(`/api/update-karyawan`, data, {
-      headers,
-    });
-
+    const response = await api.put(`/api/update-karyawan`, data, { headers });
     const updated = response.data.data;
+
+    // ✅ Tambahin cache-busting langsung di sini
+    if (updated.foto_url) {
+      updated.foto_url = `${import.meta.env.VITE_API_URL}/${updated.foto_url}?t=${Date.now()}`;
+    }
+
     commit("SET_KARYAWAN", updated);
     localStorage.setItem("karyawan", JSON.stringify(updated));
     return updated;
   } catch (err) {
-    console.error("Gagal update karyawan:", err.response?.data || err);
+    console.error("❌ Gagal update karyawan:", err.response?.data || err);
     throw err;
   }
 },
+
+
 
 
     async initKaryawan({ commit }) {
