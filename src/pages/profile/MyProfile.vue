@@ -9,49 +9,57 @@ const router = useRouter();
 const karyawan = computed(() => store.getters["karyawan/karyawan"]);
 const nama = computed(() => karyawan.value?.nama_karyawan || "");
 const jabatan = computed(() => karyawan.value?.jabatan?.nama_jabatan || "");
-
 // Dark mode
 const darkMode = ref(localStorage.getItem("theme") === "dark");
-
-// fallback avatar
 const defaultAvatar = new URL("../../assets/images/Profile.png", import.meta.url).href;
 const avatar = ref(defaultAvatar);
+const imageKey = ref(0);
+const isUpdating = ref(false);
 
 // apply darkmode + load avatar
 onMounted(async () => {
-  const savedImage = localStorage.getItem("profileImage");
-  if (savedImage) {
-    avatar.value = savedImage;
-  }
-
   document.documentElement.classList.toggle("dark", darkMode.value);
-
-  // ambil data terbaru dari backend
   await store.dispatch("karyawan/fetchKaryawanById");
+  console.log(" Ambil ulang data karyawan di MyProfile");
 });
 
-// update theme
 watch(darkMode, (val) => {
   document.documentElement.classList.toggle("dark", val);
   localStorage.setItem("theme", val ? "dark" : "light");
 });
 
-// update avatar setiap kali data karyawan berubah
-watch(karyawan, (val) => {
-  if (val?.foto_url) {
-    avatar.value = `${val.foto_url}?t=${Date.now()}`; // 🔥 anti-cache
-    localStorage.setItem("profileImage", avatar.value);
+const checkLocalStorageForImage = () => {
+  const storedImage = localStorage.getItem("profileImage");
+  if (storedImage) {
+    console.log(" Menggunakan gambar dari localStorage:", storedImage);
+    return storedImage;
+  }
+  return null;
+};
+// pantau perubahan data karyawan
+watch(karyawan, (newVal) => {
+  console.log("👀 Karyawan berubah:", newVal);
+  
+  const storedImage = checkLocalStorageForImage();
+  
+  if (storedImage && !isUpdating.value) {
+    avatar.value = storedImage;
+    imageKey.value++;
+  } else if (newVal?.foto_url) {
+    avatar.value = `${newVal.foto_url}?t=${Date.now()}`;
+    console.log("✅ Avatar diganti:", avatar.value);
   } else {
     avatar.value = defaultAvatar;
   }
-});
+  
+  imageKey.value++;
+}, { immediate: true });
 
 const handleLogout = () => {
   store.dispatch("auth/logout");
   router.push("/login");
 };
 </script>
-
 
 <template>
   <div
@@ -60,14 +68,16 @@ const handleLogout = () => {
     <!-- Profile -->
     <div class="flex flex-col items-center p-10 relative">
       <div class="relative w-24 h-24">
-        <img :src="avatar" class="rounded-full w-24 h-24 object-cover" />
+        <img 
+          :key="imageKey" 
+          :src="avatar" 
+          class="rounded-full w-24 h-24 object-cover" 
+        />
       </div>
-
       <h1 class="font-semibold text-xl mt-4 text-gray-900 dark:text-white">
         {{ nama }}
       </h1>
       <h2 class="text-base text-gray-500 dark:text-gray-400">{{ jabatan }}</h2>
-
       <router-link to="/edit-profile">
         <button
           class="mt-4 bg-blue-500 dark:bg-blue-800 w-full text-white px-4 py-2 rounded-xl text-base cursor-pointer hover:bg-blue-600 transition"
@@ -76,7 +86,6 @@ const handleLogout = () => {
         </button>
       </router-link>
     </div>
-
     <!-- Menu list -->
     <div class="px-6">
       <!-- My Profile -->
@@ -101,7 +110,6 @@ const handleLogout = () => {
           ></i>
         </div>
       </router-link>
-
       <!-- Change Password -->
       <router-link to="/change-password">
         <div
@@ -124,7 +132,6 @@ const handleLogout = () => {
           ></i>
         </div>
       </router-link>
-
       <!-- Settings (Switch Mode) -->
       <div
         class="flex items-center justify-between px-2 py-5 border-b border-gray-200 dark:border-gray-700"
@@ -152,7 +159,6 @@ const handleLogout = () => {
         </label>
       </div>
     </div>
-
     <!-- Logout -->
     <button @click="handleLogout" class="w-full text-left cursor-pointer">
       <div class="flex items-center gap-5 px-9 py-5 mt-2 text-red-500">
@@ -162,7 +168,6 @@ const handleLogout = () => {
         <span class="text-base font-medium">Log out</span>
       </div>
     </button>
-
     <!-- Bottom Navbar -->
     <Navbar />
   </div>

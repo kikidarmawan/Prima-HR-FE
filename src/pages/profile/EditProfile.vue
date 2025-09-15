@@ -2,11 +2,11 @@
 import { ref, onMounted, watch } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import SuccessModal from "@/components/SuccessModal.vue"; 
+import SuccessModal from "@/components/SuccessModal.vue";
+import api from "@/services/api";
 
 const store = useStore();
 const router = useRouter();
-
 const form = ref({
   nama_karyawan: "",
   email: "",
@@ -14,11 +14,9 @@ const form = ref({
   jk: "",
   foto: null,
 });
-
-const defaultAvatar = "https://via.placeholder.com/150";
+const defaultAvatar = new URL("../../assets/images/Profile.png", import.meta.url).href;
 const previewImage = ref(null);
 const existingData = ref(null);
-// Ambil data awal
 // modal
 const showLoadingModal = ref(false);
 const showSuccessModal = ref(false);
@@ -35,27 +33,29 @@ onMounted(async () => {
     form.value.email = data.email || "";
     form.value.no_hp = data.no_hp || "";
     form.value.jk = data.jk || "";
-    previewImage.value = data.foto_url
-      ? `${import.meta.env.VITE_API_URL}/${data.foto_url}?t=${Date.now()}`
-      : defaultAvatar;
+    const storedImage = localStorage.getItem("profileImage");
+    if (storedImage) {
+      previewImage.value = storedImage;
+    } else {
+      previewImage.value = data.foto_url || defaultAvatar;
+    }
   }
 });
+
 watch(
   () => store.getters["karyawan/karyawan"],
   (newData) => {
     if (newData) {
       existingData.value = newData;
-      previewImage.value = newData.foto_url
-        ? `${import.meta.env.VITE_API_URL}/${newData.foto_url}?t=${Date.now()}`
-        : defaultAvatar;
+      if (!showLoadingModal.value && !localStorage.getItem("profileImage")) {
+        previewImage.value = newData.foto_url || defaultAvatar;
+      }
     }
   },
   { deep: true, immediate: true }
 );
 
-
 // upload avatar
-
 const handleImageUpload = (event) => {
   const file = event.target.files[0];
   if (file) {
@@ -64,49 +64,114 @@ const handleImageUpload = (event) => {
   }
 };
 
-
 // update profile
-
 const updateProfile = async () => {
-  let payload;
-
-  if (form.value.foto instanceof File) {
-    payload = new FormData();
-    payload.append("nama_karyawan", form.value.nama_karyawan);
-    payload.append("email", form.value.email);
-    payload.append("no_hp", form.value.no_hp);
-    payload.append("jk", form.value.jk);
-    payload.append("foto", form.value.foto);
-  } else {
-    payload = {
+  let jkMapped = form.value.jk;
+  if (jkMapped === "Laki-laki") jkMapped = "L";
+  if (jkMapped === "Perempuan") jkMapped = "P";
+  
+  showLoadingModal.value = true;
+  
+  try {
+    let fotoPath = null;
+    let fotoUrl = null;
+    
+    // upload ke API khusus upload foto
+    if (form.value.foto instanceof File) {
+      const formData = new FormData();
+      formData.append("foto", form.value.foto);
+      
+      const token = localStorage.getItem("token");
+      const uploadResponse = await api.post("/api/upload-foto-karyawan", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      
+      console.log("Response upload foto:", uploadResponse.data);
+      if (uploadResponse.data && uploadResponse.data.foto_path) {
+        fotoPath = uploadResponse.data.foto_path;
+        fotoUrl = uploadResponse.data.url_path;
+      }
+    }
+    
+    // payload untuk update karyawan
+    const payload = {
+      ...existingData.value, 
       nama_karyawan: form.value.nama_karyawan,
       email: form.value.email,
       no_hp: form.value.no_hp,
-      jk: form.value.jk,
+      jk: jkMapped,
     };
-  }
-
-  showLoadingModal.value = true;
-
-  try {
-    await store.dispatch("karyawan/updateKaryawan", { data: payload });
-    await store.dispatch("karyawan/fetchKaryawanById"); // refresh data
-
-    // kalau berhasil
+    
+    delete payload.created_at;
+    delete payload.updated_at;
+    delete payload.jabatan;
+    delete payload.jam_kerja_karyawan;
+    
+    if (fotoPath) {
+      payload.foto = fotoPath;
+    }
+    
+    console.log("Payload update karyawan:", payload);
+    
+    // Update data karyawan
+    const updateResponse = await store.dispatch("karyawan/updateKaryawan", { data: payload });
+    
+    console.log("Response dari update karyawan:", updateResponse);
+    
+    if (fotoUrl) {
+      const newUrl = `${fotoUrl}?t=${Date.now()}`;
+      previewImage.value = newUrl; 
+      localStorage.setItem("profileImage", newUrl);
+      
+      const updatedKaryawan = {
+        ...store.getters["karyawan/karyawan"],
+        foto: fotoPath,
+        foto_url: newUrl
+      };
+      store.commit("karyawan/SET_KARYAWAN", updatedKaryawan);
+      localStorage.setItem("karyawan", JSON.stringify(updatedKaryawan));
+      
+      setTimeout(async () => {
+        await store.dispatch("karyawan/fetchKaryawanById");
+      }, 2000);
+    } else if (updateResponse?.foto_url) {
+      const newUrl = `${updateResponse.foto_url}?t=${Date.now()}`;
+      previewImage.value = newUrl; 
+      localStorage.setItem("profileImage", newUrl);
+  
+      setTimeout(async () => {
+        await store.dispatch("karyawan/fetchKaryawanById");
+      }, 2000);
+    }
+    
     showLoadingModal.value = false;
     showSuccessModal.value = true;
   } catch (err) {
-    // kalau gagal
     showLoadingModal.value = false;
+    console.error("Full error:", err);
+    console.error("Error response:", err.response?.data);
+    
+    // Tampilkan detail error validation
+    let errorDetails = "";
+    if (err.response?.data?.errors) {
+      errorDetails = Object.entries(err.response.data.errors)
+        .map(([field, messages]) => `${field}: ${messages.join(", ")}`)
+        .join("; ");
+    }
+    
     errorMessage.value =
-      err.response?.data?.message || "Gagal update profile, coba lagi.";
+      errorDetails ||
+      err.response?.data?.errors?.foto?.[0] ||
+      err.response?.data?.errors?.jk?.[0] ||
+      err.response?.data?.message ||
+      "Gagal update profile, coba lagi.";
     showErrorModal.value = true;
-    console.error("❌ Error update profile:", err.response?.data || err);
   }
 };
 
-
-// close success modal -> redirect ke profile
 const handleSuccessClose = () => {
   showSuccessModal.value = false;
   router.push("/profile");
@@ -129,7 +194,6 @@ const handleSuccessClose = () => {
         <h1 class="text-xl font-semibold text-gray-800 dark:text-white">Edit Profile</h1>
         <div class="w-6"></div>
       </div>
-
       <!-- Avatar Upload -->
       <div class="flex flex-col items-center mb-6">
         <div class="relative">
@@ -137,6 +201,7 @@ const handleSuccessClose = () => {
             :src="previewImage || defaultAvatar"
             alt="Profile"
             class="w-28 h-28 rounded-full object-cover border-4 border-blue-400 shadow-md"
+            :key="previewImage" 
           />
           <label
             for="avatar"
@@ -154,12 +219,10 @@ const handleSuccessClose = () => {
         </div>
         <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">Tap icon to change photo</p>
       </div>
-
       <!-- Form -->
       <form @submit.prevent="updateProfile" class="px-6 space-y-6">
         <!-- Name -->
         <div>
-
           <label class="block text-blue-500 mb-1 text-sm font-medium"
             >Name</label
           >
@@ -168,14 +231,11 @@ const handleSuccessClose = () => {
             v-model="form.nama_karyawan"
             class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 
                    text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
-
             placeholder="Enter your name"
           />
         </div>
-
         <!-- Email -->
         <div>
-
           <label class="block text-blue-500 mb-1 text-sm font-medium"
             >Email</label
           >
@@ -184,11 +244,9 @@ const handleSuccessClose = () => {
             v-model="form.email"
             class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 
                    text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
-
             placeholder="Enter your email"
           />
         </div>
-
          <!-- Phone -->
       <div>
         <label class="block text-blue-500 mb-1 text-sm font-medium">Phone</label>
@@ -200,7 +258,6 @@ const handleSuccessClose = () => {
           placeholder="Enter your phone number"
         />
       </div>
-
         <!-- Save Button -->
         <button
           type="submit"
@@ -211,7 +268,6 @@ const handleSuccessClose = () => {
       </form>
     </div>
   </div>
-
   <!-- Modal Loading -->
   <transition
     enter-active-class="transition-opacity duration-300 ease-out"
@@ -247,9 +303,13 @@ const handleSuccessClose = () => {
       </div>
     </div>
   </transition>
-
   <!-- Success Modal -->
-  <SuccessModal v-if="showSuccessModal" message="Profile berhasil diupdate " @close="handleSuccessClose" />
+  <SuccessModal
+  v-if="showSuccessModal"
+  img="https://cdn-icons-png.flaticon.com/512/190/190411.png"
+  message="Profile berhasil diupdate "
+  @close="handleSuccessClose"
+/>
 
   <!-- Error Modal -->
   <transition
