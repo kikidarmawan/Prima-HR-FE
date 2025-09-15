@@ -2,6 +2,7 @@
 import { ref, onMounted, watch } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import SuccessModal from "@/components/SuccessModal.vue"; 
 
 const store = useStore();
 const router = useRouter();
@@ -17,8 +18,12 @@ const form = ref({
 const defaultAvatar = "https://via.placeholder.com/150";
 const previewImage = ref(null);
 const existingData = ref(null);
+const showLoadingModal = ref(false);
+const showSuccessModal = ref(false);
+const showErrorModal = ref(false);
+const errorMessage = ref("");
 
-// Ambil data awal
+// ambil data awal
 onMounted(async () => {
   await store.dispatch("karyawan/fetchKaryawanById");
   const data = store.getters["karyawan/karyawan"];
@@ -46,6 +51,7 @@ watch(
   { deep: true, immediate: true }
 );
 
+// upload avatar
 const handleImageUpload = (event) => {
   const file = event.target.files[0];
   if (file) {
@@ -54,6 +60,7 @@ const handleImageUpload = (event) => {
   }
 };
 
+// update profile
 const updateProfile = async () => {
   let payload;
 
@@ -73,6 +80,8 @@ const updateProfile = async () => {
     };
   }
 
+  showLoadingModal.value = true;
+
   try {
     await store.dispatch("karyawan/updateKaryawan", { data: payload });
     await store.dispatch("karyawan/fetchKaryawanById"); // refresh data
@@ -81,7 +90,25 @@ const updateProfile = async () => {
   } catch (err) {
     console.error("❌ Error update profile:", err.response?.data || err);
     alert("Gagal update profile ❌");
+    await store.dispatch("karyawan/fetchKaryawanById");
+
+    setTimeout(() => {
+      showLoadingModal.value = false;
+      showSuccessModal.value = true;
+    }, 1000);
+  } catch (err) {
+    showLoadingModal.value = false;
+    errorMessage.value =
+      err.response?.data?.message || "Gagal update profile, coba lagi.";
+    showErrorModal.value = true;
+    console.error(err);
   }
+};
+
+// close success modal -> redirect ke profile
+const handleSuccessClose = () => {
+  showSuccessModal.value = false;
+  router.push("/profile");
 };
 </script>
 
@@ -98,9 +125,7 @@ const updateProfile = async () => {
         >
           <i class="fa-solid fa-angle-left"></i>
         </router-link>
-        <h1 class="text-xl font-semibold text-gray-800 dark:text-white">
-          Edit Profile
-        </h1>
+        <h1 class="text-xl font-semibold text-gray-800 dark:text-white">Edit Profile</h1>
         <div class="w-6"></div>
       </div>
 
@@ -126,9 +151,7 @@ const updateProfile = async () => {
             @change="handleImageUpload"
           />
         </div>
-        <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">
-          Tap icon to change photo
-        </p>
+        <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">Tap icon to change photo</p>
       </div>
 
       <!-- Form -->
@@ -142,6 +165,12 @@ const updateProfile = async () => {
             type="text"
             v-model="form.nama_karyawan"
             class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
+          <label class="block text-blue-500 mb-1 text-sm font-medium">Name</label>
+          <input
+            type="text"
+            v-model="form.nama_karyawan"
+            class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 
+                   text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
             placeholder="Enter your name"
           />
         </div>
@@ -155,6 +184,12 @@ const updateProfile = async () => {
             type="email"
             v-model="form.email"
             class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
+          <label class="block text-blue-500 mb-1 text-sm font-medium">Email</label>
+          <input
+            type="email"
+            v-model="form.email"
+            class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 
+                   text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
             placeholder="Enter your email"
           />
         </div>
@@ -168,6 +203,12 @@ const updateProfile = async () => {
             type="text"
             v-model="form.no_hp"
             class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
+          <label class="block text-blue-500 mb-1 text-sm font-medium">Phone</label>
+          <input
+            type="text"
+            v-model="form.no_hp"
+            class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 
+                   text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
             placeholder="Enter your phone number"
           />
         </div>
@@ -182,4 +223,69 @@ const updateProfile = async () => {
       </form>
     </div>
   </div>
+
+  <!-- Modal Loading -->
+  <transition
+    enter-active-class="transition-opacity duration-300 ease-out"
+    enter-from-class="opacity-0"
+    enter-to-class="opacity-100"
+    leave-active-class="transition-opacity duration-300 ease-in"
+    leave-from-class="opacity-100"
+    leave-to-class="opacity-0"
+  >
+    <div
+      v-if="showLoadingModal"
+      class="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50"
+    >
+      <div
+        class="bg-white dark:bg-gray-900 rounded-2xl p-6 max-w-sm w-full mx-4 flex flex-col items-center shadow-xl"
+      >
+        <svg
+          class="animate-spin h-12 w-12 text-blue-500 mb-4"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 
+            3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Loading...</h3>
+        <p class="text-gray-600 dark:text-gray-300 text-center text-sm">Updating Profile</p>
+      </div>
+    </div>
+  </transition>
+
+  <!-- Success Modal -->
+  <SuccessModal v-if="showSuccessModal" message="Profile berhasil diupdate " @close="handleSuccessClose" />
+
+  <!-- Error Modal -->
+  <transition
+    enter-active-class="transition-opacity duration-300 ease-out"
+    enter-from-class="opacity-0"
+    enter-to-class="opacity-100"
+    leave-active-class="transition-opacity duration-300 ease-in"
+    leave-from-class="opacity-100"
+    leave-to-class="opacity-0"
+  >
+    <div
+      v-if="showErrorModal"
+      class="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50"
+    >
+      <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 max-w-sm w-full mx-4 shadow-xl text-center">
+        <h3 class="text-lg font-semibold text-red-500 mb-2">Error</h3>
+        <p class="text-gray-700 dark:text-gray-300 text-sm mb-4">{{ errorMessage }}</p>
+        <button
+          @click="showErrorModal = false"
+          class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg"
+        >
+          Tutup
+        </button>
+      </div>
+    </div>
+  </transition>
 </template>
