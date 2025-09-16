@@ -39,7 +39,6 @@ onMounted(async () => {
   }
 });
 
-// pantau perubahan tanggal
 watch(
   selectedDate,
   async (newIndex) => {

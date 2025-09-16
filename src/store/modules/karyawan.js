@@ -27,7 +27,7 @@ export default {
         localStorage.setItem("karyawan", JSON.stringify(karyawan));
         return karyawan;
       } catch (err) {
-        console.error("Gagal ambil data karyawan:", err.response?.data || err);
+        console.error("❌ Gagal ambil data karyawan:", err.response?.data || err);
         throw err;
       }
     },
@@ -35,26 +35,17 @@ export default {
       try {
         const token = localStorage.getItem("token");
         console.log("Data yang dikirim ke backend:", data);
-        const formData = new FormData();
-        Object.keys(data).forEach(key => {
-          if (data[key] !== null && data[key] !== undefined) {
-            formData.append(key, data[key]);
-          }
-        });
         
-        console.log("FormData yang dikirim:");
-        for (let pair of formData.entries()) {
-          console.log(pair[0] + ': ', pair[1]);
-        }
-        
-        const response = await api.put(`/api/update-karyawan`, formData, {
+        // PERUBAHAN: Kirim data sebagai JSON (cara asli yang berfungsi)
+        const response = await api.put(`/api/update-karyawan`, data, {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
         });
         
         console.log("Response dari update karyawan:", response.data);
+        
         const responseData = response.data;
         const updated = responseData.data || responseData;
         

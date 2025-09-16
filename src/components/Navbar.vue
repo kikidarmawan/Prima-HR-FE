@@ -3,7 +3,6 @@
   <div class="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-center">
     <div
       class="relative bg-white dark:bg-gray-900 shadow-xl h-16 rounded-t-3xl px-4 flex items-center justify-between w-106 mx-auto transition-colors duration-300">
-
       <!-- Curve Bulatan Tengah -->
       <div
         class="absolute -top-14 left-1/2 -translate-x-1/2 w-16 h-16 bg-white dark:bg-gray-900 rounded-full z-30 flex items-center justify-center">
@@ -14,7 +13,6 @@
           <span v-else class="text-xs">...</span>
         </button>
       </div>
-
       <!-- Icons -->
       <div class="grid grid-cols-5 w-full text-center">
         <!-- Home -->
@@ -26,7 +24,6 @@
             Home
           </p>
         </router-link>
-
         <!-- Leaves -->
         <router-link to="/leaves" class="flex flex-col items-center justify-center transition-colors group">
           <i class="fa-regular fa-calendar text-xl transition-colors"
@@ -36,7 +33,6 @@
             Leaves
           </p>
         </router-link>
-
         <!-- Overtime -->
         <router-link to="/overtime" class="flex flex-col items-center justify-center transition-colors group">
           <i class="fa-regular fa-clock text-xl transition-colors"
@@ -46,7 +42,6 @@
             Overtime
           </p>
         </router-link>
-
         <!-- Holiday -->
         <router-link to="/holiday" class="flex flex-col items-center justify-center transition-colors group">
           <i class="fa-solid fa-umbrella-beach text-xl transition-colors"
@@ -56,7 +51,6 @@
             Holiday
           </p>
         </router-link>
-
         <!-- Profile -->
         <router-link to="/profile" class="flex flex-col items-center justify-center transition-colors group">
           <i class="fa-regular fa-user text-xl transition-colors"
@@ -69,21 +63,58 @@
       </div>
     </div>
   </div>
-
   <!-- Camera Modal -->
   <CameraModal v-if="isCameraOpen" @close="closeCamera" @submit="handleSubmit" />
-
   <!-- Preview Foto Presensi -->
   <div v-if="previewFoto" class="mt-4 flex justify-center">
     <img :src="`http://192.168.0.155:8000/${previewFoto}`" alt="Foto Presensi"
       class="w-32 h-32 rounded-lg border shadow" />
   </div>
+
+  <!-- Success Modal -->
+  <SuccessModal
+    v-if="showSuccessModal"
+    :title="successTitle"
+    :message="successMessage"
+    @close="showSuccessModal = false"
+  />
+
+  <!-- Error Modal -->
+  <transition
+    enter-active-class="transition-opacity duration-300 ease-out"
+    enter-from-class="opacity-0"
+    enter-to-class="opacity-100"
+    leave-active-class="transition-opacity duration-300 ease-in"
+    leave-from-class="opacity-100"
+    leave-to-class="opacity-0"
+  >
+    <div
+      v-if="showErrorModal"
+      class="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50"
+    >
+      <div
+        class="bg-white dark:bg-gray-900 rounded-2xl p-6 max-w-sm w-full mx-4 shadow-xl text-center"
+      >
+        <h3 class="text-lg font-semibold text-red-500 mb-2">Error</h3>
+        <p class="text-gray-700 dark:text-gray-300 text-sm mb-4">
+          {{ errorMessage }}
+        </p>
+        <button
+          @click="showErrorModal = false"
+          class="bg-red-500 cursor-pointer hover:bg-red-600 text-white px-4 py-2 rounded-lg"
+        >
+          Tutup
+        </button>
+      </div>
+    </div>
+  </transition>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import CameraModal from './CameraModal.vue'
+import SuccessModal from './SuccessModal.vue'
 import api from "@/services/api"
 
 const route = useRoute()
@@ -92,23 +123,31 @@ const presensiData = ref(null)
 const loading = ref(false)
 const previewFoto = ref(null)
 
+// Modal states
+const showSuccessModal = ref(false)
+const showErrorModal = ref(false)
+const successTitle = ref('')
+const successMessage = ref('')
+const errorMessage = ref('')
+
 const user = JSON.parse(localStorage.getItem("user"))
 const karyawanId = user?.id || null
 if (!karyawanId) {
-  alert("User tidak ditemukan, silakan login ulang.")
+  errorMessage.value = "User tidak ditemukan, silakan login ulang."
+  showErrorModal.value = true
 }
 
 const openCamera = () => { isCameraOpen.value = true }
 const closeCamera = () => { isCameraOpen.value = false }
 
-// 🔹 Helper untuk class active/hover nav
+//  Helper untuk class active/hover nav
 const getNavClass = (path) => {
   return route.path === path
     ? "text-blue-600 dark:text-blue-400"
     : "text-gray-500 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400"
 }
 
-// 🔹 Konversi base64 ke File
+//  Konversi base64 ke File
 function dataURLtoFile(dataurl, filename) {
   const arr = dataurl.split(',')
   const mime = arr[0].match(/:(.*?);/)[1]
@@ -134,14 +173,14 @@ function formatHis(date) {
   return `${h}:${m}:${s}`
 }
 
-// 🔹 Submit presensi
+//  Submit presensi
 async function handleSubmit(photoBase64) {
   loading.value = true
   try {
     const today = new Date()
     const tanggal = today.toISOString().split("T")[0]
     const token = localStorage.getItem("token")
-
+    
     // 🔎 cek status presensi hari ini
     let checkRes
     try {
@@ -152,37 +191,35 @@ async function handleSubmit(photoBase64) {
     } catch (err) {
       presensiData.value = null
     }
-
+    
     const todayData = presensiData.value?.["0"] || null
-
     const sudahCheckIn = !!todayData?.jam_masuk
     const sudahCheckOut = !!todayData?.jam_keluar
-
+    
     if (sudahCheckIn && sudahCheckOut) {
-      alert("Anda sudah melakukan presensi hari ini.")
+      errorMessage.value = "Anda sudah melakukan presensi hari ini."
+      showErrorModal.value = true
       return
     }
-
-    // ✅ kalau belum checkin -> action checkin
-    // ✅ kalau sudah checkin tapi belum checkout -> action checkout
+    
     const isCheckIn = !sudahCheckIn
-
     const jamSekarang = isCheckIn ? formatHi(today) : formatHis(today)
-
-    // 🔎 ambil lokasi user
+    
+    //  ambil lokasi user
     const pos = await new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resolve, (err) => {
-        alert("Lokasi harus diizinkan untuk presensi!")
+        errorMessage.value = "Lokasi harus diizinkan untuk presensi!"
+        showErrorModal.value = true
         reject(err)
       })
     })
+    
     const { latitude, longitude } = pos.coords
-
-    // 🔎 upload foto
+    
+    //  upload foto
     const fotoFile = dataURLtoFile(photoBase64, "foto.png")
     const uploadForm = new FormData()
     uploadForm.append("foto", fotoFile)
-
     const uploadRes = await api.post("/api/upload-foto-karyawan", uploadForm, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -190,8 +227,8 @@ async function handleSubmit(photoBase64) {
       },
     })
     const fotoPath = uploadRes.data.foto_path
-
-    // 🔎 siapkan payload absensi
+    
+    // payload absensi
     const absensiPayload = {
       karyawan_id: karyawanId,
       tanggal,
@@ -199,11 +236,10 @@ async function handleSubmit(photoBase64) {
         ? { jam_masuk: jamSekarang, lat_masuk: latitude, long_masuk: longitude, foto_masuk: fotoPath }
         : { jam_keluar: jamSekarang, lat_pulang: latitude, long_pulang: longitude, foto_keluar: fotoPath }),
     }
-
+    
     console.log("Action:", isCheckIn ? "Check-in" : "Check-out")
     console.log("Absensi Payload:", absensiPayload)
-
-    // 🔎 request ke API
+    
     const res = await api({
       method: isCheckIn ? "post" : "put",
       url: isCheckIn ? "/api/check-in" : "/api/check-out",
@@ -213,10 +249,14 @@ async function handleSubmit(photoBase64) {
         Accept: "application/json",
       },
     })
-
-    alert(res.data.message || "Presensi berhasil!")
-
+    
+    successTitle.value = isCheckIn ? "Check-in Successful" : "Check-out Successful"
+    successMessage.value = res.data.message || (isCheckIn ? "Your check-in has been recorded successfully!" : "Your check-out has been recorded successfully!")
+    showSuccessModal.value = true
+    
     previewFoto.value = fotoPath
+    
+    // Refresh data
     const refresh = await api.get(`/api/presensi-today?tanggal=${tanggal}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -226,13 +266,11 @@ async function handleSubmit(photoBase64) {
     presensiData.value = refresh.data.data
   } catch (err) {
     console.error("Error:", err.response?.data || err)
-    alert(err.response?.data?.message || "Presensi gagal!")
+    errorMessage.value = err.response?.data?.message || "Presensi gagal!"
+    showErrorModal.value = true
   } finally {
     loading.value = false
     closeCamera()
-
-    // 🔎 refresh status presensi biar data terbaru langsung muncul
   }
 }
-
 </script>

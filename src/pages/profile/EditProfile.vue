@@ -1,3 +1,4 @@
+
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { useStore } from "vuex";
@@ -14,7 +15,10 @@ const form = ref({
   jk: "",
   foto: null,
 });
-const defaultAvatar = new URL("../../assets/images/Profile.png", import.meta.url).href;
+const defaultAvatar = new URL(
+  "../../assets/images/Profile.png",
+  import.meta.url
+).href;
 const previewImage = ref(null);
 const existingData = ref(null);
 // modal
@@ -66,106 +70,84 @@ const handleImageUpload = (event) => {
 
 // update profile
 const updateProfile = async () => {
-  let jkMapped = form.value.jk;
-  if (jkMapped === "Laki-laki") jkMapped = "L";
-  if (jkMapped === "Perempuan") jkMapped = "P";
-  
   showLoadingModal.value = true;
-  
   try {
-    let fotoPath = null;
     let fotoUrl = null;
-    
-    // upload ke API khusus upload foto
     if (form.value.foto instanceof File) {
       const formData = new FormData();
       formData.append("foto", form.value.foto);
-      
+
       const token = localStorage.getItem("token");
-      const uploadResponse = await api.post("/api/upload-foto-karyawan", formData, {
+      const uploadRes = await api.post("/api/upload-foto-karyawan", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       });
-      
-      console.log("Response upload foto:", uploadResponse.data);
-      if (uploadResponse.data && uploadResponse.data.foto_path) {
-        fotoPath = uploadResponse.data.foto_path;
-        fotoUrl = uploadResponse.data.url_path;
+
+      if (uploadRes.data?.status && uploadRes.data.url_path) {
+        const newUrl = `${uploadRes.data.url_path}?t=${Date.now()}`;
+        previewImage.value = newUrl;
+        localStorage.setItem("profileImage", newUrl);
       }
     }
-    
-    // payload untuk update karyawan
-    const payload = {
-      ...existingData.value, 
+    let jkMapped = form.value.jk;
+    if (jkMapped === "Laki-laki") jkMapped = "L";
+    if (jkMapped === "Perempuan") jkMapped = "P";
+
+    // payload PUT
+    const formPayload = {
+      id: existingData.value?.id,
       nama_karyawan: form.value.nama_karyawan,
       email: form.value.email,
       no_hp: form.value.no_hp,
       jk: jkMapped,
     };
-    
-    delete payload.created_at;
-    delete payload.updated_at;
-    delete payload.jabatan;
-    delete payload.jam_kerja_karyawan;
-    
-    if (fotoPath) {
-      payload.foto = fotoPath;
-    }
-    
-    console.log("Payload update karyawan:", payload);
-    
-    // Update data karyawan
-    const updateResponse = await store.dispatch("karyawan/updateKaryawan", { data: payload });
-    
-    console.log("Response dari update karyawan:", updateResponse);
-    
+
+    if (fotoUrl) formPayload.foto = fotoUrl;
+    console.log("Final payload PUT:", formPayload);
+
+    const token = localStorage.getItem("token");
+    const res = await api.put("/api/update-karyawan", formPayload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    const updatedData = res.data.data || res.data;
+
+    store.commit("karyawan/SET_KARYAWAN", updatedData);
+    localStorage.setItem("karyawan", JSON.stringify(updatedData));
+
+    form.value.nama_karyawan =
+      updatedData.nama_karyawan || form.value.nama_karyawan;
+    form.value.email = updatedData.email || form.value.email;
+    form.value.no_hp = updatedData.no_hp || form.value.no_hp;
+    form.value.jk = updatedData.jk || form.value.jk;
     if (fotoUrl) {
       const newUrl = `${fotoUrl}?t=${Date.now()}`;
-      previewImage.value = newUrl; 
+      previewImage.value = newUrl;
       localStorage.setItem("profileImage", newUrl);
-      
-      const updatedKaryawan = {
-        ...store.getters["karyawan/karyawan"],
-        foto: fotoPath,
-        foto_url: newUrl
-      };
-      store.commit("karyawan/SET_KARYAWAN", updatedKaryawan);
-      localStorage.setItem("karyawan", JSON.stringify(updatedKaryawan));
-      
-      setTimeout(async () => {
-        await store.dispatch("karyawan/fetchKaryawanById");
-      }, 2000);
-    } else if (updateResponse?.foto_url) {
-      const newUrl = `${updateResponse.foto_url}?t=${Date.now()}`;
-      previewImage.value = newUrl; 
-      localStorage.setItem("profileImage", newUrl);
-  
-      setTimeout(async () => {
-        await store.dispatch("karyawan/fetchKaryawanById");
-      }, 2000);
     }
-    
+
     showLoadingModal.value = false;
     showSuccessModal.value = true;
   } catch (err) {
     showLoadingModal.value = false;
     console.error("Full error:", err);
-    console.error("Error response:", err.response?.data);
-    
-    // Tampilkan detail error validation
-    let errorDetails = "";
+    console.error("Validation errors:", err.response?.data?.errors);
+
+    // parsing error message
+    let errorText = "";
     if (err.response?.data?.errors) {
-      errorDetails = Object.entries(err.response.data.errors)
-        .map(([field, messages]) => `${field}: ${messages.join(", ")}`)
+      errorText = Object.entries(err.response.data.errors)
+        .map(([field, msgs]) => `${field}: ${msgs.join(", ")}`)
         .join("; ");
     }
-    
+
     errorMessage.value =
-      errorDetails ||
-      err.response?.data?.errors?.foto?.[0] ||
-      err.response?.data?.errors?.jk?.[0] ||
+      errorText ||
       err.response?.data?.message ||
       "Gagal update profile, coba lagi.";
     showErrorModal.value = true;
@@ -191,7 +173,9 @@ const handleSuccessClose = () => {
         >
           <i class="fa-solid fa-angle-left"></i>
         </router-link>
-        <h1 class="text-xl font-semibold text-gray-800 dark:text-white">Edit Profile</h1>
+        <h1 class="text-xl font-semibold text-gray-800 dark:text-white">
+          Edit Profile
+        </h1>
         <div class="w-6"></div>
       </div>
       <!-- Avatar Upload -->
@@ -201,7 +185,7 @@ const handleSuccessClose = () => {
             :src="previewImage || defaultAvatar"
             alt="Profile"
             class="w-28 h-28 rounded-full object-cover border-4 border-blue-400 shadow-md"
-            :key="previewImage" 
+            :key="previewImage"
           />
           <label
             for="avatar"
@@ -217,7 +201,9 @@ const handleSuccessClose = () => {
             @change="handleImageUpload"
           />
         </div>
-        <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">Tap icon to change photo</p>
+        <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">
+          Tap icon to change photo
+        </p>
       </div>
       <!-- Form -->
       <form @submit.prevent="updateProfile" class="px-6 space-y-6">
@@ -229,8 +215,7 @@ const handleSuccessClose = () => {
           <input
             type="text"
             v-model="form.nama_karyawan"
-            class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 
-                   text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
+            class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
             placeholder="Enter your name"
           />
         </div>
@@ -242,22 +227,22 @@ const handleSuccessClose = () => {
           <input
             type="email"
             v-model="form.email"
-            class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 
-                   text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
+            class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
             placeholder="Enter your email"
           />
         </div>
-         <!-- Phone -->
-      <div>
-        <label class="block text-blue-500 mb-1 text-sm font-medium">Phone</label>
-        <input
-          type="text"
-          v-model="form.no_hp"
-          class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 
-                 text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
-          placeholder="Enter your phone number"
-        />
-      </div>
+        <!-- Phone -->
+        <div>
+          <label class="block text-blue-500 mb-1 text-sm font-medium"
+            >Phone</label
+          >
+          <input
+            type="text"
+            v-model="form.no_hp"
+            class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
+            placeholder="Enter your phone number"
+          />
+        </div>
         <!-- Save Button -->
         <button
           type="submit"
@@ -290,7 +275,14 @@ const handleSuccessClose = () => {
           fill="none"
           viewBox="0 0 24 24"
         >
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
           <path
             class="opacity-75"
             fill="currentColor"
@@ -298,19 +290,22 @@ const handleSuccessClose = () => {
             3.042 1.135 5.824 3 7.938l3-2.647z"
           ></path>
         </svg>
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Loading...</h3>
-        <p class="text-gray-600 dark:text-gray-300 text-center text-sm">Updating Profile</p>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+          Loading...
+        </h3>
+        <p class="text-gray-600 dark:text-gray-300 text-center text-sm">
+          Updating Profile
+        </p>
       </div>
     </div>
   </transition>
   <!-- Success Modal -->
   <SuccessModal
-  v-if="showSuccessModal"
-  img="https://cdn-icons-png.flaticon.com/512/190/190411.png"
-  message="Profile berhasil diupdate "
-  @close="handleSuccessClose"
-/>
-
+    v-if="showSuccessModal"
+    img="https://cdn-icons-png.flaticon.com/512/190/190411.png"
+    message="Profile berhasil diupdate "
+    @close="handleSuccessClose"
+  />
   <!-- Error Modal -->
   <transition
     enter-active-class="transition-opacity duration-300 ease-out"
@@ -324,9 +319,13 @@ const handleSuccessClose = () => {
       v-if="showErrorModal"
       class="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50"
     >
-      <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 max-w-sm w-full mx-4 shadow-xl text-center">
+      <div
+        class="bg-white dark:bg-gray-900 rounded-2xl p-6 max-w-sm w-full mx-4 shadow-xl text-center"
+      >
         <h3 class="text-lg font-semibold text-red-500 mb-2">Error</h3>
-        <p class="text-gray-700 dark:text-gray-300 text-sm mb-4">{{ errorMessage }}</p>
+        <p class="text-gray-700 dark:text-gray-300 text-sm mb-4">
+          {{ errorMessage }}
+        </p>
         <button
           @click="showErrorModal = false"
           class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg"

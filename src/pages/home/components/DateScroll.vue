@@ -11,7 +11,7 @@ const emit = defineEmits(["update:selectedDate"]);
 const containerRef = ref(null);
 const itemRefs = ref([]);
 
-// 🔹 Mapping singkatan hari Indonesia → Inggris
+//  Mapping singkatan hari Indonesia → Inggris
 const weekdayMap = {
   sen: "Mon",
   sel: "Tue",
@@ -51,9 +51,9 @@ const handleClick = (index) => {
 const scrollToIndex = (index) => {
   if (containerRef.value && itemRefs.value[index]) {
     itemRefs.value[index].scrollIntoView({
-      behavior: "auto", // langsung berhenti (ubah ke "smooth" kalau mau animasi)
-      inline: "center", // biar di tengah horizontal
-      block: "nearest", // jangan ubah posisi vertical
+      behavior: "auto",
+      inline: "center",
+      block: "nearest",
     });
   }
 };
@@ -98,18 +98,18 @@ watch(
     <div
       v-for="(date, index) in dates"
       :key="index"
-      :ref="el => itemRefs[index] = el"
+      :ref="(el) => (itemRefs[index] = el)"
       role="button"
       tabindex="0"
       @click="handleClick(index)"
       @keydown.enter="handleClick(index)"
-      :class="[ 
+      :class="[
         'min-w-[64px] h-16 flex-shrink-0 shadow flex flex-col items-center justify-center rounded-2xl transition-all duration-200',
         index <= todayIndex
-          ? (index === props.selectedDate
-              ? 'bg-blue-500 text-white border border-blue-500 cursor-pointer'
-              : 'bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-300 dark:border-gray-600 cursor-pointer hover:bg-blue-100 dark:hover:bg-gray-700')
-              : 'bg-gray-200 dark:bg-gray-700 text-gray-400 border border-gray-300 dark:border-gray-600 cursor-not-allowed opacity-50'
+          ? index === props.selectedDate
+            ? 'bg-blue-500 text-white border border-blue-500 cursor-pointer'
+            : 'bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-300 dark:border-gray-600 cursor-pointer hover:bg-blue-100 dark:hover:bg-gray-700'
+          : 'bg-gray-200 dark:bg-gray-700 text-gray-400 border border-gray-300 dark:border-gray-600 cursor-not-allowed opacity-50',
       ]"
     >
       <span class="text-base font-semibold">{{ date.day }}</span>
@@ -122,12 +122,11 @@ watch(
 .scroll-x {
   -webkit-overflow-scrolling: touch;
   touch-action: pan-x;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .scroll-x::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
+  display: none;
 }
-
 </style>
