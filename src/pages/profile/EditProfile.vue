@@ -1,4 +1,3 @@
-
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { useStore } from "vuex";
@@ -8,19 +7,24 @@ import api from "@/services/api";
 
 const store = useStore();
 const router = useRouter();
+
 const form = ref({
   nama_karyawan: "",
   email: "",
   no_hp: "",
   jk: "",
-  foto: null,
+  foto: null,        
+  foto_path: null,  
 });
+
 const defaultAvatar = new URL(
   "../../assets/images/Profile.png",
   import.meta.url
 ).href;
+
 const previewImage = ref(null);
 const existingData = ref(null);
+
 // modal
 const showLoadingModal = ref(false);
 const showSuccessModal = ref(false);
@@ -37,7 +41,9 @@ onMounted(async () => {
     form.value.email = data.email || "";
     form.value.no_hp = data.no_hp || "";
     form.value.jk = data.jk || "";
-    const storedImage = localStorage.getItem("profileImage");
+    form.value.foto_path = data.foto_path || null;
+
+    const storedImage = localStorage.getItem(`profileImage_${data.id}`);
     if (storedImage) {
       previewImage.value = storedImage;
     } else {
@@ -51,7 +57,11 @@ watch(
   (newData) => {
     if (newData) {
       existingData.value = newData;
-      if (!showLoadingModal.value && !localStorage.getItem("profileImage")) {
+      form.value.foto_path = newData.foto_path || null;
+      if (
+        !showLoadingModal.value &&
+        !localStorage.getItem(`profileImage_${newData.id}`)
+      ) {
         previewImage.value = newData.foto_url || defaultAvatar;
       }
     }
@@ -72,7 +82,10 @@ const handleImageUpload = (event) => {
 const updateProfile = async () => {
   showLoadingModal.value = true;
   try {
-    let fotoUrl = null;
+    let fotoPath = form.value.foto_path;
+    let fotoPreviewUrl = null;
+
+    // kalau ada file baru → upload ke server
     if (form.value.foto instanceof File) {
       const formData = new FormData();
       formData.append("foto", form.value.foto);
@@ -85,33 +98,43 @@ const updateProfile = async () => {
         },
       });
 
-      if (uploadRes.data?.status && uploadRes.data.url_path) {
-        const newUrl = `${uploadRes.data.url_path}?t=${Date.now()}`;
-        previewImage.value = newUrl;
-        localStorage.setItem("profileImage", newUrl);
+      if (uploadRes.data?.status) {
+        fotoPreviewUrl = `${uploadRes.data.url_path}?t=${Date.now()}`;
+        previewImage.value = fotoPreviewUrl;
+
+        if (existingData.value?.id) {
+          localStorage.setItem(
+            `profileImage_${existingData.value.id}`,
+            fotoPreviewUrl
+          );
+        }
+
+        fotoPath = uploadRes.data.foto_path;
+        form.value.foto_path = fotoPath;
       }
     }
+
     let jkMapped = form.value.jk;
     if (jkMapped === "Laki-laki") jkMapped = "L";
     if (jkMapped === "Perempuan") jkMapped = "P";
 
-// payload PUT dengan fallback
-const formPayload = {
-  id: existingData.value?.id,
-  nama_karyawan: form.value.nama_karyawan || existingData.value?.nama_karyawan,
-  email: form.value.email || existingData.value?.email,
-  no_hp: form.value.no_hp || existingData.value?.no_hp,
-  jk: jkMapped || existingData.value?.jk,
-};
+    // payload PUT
+    const formPayload = {
+      id: existingData.value?.id,
+      nama_karyawan:
+        form.value.nama_karyawan || existingData.value?.nama_karyawan,
+      email: form.value.email || existingData.value?.email,
+      no_hp: form.value.no_hp || existingData.value?.no_hp,
+      jk: jkMapped || existingData.value?.jk,
+      ...(fotoPath ? { foto_path: fotoPath } : {}), 
+    };
 
-if (fotoUrl) formPayload.foto = fotoUrl;
-if (!form.value.nama_karyawan) {
-  showLoadingModal.value = false;
-  errorMessage.value = "Field tidak boleh kosong.";
-  showErrorModal.value = true;
-  return;
-}
-
+    if (!form.value.nama_karyawan) {
+      showLoadingModal.value = false;
+      errorMessage.value = "Field tidak boleh kosong.";
+      showErrorModal.value = true;
+      return;
+    }
 
     const token = localStorage.getItem("token");
     const res = await api.put("/api/update-karyawan", formPayload, {
@@ -123,18 +146,26 @@ if (!form.value.nama_karyawan) {
 
     const updatedData = res.data.data || res.data;
 
+    // update store & localStorage
     store.commit("karyawan/SET_KARYAWAN", updatedData);
     localStorage.setItem("karyawan", JSON.stringify(updatedData));
 
+    // update state
     form.value.nama_karyawan =
       updatedData.nama_karyawan || form.value.nama_karyawan;
     form.value.email = updatedData.email || form.value.email;
     form.value.no_hp = updatedData.no_hp || form.value.no_hp;
     form.value.jk = updatedData.jk || form.value.jk;
-    if (fotoUrl) {
-      const newUrl = `${fotoUrl}?t=${Date.now()}`;
-      previewImage.value = newUrl;
-      localStorage.setItem("profileImage", newUrl);
+    form.value.foto_path = updatedData.foto_path || form.value.foto_path;
+
+    if (fotoPreviewUrl) {
+      previewImage.value = fotoPreviewUrl;
+      if (existingData.value?.id) {
+        localStorage.setItem(
+          `profileImage_${existingData.value.id}`,
+          fotoPreviewUrl
+        );
+      }
     }
 
     showLoadingModal.value = false;
@@ -144,7 +175,6 @@ if (!form.value.nama_karyawan) {
     console.error("Full error:", err);
     console.error("Validation errors:", err.response?.data?.errors);
 
-    // parsing error message
     let errorText = "";
     if (err.response?.data?.errors) {
       errorText = Object.entries(err.response.data.errors)
@@ -184,6 +214,7 @@ const handleSuccessClose = () => {
         </h1>
         <div class="w-6"></div>
       </div>
+
       <!-- Avatar Upload -->
       <div class="flex flex-col items-center mb-6">
         <div class="relative">
@@ -211,13 +242,12 @@ const handleSuccessClose = () => {
           Tap icon to change photo
         </p>
       </div>
+
       <!-- Form -->
       <form @submit.prevent="updateProfile" class="px-6 space-y-6">
         <!-- Name -->
         <div>
-          <label class="block text-blue-500 mb-1 text-sm font-medium"
-            >Name</label
-          >
+          <label class="block text-blue-500 mb-1 text-sm font-medium">Name</label>
           <input
             type="text"
             v-model="form.nama_karyawan"
@@ -227,9 +257,7 @@ const handleSuccessClose = () => {
         </div>
         <!-- Email -->
         <div>
-          <label class="block text-blue-500 mb-1 text-sm font-medium"
-            >Email</label
-          >
+          <label class="block text-blue-500 mb-1 text-sm font-medium">Email</label>
           <input
             type="email"
             v-model="form.email"
@@ -239,9 +267,7 @@ const handleSuccessClose = () => {
         </div>
         <!-- Phone -->
         <div>
-          <label class="block text-blue-500 mb-1 text-sm font-medium"
-            >Phone</label
-          >
+          <label class="block text-blue-500 mb-1 text-sm font-medium">Phone</label>
           <input
             type="text"
             v-model="form.no_hp"
@@ -259,6 +285,7 @@ const handleSuccessClose = () => {
       </form>
     </div>
   </div>
+
   <!-- Modal Loading -->
   <transition
     enter-active-class="transition-opacity duration-300 ease-out"
@@ -292,8 +319,8 @@ const handleSuccessClose = () => {
           <path
             class="opacity-75"
             fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 
-            3.042 1.135 5.824 3 7.938l3-2.647z"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0
+3.042 1.135 5.824 3 7.938l3-2.647z"
           ></path>
         </svg>
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
@@ -305,6 +332,7 @@ const handleSuccessClose = () => {
       </div>
     </div>
   </transition>
+
   <!-- Success Modal -->
   <SuccessModal
     v-if="showSuccessModal"
@@ -312,6 +340,7 @@ const handleSuccessClose = () => {
     message="Profile berhasil diupdate "
     @close="handleSuccessClose"
   />
+
   <!-- Error Modal -->
   <transition
     enter-active-class="transition-opacity duration-300 ease-out"

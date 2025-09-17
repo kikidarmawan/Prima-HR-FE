@@ -35,27 +35,28 @@ export default {
   },
 
   actions: {
- async login({ commit }, { username, password }) {
+    async login({ commit }, { username, password }) {
       try {
         const { data } = await api.post("/api/login", { username, password });
-    
+
         const token = data.token;
         const user = data.data || data.user;
-    
+
         // Simpan token & user
         commit("SET_TOKEN", token);
         commit("SET_USER", user);
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
-    
+
         api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    
-        // ambil detail karyawan tanpa parameter
+        localStorage.removeItem("profileImage");
+
+        // ambil detail karyawan
         const karyawanRes = await api.get("/api/detail-karyawan");
         const karyawan = karyawanRes.data.data;
         commit("SET_KARYAWAN", karyawan);
         localStorage.setItem("karyawan", JSON.stringify(karyawan));
-    
+
         commit("SET_ERROR", null);
         return true;
       } catch (error) {
@@ -68,6 +69,7 @@ export default {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       localStorage.removeItem("karyawan");
+      localStorage.removeItem("profileImage");
       delete api.defaults.headers.common["Authorization"];
       commit("LOGOUT");
     },
@@ -88,6 +90,20 @@ export default {
         commit("SET_KARYAWAN", karyawan);
       }
     },
+    async refreshKaryawan({ commit, state }) {
+      if (!state.token) return;
+
+      try {
+        const karyawanRes = await api.get("/api/detail-karyawan");
+        const karyawan = karyawanRes.data.data;
+        commit("SET_KARYAWAN", karyawan);
+        localStorage.setItem("karyawan", JSON.stringify(karyawan));
+        return karyawan;
+      } catch (error) {
+        console.error("Gagal refresh data karyawan:", error);
+        return null;
+      }
+    },
   },
 
   getters: {
@@ -96,5 +112,8 @@ export default {
     user: (state) => state.user,
     karyawan: (state) => state.karyawan,
     karyawanId: (state) => state.karyawan?.id,
+    fotoUrl: (state) => {
+      return state.karyawan?.foto_url || null;
+    },
   },
 };
