@@ -12,8 +12,6 @@ export default {
         typeof rawTanggal === "object" ? rawTanggal.tanggal : rawTanggal;
 
       const data = this.$store.getters["presensi/presensiByDate"](tanggalStr);
-      console.log("presensi Date: ", data);
-
       return data;
     },
     loading() {
@@ -51,6 +49,7 @@ export default {
   },
 };
 </script>
+
 
 <template>
   <!-- Loading Shimmer -->

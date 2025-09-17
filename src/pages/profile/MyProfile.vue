@@ -19,7 +19,6 @@ const isUpdating = ref(false);
 onMounted(async () => {
   document.documentElement.classList.toggle("dark", darkMode.value);
   await store.dispatch("karyawan/fetchKaryawanById");
-  console.log(" Ambil ulang data karyawan di MyProfile");
 });
 
 watch(darkMode, (val) => {
@@ -30,29 +29,30 @@ watch(darkMode, (val) => {
 const checkLocalStorageForImage = () => {
   const storedImage = localStorage.getItem("profileImage");
   if (storedImage) {
-    console.log(" Menggunakan gambar dari localStorage:", storedImage);
     return storedImage;
   }
   return null;
 };
+
 // perubahan data karyawan
-watch(karyawan, (newVal) => {
-  console.log("👀 Karyawan berubah:", newVal);
-  
-  const storedImage = checkLocalStorageForImage();
-  
-  if (storedImage && !isUpdating.value) {
-    avatar.value = storedImage;
+watch(
+  karyawan,
+  (newVal) => {
+    const storedImage = checkLocalStorageForImage();
+
+    if (storedImage && !isUpdating.value) {
+      avatar.value = storedImage;
+      imageKey.value++;
+    } else if (newVal?.foto_url) {
+      avatar.value = `${newVal.foto_url}?t=${Date.now()}`;
+    } else {
+      avatar.value = defaultAvatar;
+    }
+
     imageKey.value++;
-  } else if (newVal?.foto_url) {
-    avatar.value = `${newVal.foto_url}?t=${Date.now()}`;
-    console.log("✅ Avatar diganti:", avatar.value);
-  } else {
-    avatar.value = defaultAvatar;
-  }
-  
-  imageKey.value++;
-}, { immediate: true });
+  },
+  { immediate: true }
+);
 
 const handleLogout = () => {
   store.dispatch("auth/logout");

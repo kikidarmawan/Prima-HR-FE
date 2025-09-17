@@ -11,10 +11,8 @@ const tabs = ["Personal", "Professional", "Documents"];
 const activeTab = ref("Personal");
 const store = useStore();
 
-// PERUBAHAN: Gunakan computed untuk mendapatkan data karyawan dari Vuex store
 const karyawan = computed(() => store.getters["karyawan/karyawan"]);
 
-// PERUBAHAN: Tetap ambil data dari API saat komponen dimount untuk memastikan data terbaru
 watchEffect(async () => {
   try {
     await store.dispatch("karyawan/fetchKaryawanById");

@@ -53,7 +53,6 @@ const applyLeave = async () => {
     keterangan: keterangan.value,
   };
 
- 
   showLoadingModal.value = true;
 
   try {
@@ -70,10 +69,9 @@ const applyLeave = async () => {
     alert(
       `Pengajuan gagal: ${error?.response?.data?.message || error.message}`
     );
-    showLoadingModal.value = false; 
+    showLoadingModal.value = false;
   }
 };
-
 
 const goToHome = () => {
   router.push("/leaves");
@@ -100,29 +98,29 @@ const goToHome = () => {
       <div
         class="border border-blue-500 rounded-lg px-1 pt-5 pb-2 bg-white dark:bg-gray-900 relative"
       >
-        <label class="text-xs text-blue-500 absolute top-1 left-2">Judul</label>
+        <label class="text-xs text-blue-500 absolute top-1 left-2">Title</label>
         <input
           v-model="title"
           type="text"
-          placeholder="Cuti Sakit"
+          placeholder="Sick Leave"
           class="w-full outline-none bg-transparent pl-2 text-gray-900 dark:text-white"
           required
         />
       </div>
 
-      <!-- Jenis Absen -->
+      <!-- Leave Type -->
       <div
         class="border border-blue-500 rounded-lg px-1 pt-5 pb-2 bg-white dark:bg-gray-900 relative"
       >
         <label class="text-xs text-blue-500 absolute top-1 left-2"
-          >Jenis Absen</label
+          >Leave Type</label
         >
         <select
           v-model="kategoriAbsensiId"
           class="w-full outline-none bg-transparent text-gray-900 dark:text-white mt-1.5"
           required
         >
-          <option disabled value="">Pilih Jenis Absen</option>
+          <option disabled value="">Select Leave Type</option>
           <option
             v-for="kategori in $store.getters[
               'kategori_absen/allKategoriAbsensi'
@@ -136,12 +134,12 @@ const goToHome = () => {
         </select>
       </div>
 
-      <!-- Tanggal -->
+      <!-- Date -->
       <div
         class="border border-blue-500 rounded-lg px-1 pt-5 pb-2 bg-white dark:bg-gray-900 relative"
       >
         <label class="text-xs text-blue-500 absolute top-1 left-2"
-          >Tanggal Absen</label
+          >Leave Date</label
         >
         <input
           v-model="tanggal"
@@ -151,23 +149,21 @@ const goToHome = () => {
         />
       </div>
 
-      <!-- Keterangan -->
+      <!-- Notes -->
       <div
         class="border border-blue-500 rounded-lg px-1 pt-5 pb-2 bg-white dark:bg-gray-900 relative"
       >
-        <label class="text-xs text-blue-500 absolute top-1 left-2"
-          >Keterangan</label
-        >
+        <label class="text-xs text-blue-500 absolute top-1 left-2">Notes</label>
         <textarea
           v-model="keterangan"
           rows="3"
-          placeholder="Contoh: Mengajukan cuti karena keperluan keluarga."
+          placeholder=""
           class="w-full outline-none bg-transparent resize-none text-gray-900 dark:text-white mt-1.5"
           required
         ></textarea>
       </div>
 
-      <!-- Tombol Submit -->
+      <!-- Submit Button -->
       <button
         type="submit"
         class="w-full mt-5 bg-blue-500 text-white font-semibold py-3 rounded-xl hover:bg-blue-600 transition"
@@ -176,53 +172,52 @@ const goToHome = () => {
       </button>
     </form>
 
-   <!-- Modal Loading (rapi + overlay non-clickable) -->
-<transition
-  enter-active-class="transition-opacity duration-300 ease-out"
-  enter-from-class="opacity-0"
-  enter-to-class="opacity-100"
-  leave-active-class="transition-opacity duration-300 ease-in"
-  leave-from-class="opacity-100"
-  leave-to-class="opacity-0"
->
-  <div
-    v-if="showLoadingModal"
-    class="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50 pointer-events-none"
-  >
-    <div
-      class="bg-white dark:bg-gray-900 rounded-2xl p-6 max-w-sm w-full mx-4 flex flex-col items-center shadow-xl pointer-events-auto"
+    <!-- Modal Loading (rapi + overlay non-clickable) -->
+    <transition
+      enter-active-class="transition-opacity duration-300 ease-out"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300 ease-in"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
     >
-      <!-- Spinner -->
-      <svg
-        class="animate-spin h-12 w-12 text-blue-500 mb-4"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
+      <div
+        v-if="showLoadingModal"
+        class="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50 pointer-events-none"
       >
-        <circle
-          class="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          stroke-width="4"
-        ></circle>
-        <path
-          class="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-        ></path>
-      </svg>
-      <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-        Loading...
-      </h3>
-      <p class="text-gray-600 dark:text-gray-300 text-center text-sm">
-        Processing Request
-      </p>
-    </div>
-  </div>
-</transition>
-
+        <div
+          class="bg-white dark:bg-gray-900 rounded-2xl p-6 max-w-sm w-full mx-4 flex flex-col items-center shadow-xl pointer-events-auto"
+        >
+          <!-- Spinner -->
+          <svg
+            class="animate-spin h-12 w-12 text-blue-500 mb-4"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            Loading...
+          </h3>
+          <p class="text-gray-600 dark:text-gray-300 text-center text-sm">
+            Processing Request
+          </p>
+        </div>
+      </div>
+    </transition>
 
     <!-- Modal Sukses -->
     <SuccessLeave v-if="showSuccessLeave" @close="goToHome" />

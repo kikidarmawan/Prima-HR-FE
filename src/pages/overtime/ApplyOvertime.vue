@@ -106,7 +106,7 @@ const goToOvertime = () => {
       <div
         class="border border-blue-500 rounded-lg px-1 pt-5 pb-2 bg-white dark:bg-gray-900 relative"
       >
-        <label class="text-xs text-blue-500 absolute top-1 left-2">Tanggal</label>
+        <label class="text-xs text-blue-500 absolute top-1 left-2">Date</label>
         <input
           v-model="tanggal"
           type="date"
@@ -120,7 +120,7 @@ const goToOvertime = () => {
         <div
           class="flex-1 border border-blue-500 rounded-lg px-1 pt-5 pb-2 bg-white dark:bg-gray-900 relative"
         >
-          <label class="text-xs text-blue-500 absolute top-1 left-2">Mulai</label>
+          <label class="text-xs text-blue-500 absolute top-1 left-2">Start</label>
           <input
             v-model="startTime"
             type="time"
@@ -131,7 +131,7 @@ const goToOvertime = () => {
         <div
           class="flex-1 border border-blue-500 rounded-lg px-1 pt-5 pb-2 bg-white dark:bg-gray-900 relative"
         >
-          <label class="text-xs text-blue-500 absolute top-1 left-2">Selesai</label>
+          <label class="text-xs text-blue-500 absolute top-1 left-2">End</label>
           <input
             v-model="endTime"
             type="time"
@@ -145,11 +145,11 @@ const goToOvertime = () => {
       <div
         class="border border-blue-500 rounded-lg px-1 pt-5 pb-2 bg-white dark:bg-gray-900 relative"
       >
-        <label class="text-xs text-blue-500 absolute top-1 left-2">Deskripsi</label>
+        <label class="text-xs text-blue-500 absolute top-1 left-2">Description</label>
         <textarea
           v-model="description"
           rows="3"
-          placeholder="Contoh: Menyelesaikan laporan bulanan"
+          placeholder=""
           class="w-full outline-none bg-transparent resize-none text-gray-900 dark:text-white mt-1.5"
           required
         ></textarea>
