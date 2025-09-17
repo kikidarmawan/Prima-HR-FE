@@ -6,6 +6,8 @@ import SuccessLeave from "@/components/SuccessLeave.vue";
 
 const router = useRouter();
 const store = useStore();
+
+// state modal
 const showSuccessLeave = ref(false);
 const showLoadingModal = ref(false);
 
@@ -59,7 +61,7 @@ const applyLeave = async () => {
     await store.dispatch("p_absen/ajukanAbsen", payload);
     await store.dispatch("absensi/getAllAbsensiData");
 
-    // jeda aimasi loading
+    // kasih jeda biar animasi loading keliatan
     setTimeout(() => {
       showLoadingModal.value = false;
       showSuccessLeave.value = true;
@@ -122,9 +124,7 @@ const goToHome = () => {
         >
           <option disabled value="">Select Leave Type</option>
           <option
-            v-for="kategori in $store.getters[
-              'kategori_absen/allKategoriAbsensi'
-            ]"
+            v-for="kategori in $store.getters['kategori_absen/allKategoriAbsensi']"
             :key="kategori.id"
             :value="kategori.id"
             class="text-black dark:text-white bg-white dark:bg-gray-900"
@@ -171,8 +171,7 @@ const goToHome = () => {
         Apply Leave
       </button>
     </form>
-
-    <!-- Modal Loading (rapi + overlay non-clickable) -->
+    <!-- Modal Loading -->
     <transition
       enter-active-class="transition-opacity duration-300 ease-out"
       enter-from-class="opacity-0"
@@ -185,6 +184,9 @@ const goToHome = () => {
         v-if="showLoadingModal"
         class="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50 pointer-events-none"
       >
+        class="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50"
+      >
+        <!-- Backdrop non-clickable -->
         <div
           class="bg-white dark:bg-gray-900 rounded-2xl p-6 max-w-sm w-full mx-4 flex flex-col items-center shadow-xl pointer-events-auto"
         >
@@ -220,6 +222,11 @@ const goToHome = () => {
     </transition>
 
     <!-- Modal Sukses -->
-    <SuccessLeave v-if="showSuccessLeave" @close="goToHome" />
+    <SuccessLeave
+      v-if="showSuccessLeave"
+      title="Leave Submitted"
+      message="Your request has been sent"
+      @close="goToHome"
+    />
   </div>
 </template>

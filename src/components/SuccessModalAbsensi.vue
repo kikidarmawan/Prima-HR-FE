@@ -1,29 +1,3 @@
-<script setup>
-import { ref, onMounted } from "vue";
-
-defineProps({
-  title: {
-    type: String,
-    default: "Leave Applied Successfully",
-  },
-  message: {
-    type: String,
-    default: "Your leave has been applied successfully",
-  },
-});
-
-const emit = defineEmits(["close"]);
-const visible = ref(false);
-
-const handleDone = () => {
-  emit("close");
-};
-
-onMounted(() => {
-  visible.value = true;
-});
-</script>
-
 <template>
   <div
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs"
@@ -40,14 +14,14 @@ onMounted(() => {
         v-show="visible"
         class="bg-white dark:bg-gray-900 rounded-2xl p-6 w-80 text-center shadow-xl transition-colors duration-300"
       >
-        <!-- Icon -->
+      
         <svg
           class="mx-auto w-20 h-20 text-green-500 mb-4"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
           viewBox="0 0 24 24"
         >
-          <circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.2" />
+          <circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.2"/>
           <path
             fill="currentColor"
             d="M10 14l-2-2-1.5 1.5L10 17l7-7-1.5-1.5z"
@@ -56,18 +30,18 @@ onMounted(() => {
 
         <!-- Title -->
         <h2 class="text-xl font-bold text-blue-400 mb-2 dark:text-blue-500">
-          {{ title }}
+          Success
         </h2>
 
         <!-- Subtitle -->
         <p class="text-sm text-gray-600 dark:text-gray-300 mb-6">
-          {{ message }}
+          Absensi Berhasil Dikirim
         </p>
 
         <!-- Button -->
         <button
-          @click="handleDone"
-          class="bg-blue-500 cursor-pointer hover:bg-blue-600 text-white w-full py-2 rounded-lg text-sm font-semibold"
+          @click="$emit('close')"
+          class="bg-blue-500 hover:bg-blue-600 text-white w-full py-2 rounded-lg text-sm font-semibold cursor-pointer"
         >
           Done
         </button>
@@ -75,3 +49,23 @@ onMounted(() => {
     </transition>
   </div>
 </template>
+
+
+
+
+<script setup>
+import { ref, onMounted } from "vue";
+
+defineProps({
+  img: {
+    type: String,
+    required: true,
+  },
+});
+
+const visible = ref(false);
+
+onMounted(() => {
+  visible.value = true;
+});
+</script>

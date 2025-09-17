@@ -1,15 +1,10 @@
-<script>
-export default {
-  name: "TodayShift",
-  props: {
-    selectedDate: { type: Object, default: null },
-  },
+<script setup>
+import { computed, watch } from "vue";
+import { useStore } from "vuex";
 
-  computed: {
-    presensiByDate() {
-      const rawTanggal = this.selectedDate?.raw;
-      const tanggalStr =
-        typeof rawTanggal === "object" ? rawTanggal.tanggal : rawTanggal;
+const props = defineProps({
+  selectedDate: { type: Object, default: null },
+});
 
       const data = this.$store.getters["presensi/presensiByDate"](tanggalStr);
       return data;
@@ -21,39 +16,46 @@ export default {
       return this.$store.state.presensi.loading.loadingMonthPresensi;
     },
   },
+const store = useStore();
 
-  methods: {
-    formatTime(time) {
-      return time ? time.slice(0, 5) : "-";
-    },
-    async fetchPresensi() {
-      const karyawan = this.$store.state.auth.user?.karyawan_id;
-      if (!karyawan || !this.selectedDate?.raw) return;
+const presensi = computed(() => store.state.presensi.todayPresensi);
 
-      const today = new Date().toISOString().split("T")[0];
-      if (this.selectedDate.raw === today) {
-        await this.$store.dispatch("presensi/fetchTodayPresensi", karyawan);
-      } else {
-        await this.$store.dispatch("presensi/fetchMonthPresensi", karyawan);
-      }
-    },
+const presensiByDate = computed(() => presensi.value?.["0"] ?? null);
+
+const loading = computed(() => store.getters["presensi/isLoadingTodayPresensi"]);
+const loadingMonth = computed(
+  () => store.state.presensi.loading.loadingMonthPresensi
+);
+
+function formatTime(time) {
+  return time ? time.slice(0, 5) : "-";
+}
+
+async function fetchPresensi() {
+  const karyawan = store.state.auth.user?.karyawan_id;
+  if (!karyawan || !props.selectedDate?.raw) return;
+
+  const today = new Date().toISOString().split("T")[0];
+  if (props.selectedDate.raw === today) {
+    await store.dispatch("presensi/fetchTodayPresensi", karyawan);
+  } else {
+    await store.dispatch("presensi/fetchMonthPresensi", karyawan);
+  }
+}
+
+watch(
+  () => props.selectedDate,
+  () => {
+    fetchPresensi();
   },
-
-  watch: {
-    selectedDate: {
-      handler() {
-        this.fetchPresensi();
-      },
-      immediate: true,
-    },
-  },
-};
+  { immediate: true }
+);
 </script>
 
 
 <template>
   <!-- Loading Shimmer -->
-  <div v-if="loading || isLoadingMonthPresensi" class="p-5">
+  <div v-if="loading || loadingMonth" class="p-5">
     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
       Today Attendance
     </h3>
@@ -77,7 +79,7 @@ export default {
     </div>
   </div>
 
-  <div v-if="!loading && !isLoadingMonthPresensi" class="p-5">
+  <div v-if="!loading && !loadingMonth" class="p-5">
     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
       Today Attendance
     </h3>

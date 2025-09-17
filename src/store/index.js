@@ -11,6 +11,7 @@ import team_leave from "./modules/team_leave";
 import p_lembur from "./modules/p_lembur";
 import overtime_by_status from "./modules/overtime_by_status";
 import overtime_count from "./modules/overtime_count";
+import absen from "./modules/absensi";
 
 
 export default createStore({
@@ -20,6 +21,7 @@ export default createStore({
     karyawan,
     p_absen,
     absensi,
+    absen,
     shift,
     presensi,
     kategori_absen,
