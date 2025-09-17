@@ -1,53 +1,77 @@
 <script setup>
-const emit = defineEmits(['close'])
+import { ref, onMounted } from "vue";
+
+defineProps({
+  title: {
+    type: String,
+    default: "Leave Applied Successfully",
+  },
+  message: {
+    type: String,
+    default: "Your leave has been applied successfully",
+  },
+});
+
+const emit = defineEmits(["close"]);
+const visible = ref(false);
 
 const handleDone = () => {
-  emit('close')
-}
+  emit("close");
+};
+
+onMounted(() => {
+  visible.value = true;
+});
 </script>
 
 <template>
   <div
-    class="fixed inset-0 flex items-end justify-center bg-black/50 backdrop-blur-xs"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs"
   >
-    <!-- Success Modal -->
-    <div
-      class="bg-white dark:bg-[#0c0e19] rounded-t-2xl p-6 w-105 max-w-md text-center shadow-xl"
+    <transition
+      enter-active-class="transition ease-out duration-300"
+      enter-from-class="opacity-0 scale-95"
+      enter-to-class="opacity-100 scale-100"
+      leave-active-class="transition ease-in duration-200"
+      leave-from-class="opacity-100 scale-100"
+      leave-to-class="opacity-0 scale-95"
     >
-      <div class="flex items-center justify-center mb-4">
-        <div class="bg-blue-100 dark:bg-blue-900 rounded-full p-4">
-          <div class="bg-blue-500 rounded-full p-4">
-            <svg
-              class="w-6 h-6 text-white"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-        Leave Applied Successfully
-      </h2>
-      <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-        Your leave has been applied successfully
-      </p>
-
-      <button
-        @click="handleDone"
-        class="mt-6 w-full bg-blue-500 text-white rounded-lg py-2 text-sm hover:bg-blue-600 transition duration-200"
+      <div
+        v-show="visible"
+        class="bg-white dark:bg-gray-900 rounded-2xl p-6 w-80 text-center shadow-xl transition-colors duration-300"
       >
-        Done
-      </button>
-    </div>
+        <!-- Icon -->
+        <svg
+          class="mx-auto w-20 h-20 text-green-500 mb-4"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.2" />
+          <path
+            fill="currentColor"
+            d="M10 14l-2-2-1.5 1.5L10 17l7-7-1.5-1.5z"
+          />
+        </svg>
+
+        <!-- Title -->
+        <h2 class="text-xl font-bold text-blue-400 mb-2 dark:text-blue-500">
+          {{ title }}
+        </h2>
+
+        <!-- Subtitle -->
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-6">
+          {{ message }}
+        </p>
+
+        <!-- Button -->
+        <button
+          @click="handleDone"
+          class="bg-blue-500 cursor-pointer hover:bg-blue-600 text-white w-full py-2 rounded-lg text-sm font-semibold"
+        >
+          Done
+        </button>
+      </div>
+    </transition>
   </div>
 </template>

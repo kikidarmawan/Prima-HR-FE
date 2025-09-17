@@ -72,7 +72,7 @@ const applyOvertime = async () => {
 
     setTimeout(() => {
       showLoading.value = false;
-      showSuccess.value = true;
+      showSuccess.value = true; // tampilkan modal sukses
     }, 1000);
   } catch (error) {
     console.error(" Gagal lembur (dari ApplyOvertime.vue):", error);
@@ -85,8 +85,6 @@ const goToOvertime = () => {
   router.push("/overtime");
 };
 </script>
-
-
 
 <template>
   <div
@@ -207,6 +205,11 @@ const goToOvertime = () => {
     </transition>
 
     <!-- Modal Sukses -->
-    <SuccessLeave v-if="showSuccess" @close="goToOvertime" />
+    <SuccessLeave
+      v-if="showSuccess"
+      title="Overtime Success"
+      message="Your request has been sent"
+      @close="goToOvertime"
+    />
   </div>
 </template>

@@ -24,7 +24,7 @@ const isUpdating = ref(false);
 onMounted(async () => {
   document.documentElement.classList.toggle("dark", darkMode.value);
   await store.dispatch("karyawan/fetchKaryawanById");
-  console.log(" Ambil ulang data karyawan di MyProfile");
+ 
 });
 
 
@@ -56,14 +56,13 @@ watch(darkMode, (val) => {
 const checkLocalStorageForImage = () => {
   const storedImage = localStorage.getItem("profileImage");
   if (storedImage) {
-    console.log(" Menggunakan gambar dari localStorage:", storedImage);
     return storedImage;
   }
   return null;
 };
 // perubahan data karyawan
 watch(karyawan, (newVal) => {
-  console.log("👀 Karyawan berubah:", newVal);
+
   
   const storedImage = checkLocalStorageForImage();
   
