@@ -9,11 +9,16 @@ const router = useRouter();
 const karyawan = computed(() => store.getters["karyawan/karyawan"]);
 const nama = computed(() => karyawan.value?.nama_karyawan || "");
 const jabatan = computed(() => karyawan.value?.jabatan?.nama_jabatan || "");
+
+
+// Dark mode
+
 const darkMode = ref(localStorage.getItem("theme") === "dark");
 const defaultAvatar = new URL("../../assets/images/Profile.png", import.meta.url).href;
 const avatar = ref(defaultAvatar);
 const imageKey = ref(0);
 const isUpdating = ref(false);
+
 
 // apply darkmode + load avatar
 onMounted(async () => {
@@ -22,10 +27,31 @@ onMounted(async () => {
   console.log(" Ambil ulang data karyawan di MyProfile");
 });
 
+
+// fallback avatar
+const defaultAvatar = new URL("../../assets/images/Profile.png", import.meta.url).href;
+const avatar = ref(defaultAvatar);
+
+// apply darkmode + load avatar
+onMounted(async () => {
+  const savedImage = localStorage.getItem("profileImage");
+  if (savedImage) {
+    avatar.value = savedImage;
+  }
+
+  document.documentElement.classList.toggle("dark", darkMode.value);
+
+  // ambil data terbaru dari backend
+  await store.dispatch("karyawan/fetchKaryawanById");
+});
+
+// update theme
+
 watch(darkMode, (val) => {
   document.documentElement.classList.toggle("dark", val);
   localStorage.setItem("theme", val ? "dark" : "light");
 });
+
 
 const checkLocalStorageForImage = () => {
   const storedImage = localStorage.getItem("profileImage");
@@ -54,11 +80,23 @@ watch(karyawan, (newVal) => {
   imageKey.value++;
 }, { immediate: true });
 
+// update avatar setiap kali data karyawan berubah
+watch(karyawan, (val) => {
+  if (val?.foto_url) {
+    avatar.value = `${val.foto_url}?t=${Date.now()}`; // 🔥 anti-cache
+    localStorage.setItem("profileImage", avatar.value);
+  } else {
+    avatar.value = defaultAvatar;
+  }
+});
+
+
 const handleLogout = () => {
   store.dispatch("auth/logout");
   router.push("/login");
 };
 </script>
+
 
 <template>
   <div
@@ -67,12 +105,18 @@ const handleLogout = () => {
     <!-- Profile -->
     <div class="flex flex-col items-center p-10 relative">
       <div class="relative w-24 h-24">
+
         <img 
           :key="imageKey" 
           :src="avatar" 
           class="rounded-full w-24 h-24 object-cover" 
         />
       </div>
+
+        <img :src="avatar" class="rounded-full w-24 h-24 object-cover" />
+      </div>
+
+
       <h1 class="font-semibold text-xl mt-4 text-gray-900 dark:text-white">
         {{ nama }}
       </h1>
