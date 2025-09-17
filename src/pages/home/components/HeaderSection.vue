@@ -4,24 +4,18 @@ import { useStore } from "vuex";
 import Oren from "@/assets/images/Oren.jpg";
 
 const store = useStore();
-
-// PERUBAHAN: Gunakan computed untuk mendapatkan data karyawan dari Vuex store
 const karyawan = computed(() => store.getters["karyawan/karyawan"]);
 const nama = computed(() => karyawan.value?.nama_karyawan || ""); 
 const jabatan = computed(() => karyawan.value?.jabatan?.nama_jabatan || ""); 
 
-// PERUBAHAN: Gunakan computed untuk fotoUrl dengan fallback
 const fotoUrl = computed(() => {
-  // Cek dulu apakah ada gambar di localStorage
   const storedImage = localStorage.getItem("profileImage");
   if (storedImage) {
     return storedImage;
   }
-  // Jika tidak ada, gunakan dari Vuex store
   return karyawan.value?.foto_url || Oren;
 });
 
-// PERUBAHAN: Ambil data karyawan saat komponen dimount
 onMounted(async () => {
   try {
     await store.dispatch("karyawan/fetchKaryawanById");

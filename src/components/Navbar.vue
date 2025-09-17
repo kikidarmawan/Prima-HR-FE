@@ -3,7 +3,6 @@
   <div class="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-center">
     <div
       class="relative bg-white dark:bg-gray-900 shadow-xl h-16 rounded-t-3xl px-4 flex items-center justify-between w-106 mx-auto transition-colors duration-300">
-
       <!-- Curve Bulatan Tengah -->
       <div
         class="absolute -top-14 left-1/2 -translate-x-1/2 w-16 h-16 bg-white dark:bg-gray-900 rounded-full z-30 flex items-center justify-center">
@@ -27,7 +26,6 @@
             Home
           </p>
         </router-link>
-
         <!-- Leaves -->
         <router-link to="/leaves" class="flex flex-col items-center justify-center transition-colors group">
           <i class="fa-regular fa-calendar text-xl transition-colors"
@@ -37,7 +35,6 @@
             Leaves
           </p>
         </router-link>
-
         <!-- Overtime -->
         <router-link to="/overtime" class="flex flex-col items-center justify-center transition-colors group">
           <i class="fa-regular fa-clock text-xl transition-colors"
@@ -47,7 +44,6 @@
             Overtime
           </p>
         </router-link>
-
         <!-- Holiday -->
         <router-link to="/holiday" class="flex flex-col items-center justify-center transition-colors group">
           <i class="fa-solid fa-umbrella-beach text-xl transition-colors"
@@ -57,7 +53,6 @@
             Holiday
           </p>
         </router-link>
-
         <!-- Profile -->
         <router-link to="/profile" class="flex flex-col items-center justify-center transition-colors group">
           <i class="fa-regular fa-user text-xl transition-colors"
@@ -70,10 +65,8 @@
       </div>
     </div>
   </div>
-
   <!-- Camera Modal -->
   <CameraModal v-if="isCameraOpen" @close="closeCamera" @submit="handleSubmit" />
-
   <!-- Preview Foto Presensi -->
   <!-- <div v-if="previewFoto" class="mt-4 flex justify-center">
     <img :src="`http://192.168.0.155:8000/${previewFoto}`" alt="Foto Presensi"
@@ -123,13 +116,13 @@
       </div>
     </div>
   </transition>
-
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import CameraModal from './CameraModal.vue'
+import SuccessModal from './SuccessModal.vue'
 import api from "@/services/api"
 import { useStore } from "vuex";
 import SuccessModal from "@/components/SuccessModalAbsensi.vue";
@@ -145,16 +138,24 @@ const showErrorModal = ref(false)
 const previewFoto = ref(null)
 const errorMessage = ref("");
 
+// Modal states
+const showSuccessModal = ref(false)
+const showErrorModal = ref(false)
+const successTitle = ref('')
+const successMessage = ref('')
+const errorMessage = ref('')
+
 const user = JSON.parse(localStorage.getItem("user"))
 const karyawanId = user?.id || null
 if (!karyawanId) {
-  alert("User tidak ditemukan, silakan login ulang.")
+  errorMessage.value = "User tidak ditemukan, silakan login ulang."
+  showErrorModal.value = true
 }
 
 const openCamera = () => { isCameraOpen.value = true }
 const closeCamera = () => { isCameraOpen.value = false }
 
-// 🔹 Helper untuk class active/hover nav
+//  Helper untuk class active/hover nav
 const getNavClass = (path) => {
   return route.path === path
     ? "text-blue-600 dark:text-blue-400"
@@ -165,7 +166,7 @@ const handleSuccessClose = () => {
   showSuccessModal.value = false;
 };
 
-// 🔹 Submit presensi
+//  Submit presensi
 async function handleSubmit(photoBase64) {
   loading.value = true
   try {
@@ -194,5 +195,4 @@ async function handleSubmit(photoBase64) {
     closeCamera()
   }
 }
-
 </script>

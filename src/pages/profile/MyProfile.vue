@@ -9,7 +9,6 @@ const router = useRouter();
 const karyawan = computed(() => store.getters["karyawan/karyawan"]);
 const nama = computed(() => karyawan.value?.nama_karyawan || "");
 const jabatan = computed(() => karyawan.value?.jabatan?.nama_jabatan || "");
-// Dark mode
 const darkMode = ref(localStorage.getItem("theme") === "dark");
 const defaultAvatar = new URL("../../assets/images/Profile.png", import.meta.url).href;
 const avatar = ref(defaultAvatar);
@@ -36,7 +35,7 @@ const checkLocalStorageForImage = () => {
   }
   return null;
 };
-// pantau perubahan data karyawan
+// perubahan data karyawan
 watch(karyawan, (newVal) => {
   console.log("👀 Karyawan berubah:", newVal);
   

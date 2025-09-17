@@ -14,6 +14,5 @@ const props = defineProps({
     <Item label="Tanggal Masuk" :value="data.tgl_masuk ?? '-'" />
     <Item label="Status Karyawan" :value="data.status ?? '-'" />
     <Item label="Pendidikan Terakhir" :value="data.pendidikan_terkhir ?? '-'" />
-    <!-- Tambah data lainnya sesuai kebutuhan -->
   </div>
 </template>

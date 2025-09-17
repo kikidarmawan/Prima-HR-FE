@@ -6,7 +6,9 @@ const store = useStore();
 
 // ambil state
 const monthPresensi = computed(() => store.state.presensi.monthPresensi);
-const loading = computed(() => store.state.presensi.loading.loadingMonthPresensi); // pastikan di module ada state `loading`
+const loading = computed(
+  () => store.state.presensi.loading.loadingMonthPresensi
+);
 
 function formatDate(dateStr) {
   if (!dateStr) return "-";
@@ -43,7 +45,9 @@ function formatTime(timeStr) {
       >
         <div class="flex justify-between items-center">
           <div>
-            <div class="h-4 w-20 bg-gray-300 dark:bg-gray-600 rounded mb-2"></div>
+            <div
+              class="h-4 w-20 bg-gray-300 dark:bg-gray-600 rounded mb-2"
+            ></div>
             <div class="h-3 w-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
           </div>
           <div class="text-right">
@@ -57,7 +61,10 @@ function formatTime(timeStr) {
     <div v-else-if="monthPresensi.length" class="space-y-3 mt-3">
       <div v-for="(p, i) in monthPresensi" :key="i" class="space-y-3">
         <template
-          v-for="(time, label) in { 'Check In': p.jam_masuk, 'Check Out': p.jam_keluar }"
+          v-for="(time, label) in {
+            'Check In': p.jam_masuk,
+            'Check Out': p.jam_keluar,
+          }"
           :key="label"
         >
           <div
@@ -69,12 +76,14 @@ function formatTime(timeStr) {
                 <h2 class="text-sm font-medium text-gray-800 dark:text-white">
                   {{ label }}
                 </h2>
-                <p class="text-xs text-gray-400 dark:text-gray-300 ">
+                <p class="text-xs text-gray-400 dark:text-gray-300">
                   {{ formatDate(p.tanggal) }}
                 </p>
               </div>
               <div class="text-right w-[25%]">
-                <h1 class="text-sm md:text-base font-bold text-gray-900 dark:text-white">
+                <h1
+                  class="text-sm md:text-base font-bold text-gray-900 dark:text-white"
+                >
                   {{ formatTime(time) }}
                 </h1>
               </div>

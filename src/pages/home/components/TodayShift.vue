@@ -12,11 +12,6 @@ const presensi = computed(() => store.state.presensi.todayPresensi);
 
 const presensiByDate = computed(() => presensi.value?.["0"] ?? null);
 
-console.log(presensiByDate.value);
-
-
-
-
 const loading = computed(() => store.getters["presensi/isLoadingTodayPresensi"]);
 const loadingMonth = computed(
   () => store.state.presensi.loading.loadingMonthPresensi
@@ -62,7 +57,9 @@ watch(
         class="bg-white dark:bg-gray-800 rounded-2xl shadow p-4 flex flex-col border border-gray-200 dark:border-gray-700 animate-pulse"
       >
         <div class="flex items-center gap-2 mb-3">
-          <div class="bg-gray-200 dark:bg-gray-700 p-2 rounded-lg w-8 h-8"></div>
+          <div
+            class="bg-gray-200 dark:bg-gray-700 p-2 rounded-lg w-8 h-8"
+          ></div>
           <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-20"></div>
         </div>
         <div class="h-6 bg-gray-200 dark:bg-gray-700 rounded w-16 mb-2"></div>

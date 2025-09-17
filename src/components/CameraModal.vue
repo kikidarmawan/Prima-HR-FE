@@ -60,7 +60,6 @@ async function submitPhoto() {
 
   showLoadingModal.value = true;
 
-  // simulasi proses async (misalnya upload API)
   setTimeout(() => {
     showLoadingModal.value = false;
     emit("submit", photo.value);
@@ -107,7 +106,7 @@ onUnmounted(stopCamera);
         <button
           v-if="!photo"
           @click="capturePhoto"
-          class="flex-1 px-4 py-2 rounded-lg text-white bg-blue-500 hover:bg-blue-600"
+          class="flex-1 cursor-pointer px-4 py-2 rounded-lg text-white bg-blue-500 hover:bg-blue-600"
         >
           Capture
         </button>
@@ -115,13 +114,13 @@ onUnmounted(stopCamera);
         <template v-else>
           <button
             @click="retakePhoto"
-            class="flex-1 px-4 py-2 rounded-lg text-white bg-yellow-500 hover:bg-yellow-600"
+            class="flex-1 px-4 py-2 cursor-pointer rounded-lg text-white bg-yellow-500 hover:bg-yellow-600"
           >
             Retake
           </button>
           <button
             @click="submitPhoto"
-            class="flex-1 px-4 py-2 rounded-lg text-white bg-green-500 hover:bg-green-600"
+            class="flex-1 px-4 py-2 cursor-pointer rounded-lg text-white bg-green-500 hover:bg-green-600"
           >
             Submit
           </button>
@@ -129,7 +128,7 @@ onUnmounted(stopCamera);
 
         <button
           @click="closeCamera"
-          class="px-4 py-2 rounded-lg text-white bg-gray-400 hover:bg-gray-500
+          class="px-4 py-2 cursor-pointer rounded-lg text-white bg-gray-400 hover:bg-gray-500
                  dark:bg-gray-700 dark:hover:bg-gray-600"
         >
           Close
