@@ -1,22 +1,23 @@
 <script setup>
-
 import { ref, computed, onMounted } from "vue";
 import { useStore } from "vuex";
 import Oren from "@/assets/images/Oren.jpg";
 
 const store = useStore();
+
+// ambil data karyawan dari store
 const karyawan = computed(() => store.getters["karyawan/karyawan"]);
 const nama = computed(() => karyawan.value?.nama_karyawan || ""); 
 const jabatan = computed(() => karyawan.value?.jabatan?.nama_jabatan || ""); 
 
+// foto profil, fallback ke localStorage atau default
 const fotoUrl = computed(() => {
   const storedImage = localStorage.getItem("profileImage");
-  if (storedImage) {
-    return storedImage;
-  }
+  if (storedImage) return storedImage;
   return karyawan.value?.foto_url || Oren;
 });
 
+// fetch data karyawan saat mounted
 onMounted(async () => {
   try {
     await store.dispatch("karyawan/fetchKaryawanById");
@@ -24,15 +25,6 @@ onMounted(async () => {
     console.error("Gagal ambil data karyawan:", err);
   }
 });
-
-import { ref } from "vue";
-import Oren from "@/assets/images/Oren.jpg";
-
-const karyawan = JSON.parse(localStorage.getItem("karyawan"));
-const nama = karyawan?.nama_karyawan; 
-const jabatan = karyawan?.jabatan?.nama_jabatan; 
-const fotoUrl = ref(karyawan?.foto_url || Oren);
-
 </script>
 
 <template>

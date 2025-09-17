@@ -1,5 +1,4 @@
 import api from "@/services/api";
-import store from "@/store";
 
 const state = {
   teamLeave: [],
@@ -20,7 +19,7 @@ const mutations = {
 };
 
 const actions = {
-  // ambil data leave untuk tim manager yang login
+  // Ambil data leave untuk tim manager yang login
   async getTeamLeaveData({ commit }) {
     commit("SET_LOADING", true);
     commit("SET_ERROR", null);
@@ -28,47 +27,46 @@ const actions = {
     try {
       const res = await api.get("/api/absensi-manager");
 
-      const mapped = res.data.data.map((item) => {
-        return {
-          ...item,
-          name: item.karyawan?.name,
-          date: item.tanggal,
-          karyawan_id: item.karyawan_id,
-        };
-      });
+      const mapped = res.data.data.map((item) => ({
+        ...item,
+        name: item.karyawan?.nama_karyawan || `Employee ${item.karyawan_id}`,
+        date: item.tanggal,
+        karyawan_id: item.karyawan_id,
+      }));
 
       commit("SET_TEAM_LEAVE", mapped);
     } catch (err) {
       console.error("Failed to fetch team leave:", err);
-      commit("SET_ERROR", err.message);
+      commit("SET_TEAM_LEAVE", []); // kosongkan data biar ga nyangkut
+      commit("SET_ERROR", err.response?.data?.message || err.message);
     } finally {
       commit("SET_LOADING", false);
     }
   },
 
-  // update status (accept / reject)
-  async updateLeaveStatus({ dispatch }, { item, status }) {
+  // Update status (accept / reject)
+  async updateLeaveStatus({ commit, state }, { item, status }) {
     try {
       const payload = {
         tanggal: item.date,
         karyawan_id: item.karyawan_id,
-        status: status,
+        status: status, // "Disetujui" / "Ditolak"
         alasan_ditolak: status === "Ditolak" ? "Alasan ditolak" : null,
       };
-
-      console.log("=== Updating Leave ===");
-      console.log("Leave ID:", item.id);
-      console.log("Payload:", payload);
-
+  
       await api.put(`/api/update-absensi-status/${item.id}`, payload);
-
-      // refresh data
-      await dispatch("getTeamLeaveData");
+  
+      // update local state langsung
+      const updatedTeamLeave = state.teamLeave.map((leave) =>
+        leave.id === item.id ? { ...leave, status } : leave
+      );
+      commit("SET_TEAM_LEAVE", updatedTeamLeave);
+  
     } catch (err) {
       console.error("=== Update Failed ===");
       console.error("Error Response:", err.response?.data || err.message);
     }
-  },
+  }
 };
 
 export default {

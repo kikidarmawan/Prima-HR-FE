@@ -14,7 +14,7 @@ const showModal = ref(false);
 // ambil user & karyawan dari auth store
 const user = computed(() => store.state.auth?.user || {});
 const karyawan = computed(() => store.state.auth?.user?.karyawan || {});
-const karyawanId = computed(() => karyawan.value.id);
+const karyawanId = computed(() => karyawan.value?.id);
 
 // tab list
 const tabs = computed(() => {
@@ -45,29 +45,20 @@ const absensiData = computed(
       ditolak: [],
     }
 );
-const absensiCount = computed(
-  () =>
-    store.getters["absensi/absensiCount"] || {
-      pending: 0,
-      disetujui: 0,
-      ditolak: 0,
-    }
-);
+
 const teamLeave = computed(() => store.state.team_leave.teamLeave);
 
-// ganti stats computed
-const stats = computed(() => [
-  { label: "Leave Balance", value: 
-      (tabData.value.Pending?.length || 0) +
-      (tabData.value.Approved?.length || 0) +
-      (tabData.value.Rejected?.length || 0),
-    color: "blue" 
-  },
-  { label: "Leave Pending", value: tabData.value.Pending?.length || 0, color: "green" },
-  { label: "Leave Approved", value: tabData.value.Approved?.length || 0, color: "teal" },
-  { label: "Leave Cancelled", value: tabData.value.Rejected?.length || 0, color: "red" },
-]);
+// stats grid
+const stats = computed(() => {
+  const td = tabData.value;
+  return [
+    { label: "Leave Balance", value: (td.Pending?.length || 0) + (td.Approved?.length || 0) + (td.Rejected?.length || 0), color: "blue" },
+    { label: "Leave Pending", value: td.Pending?.length || 0, color: "green" },
+    { label: "Leave Approved", value: td.Approved?.length || 0, color: "teal" },
+    { label: "Leave Cancelled", value: td.Rejected?.length || 0, color: "red" },
 
+  ];
+});
 
 const filters = ref({
   status: [],
@@ -79,19 +70,16 @@ const filters = ref({
 const tabData = computed(() => {
   const filterData = (data) => {
     let result = data;
-    // filter leave type
     if (filters.value.leaveType.length) {
       result = result.filter((item) =>
         filters.value.leaveType.includes(item.leaveBalanceValue)
       );
     }
-    // filter status (opsional, kalau nanti kepake)
     if (filters.value.status.length) {
       result = result.filter((item) =>
         filters.value.status.includes(item.status)
       );
     }
-    // filter team member
     if (filters.value.teamMember) {
       result = result.filter(
         (item) =>
@@ -108,12 +96,18 @@ const tabData = computed(() => {
     Pending: filterData(formatAbsensiData(absensiData.value.pending, "Pending")),
     Approved: filterData(formatAbsensiData(absensiData.value.disetujui, "Approved")),
     Rejected: filterData(formatAbsensiData(absensiData.value.ditolak, "Rejected")),
-    "Team Leave":
-      karyawanId.value === 34 ? filterData(formatTeamLeaveData(teamLeave.value)) : [],
+    "Team Leave": teamLeave.value
+      ? filterData(
+          formatTeamLeaveData(
+            teamLeave.value.filter(
+              (item) => item.karyawan?.manager === karyawanId.value
+            )
+          )
+        )
+      : [],
   };
   return data;
 });
-
 
 function formatAbsensiData(data, status) {
   if (!data || !Array.isArray(data)) return [];
@@ -147,6 +141,7 @@ function formatAbsensiData(data, status) {
     };
   });
 }
+
 function formatTeamLeaveData(data) {
   if (!data || !Array.isArray(data)) return [];
   return data.map((item) => ({
@@ -161,6 +156,7 @@ function formatTeamLeaveData(data) {
     rawData: item,
   }));
 }
+
 function formatDate(date) {
   if (!date) return null;
   const d = new Date(date);
@@ -169,6 +165,7 @@ function formatDate(date) {
   const day = String(d.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
+
 function calculateDays(startDate, endDate) {
   if (!startDate) return 1;
   if (!endDate || startDate === endDate) return 1;
@@ -186,20 +183,18 @@ onMounted(async () => {
   try {
     await store.dispatch("kategori_absen/fetchKategoriAbsensi");
     await store.dispatch("absensi/getAllAbsensiData");
-    if (karyawanId.value === 34) {
-      await store.dispatch("team_leave/getTeamLeaveData");
-    }
+    await store.dispatch("team_leave/getTeamLeaveData");
   } catch (error) {
     console.error("Failed to load data:", error);
   }
 });
-
 
 function applyFilters(newFilters) {
   filters.value = { ...newFilters };
   showModal.value = false;
 }
 </script>
+
 
 <template>
   <div class="bg-gray-100 dark:bg-[#0c0e19] min-h-screen flex flex-col items-center transition-colors duration-300">

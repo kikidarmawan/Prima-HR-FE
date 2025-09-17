@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs"
-  >
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs">
     <transition
       enter-active-class="transition ease-out duration-300"
       enter-from-class="opacity-0 scale-95"
@@ -37,8 +35,7 @@
         <!-- Button -->
         <button
           @click="$emit('close')"
-          class="bg-blue-500  hover:bg-blue-600 text-white w-full py-2 rounded-lg text-sm font-semibold cursor-pointer"
-          class="bg-blue-500 cursor-pointer hover:bg-blue-600 text-white w-full py-2 rounded-lg text-sm font-semibold"
+          class="bg-blue-500 hover:bg-blue-600 text-white w-full py-2 rounded-lg text-sm font-semibold cursor-pointer"
         >
           Done
         </button>
