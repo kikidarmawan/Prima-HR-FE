@@ -48,23 +48,23 @@ export default {
     },
   },
   actions: {
-    async fetchTodayPresensi({ commit }, tanggal = null) {
+    async fetchTodayPresensi({ commit }, payload) {
       commit("SET_LOADING_TODAY_PRESENSI", true);
       commit("SET_ERROR", null);
+      commit("SET_TODAY_PRESENSI", null);
       try {
         const token = localStorage.getItem("token");
-
-        let tgl;
-        if (tanggal && /^\d{4}-\d{2}-\d{2}$/.test(tanggal)) {
-          tgl = tanggal;
-        } else {
-          tgl = new Date().toISOString().split("T")[0];
-        }
-
+    
+        // ✅ ambil tanggal dari payload
+        const inputTanggal = payload?.tanggal;
+        const tgl = /^\d{4}-\d{2}-\d{2}$/.test(inputTanggal)
+          ? inputTanggal
+          : new Date().toISOString().split("T")[0];
+    
         const res = await api.get(`/api/presensi-today?tanggal=${tgl}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-
+    
         const { status, data } = res.data;
         if (status && data) {
           commit("SET_TODAY_PRESENSI", data);
@@ -77,7 +77,7 @@ export default {
       } finally {
         commit("SET_LOADING_TODAY_PRESENSI", false);
       }
-    },
+    },    
 
     async submitPresensi({ commit, state }, { karyawanId, photoBase64 }) {
       commit("SET_LOADING", true);
