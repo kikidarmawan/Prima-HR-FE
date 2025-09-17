@@ -122,23 +122,20 @@
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import CameraModal from './CameraModal.vue'
-import api from "@/services/api"
 import { useStore } from "vuex";
 import SuccessModal from "@/components/SuccessModalAbsensi.vue";
 
-
 const route = useRoute()
 const store = useStore();
+
 const isCameraOpen = ref(false)
 const presensiData = ref(null)
-const loading  = computed(() => store.state.absen.loadingSubmitPresensi)
+const loading = computed(() => store.state.absen.loadingSubmitPresensi)
 const previewFoto = ref(null)
 
 // Modal states
 const showSuccessModal = ref(false)
 const showErrorModal = ref(false)
-const successTitle = ref('')
-const successMessage = ref('')
 const errorMessage = ref('')
 
 const user = JSON.parse(localStorage.getItem("user"))
@@ -151,7 +148,6 @@ if (!karyawanId) {
 const openCamera = () => { isCameraOpen.value = true }
 const closeCamera = () => { isCameraOpen.value = false }
 
-//  Helper untuk class active/hover nav
 const getNavClass = (path) => {
   return route.path === path
     ? "text-blue-600 dark:text-blue-400"
@@ -162,32 +158,32 @@ const handleSuccessClose = () => {
   showSuccessModal.value = false;
 };
 
-//  Submit presensi
+// 🚀 Submit presensi
 async function handleSubmit(photoBase64) {
-  loading.value = true
   try {
     const result = await store.dispatch("absen/submitAbsensi", {
       photoBase64,
       karyawanId,
-    })
+    });
 
-    if (!result) throw new Error("Gagal mendapatkan hasil presensi")
+    if (!result) throw new Error("Gagal mendapatkan hasil presensi");
 
-    const { message, fotoPath } = result
+    const { message, fotoPath } = result;
 
-    showSuccessModal.value = true
+    showSuccessModal.value = true;
+    previewFoto.value = fotoPath;
 
-    // alert(message || "Presensi berhasil!")
-    previewFoto.value = fotoPath
+    // refresh data presensi
     store.dispatch("presensi/fetchTodayPresensi");
     store.dispatch("presensi/fetchMonthPresensi");
   } catch (err) {
-    console.error("Error:", err?.response?.data?.message)
-    errorMessage.value = err?.response?.data?.message;
-    showErrorModal.value = true
+    console.error("Error:", err?.response?.data?.message || err.message);
+
+    // ✅ ambil pesan error dari backend kalau ada
+    errorMessage.value = err?.response?.data?.message || err.message || "Gagal presensi";
+    showErrorModal.value = true;
   } finally {
-    loading.value = false
-    closeCamera()
+    closeCamera();
   }
 }
 </script>
