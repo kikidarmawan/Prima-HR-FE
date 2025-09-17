@@ -43,26 +43,33 @@ onMounted(async () => {
 watch(
   selectedDate,
   async (newIndex) => {
-    if (!dates.value[newIndex]) return;
-
-    const picked = dates.value[newIndex];
     const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth(); // bulan dimulai dari 0 (0=Jan, 8=Sep)    
+    // 📌 Ambil hari berdasarkan index (ditambah 1 karena tanggal mulai dari 1, index dari 0)
+    const day = newIndex + 2;
+
+    // 📌 Buat tanggal target, tapi tetap di bulan & tahun yang sama
+    const targetDate = new Date(year, month, day);
+
     const karyawan = JSON.parse(localStorage.getItem("karyawan"));
     const karyawanId = karyawan?.id || 34;
 
-    await store.dispatch("presensi/fetchTodayPresensi", karyawanId);
-    
+    await store.dispatch("presensi/fetchTodayPresensi", {
+      karyawanId,
+      tanggal: targetDate.toISOString().split("T")[0],
+    });
+
     const p = store.state.presensi.todayPresensi;
     shiftData.value = p;
     activities.value = [
       p?.jam_masuk ? { type: "checkin", time: p.jam_masuk } : null,
       p?.jam_keluar ? { type: "checkout", time: p.jam_keluar } : null,
     ].filter(Boolean);
-    // if (parseInt(picked.day) === today.getDate()) {
-    // }
   },
   { immediate: true }
 );
+
 </script>
 
 <template>
