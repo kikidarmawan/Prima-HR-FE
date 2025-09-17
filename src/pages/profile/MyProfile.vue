@@ -76,8 +76,6 @@ watch(
       avatar.value = defaultAvatar;
     }
 watch(karyawan, (newVal) => {
-
-  
   const storedImage = checkLocalStorageForImage();
   
   if (storedImage && !isUpdating.value) {
@@ -86,7 +84,6 @@ watch(karyawan, (newVal) => {
   },
   { immediate: true }
 );
-
 // update avatar setiap kali data karyawan berubah
 watch(karyawan, (val) => {
   if (val?.foto_url) {
@@ -96,8 +93,6 @@ watch(karyawan, (val) => {
     avatar.value = defaultAvatar;
   }
 });
-
-
 const handleLogout = () => {
   store.dispatch("auth/logout");
   router.push("/login");

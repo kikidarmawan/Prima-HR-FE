@@ -18,19 +18,30 @@ const props = defineProps({
   },
 const store = useStore();
 
+// presensi dari store
 const presensi = computed(() => store.state.presensi.todayPresensi);
 
-const presensiByDate = computed(() => presensi.value?.["0"] ?? null);
+// ambil data presensi per tanggal
+const presensiByDate = computed(() => {
+  const rawTanggal = props.selectedDate?.raw;
+  const tanggalStr =
+    typeof rawTanggal === "object" ? rawTanggal.tanggal : rawTanggal;
 
+  return store.getters["presensi/presensiByDate"](tanggalStr);
+});
+
+// loading state
 const loading = computed(() => store.getters["presensi/isLoadingTodayPresensi"]);
 const loadingMonth = computed(
   () => store.state.presensi.loading.loadingMonthPresensi
 );
 
+// format waktu
 function formatTime(time) {
   return time ? time.slice(0, 5) : "-";
 }
 
+// fetch presensi sesuai tanggal
 async function fetchPresensi() {
   const karyawan = store.state.auth.user?.karyawan_id;
   if (!karyawan || !props.selectedDate?.raw) return;
@@ -43,6 +54,7 @@ async function fetchPresensi() {
   }
 }
 
+// jalankan fetchPresensi tiap kali selectedDate berubah
 watch(
   () => props.selectedDate,
   () => {

@@ -171,7 +171,7 @@ const goToHome = () => {
         Apply Leave
       </button>
     </form>
-    <!-- Modal Loading -->
+    <!-- Modal Loading (rapi + overlay non-clickable) -->
     <transition
       enter-active-class="transition-opacity duration-300 ease-out"
       enter-from-class="opacity-0"
