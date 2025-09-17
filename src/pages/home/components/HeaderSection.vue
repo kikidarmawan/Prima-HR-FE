@@ -1,4 +1,5 @@
 <script setup>
+
 import { ref, computed, onMounted } from "vue";
 import { useStore } from "vuex";
 import Oren from "@/assets/images/Profile.png";
@@ -26,6 +27,15 @@ onMounted(async () => {
     loading.value = false;
   }
 });
+
+import { ref } from "vue";
+import Oren from "@/assets/images/Oren.jpg";
+
+const karyawan = JSON.parse(localStorage.getItem("karyawan"));
+const nama = karyawan?.nama_karyawan; 
+const jabatan = karyawan?.jabatan?.nama_jabatan; 
+const fotoUrl = ref(karyawan?.foto_url || Oren);
+
 </script>
 
 <template>

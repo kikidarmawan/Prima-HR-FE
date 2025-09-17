@@ -26,6 +26,8 @@ const previewImage = ref(null);
 const existingData = ref(null);
 
 // modal
+
+
 const showLoadingModal = ref(false);
 const showSuccessModal = ref(false);
 const showErrorModal = ref(false);
@@ -44,13 +46,32 @@ onMounted(async () => {
     form.value.foto_path = data.foto_path || null;
 
     const storedImage = localStorage.getItem(`profileImage_${data.id}`);
+
+    const storedImage = localStorage.getItem("profileImage");
     if (storedImage) {
       previewImage.value = storedImage;
     } else {
       previewImage.value = data.foto_url || defaultAvatar;
     }
+
+    previewImage.value = data.foto_url
+      ? `${import.meta.env.VITE_API_URL}/${data.foto_url}?t=${Date.now()}`
+      : defaultAvatar;
+
   }
 });
+watch(
+  () => store.getters["karyawan/karyawan"],
+  (newData) => {
+    if (newData) {
+      existingData.value = newData;
+      previewImage.value = newData.foto_url
+        ? `${import.meta.env.VITE_API_URL}/${newData.foto_url}?t=${Date.now()}`
+        : defaultAvatar;
+    }
+  },
+  { deep: true, immediate: true }
+);
 
 watch(
   () => store.getters["karyawan/karyawan"],
@@ -111,6 +132,10 @@ const updateProfile = async () => {
 
         fotoPath = uploadRes.data.foto_path;
         form.value.foto_path = fotoPath;
+      if (uploadRes.data?.status && uploadRes.data.url_path) {
+        const newUrl = `${uploadRes.data.url_path}?t=${Date.now()}`;
+        previewImage.value = newUrl;
+        localStorage.setItem("profileImage", newUrl);
       }
     }
 
@@ -144,8 +169,24 @@ const updateProfile = async () => {
       },
     });
 
-    const updatedData = res.data.data || res.data;
+  if (form.value.foto instanceof File) {
+    payload = new FormData();
+    payload.append("nama_karyawan", form.value.nama_karyawan);
+    payload.append("email", form.value.email);
+    payload.append("no_hp", form.value.no_hp);
+    payload.append("jk", form.value.jk);
+    payload.append("foto", form.value.foto);
+  } else {
+    payload = {
+      nama_karyawan: form.value.nama_karyawan,
+      email: form.value.email,
+      no_hp: form.value.no_hp,
+      jk: form.value.jk,
+    };
+  }
 
+
+    const updatedData = res.data.data || res.data;
     // update store & localStorage
     store.commit("karyawan/SET_KARYAWAN", updatedData);
     localStorage.setItem("karyawan", JSON.stringify(updatedData));
@@ -167,6 +208,17 @@ const updateProfile = async () => {
         );
       }
     }
+
+  try {
+    await store.dispatch("karyawan/updateKaryawan", { data: payload });
+    await store.dispatch("karyawan/fetchKaryawanById"); // refresh data
+    alert("Profile berhasil diupdate ✅");
+    router.push("/profile");
+  } catch (err) {
+    console.error("❌ Error update profile:", err.response?.data || err);
+    alert("Gagal update profile ❌");
+    await store.dispatch("karyawan/fetchKaryawanById");
+
 
     showLoadingModal.value = false;
     showSuccessModal.value = true;
@@ -252,11 +304,22 @@ const handleSuccessClose = () => {
             type="text"
             v-model="form.nama_karyawan"
             class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
+          <label class="block text-blue-500 mb-1 text-sm font-medium">Name</label>
+          <input
+            type="text"
+            v-model="form.nama_karyawan"
+            class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
             placeholder="Enter your name"
           />
         </div>
         <!-- Email -->
         <div>
+          <label class="block text-blue-500 mb-1 text-sm font-medium">Email</label>
+          >
+          <input
+            type="email"
+            v-model="form.email"
+            class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
           <label class="block text-blue-500 mb-1 text-sm font-medium">Email</label>
           <input
             type="email"
@@ -267,6 +330,16 @@ const handleSuccessClose = () => {
         </div>
         <!-- Phone -->
         <div>
+          <label class="block text-blue-500 mb-1 text-sm font-medium">Phone</label>
+          <label class="block text-blue-500 mb-1 text-sm font-medium"
+            >Phone</label
+          >
+
+
+          <input
+            type="text"
+            v-model="form.no_hp"
+            class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
           <label class="block text-blue-500 mb-1 text-sm font-medium">Phone</label>
           <input
             type="text"

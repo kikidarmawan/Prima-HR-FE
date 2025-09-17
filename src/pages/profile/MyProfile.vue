@@ -11,7 +11,7 @@ const karyawan = computed(() => store.getters["karyawan/karyawan"]);
 const nama = computed(() => karyawan.value?.nama_karyawan || "");
 const jabatan = computed(() => karyawan.value?.jabatan?.nama_jabatan || "");
 
-// dark mode
+// Dark mode
 const darkMode = ref(localStorage.getItem("theme") === "dark");
 
 // avatar
@@ -21,20 +21,45 @@ const defaultAvatar = new URL(
 ).href;
 const avatar = ref(defaultAvatar);
 const imageKey = ref(0);
-
-// ambil data user waktu mount
+// apply darkmode + load avatar
 onMounted(async () => {
   document.documentElement.classList.toggle("dark", darkMode.value);
   await store.dispatch("karyawan/fetchKaryawanById");
+ 
+});
+// fallback avatar
+const defaultAvatar = new URL("../../assets/images/Profile.png", import.meta.url).href;
+const avatar = ref(defaultAvatar);
+
+// apply darkmode + load avatar
+onMounted(async () => {
+  const savedImage = localStorage.getItem("profileImage");
+  if (savedImage) {
+    avatar.value = savedImage;
+  }
+
+  document.documentElement.classList.toggle("dark", darkMode.value);
+
+  // ambil data terbaru dari backend
+  await store.dispatch("karyawan/fetchKaryawanById");
 });
 
-// watch dark mode
+// update theme
 watch(darkMode, (val) => {
   document.documentElement.classList.toggle("dark", val);
   localStorage.setItem("theme", val ? "dark" : "light");
 });
 
 // watch perubahan data karyawan
+const checkLocalStorageForImage = () => {
+  const storedImage = localStorage.getItem("profileImage");
+  if (storedImage) {
+    return storedImage;
+  }
+  return null;
+};
+
+// perubahan data karyawan
 watch(
   karyawan,
   (newVal) => {
@@ -56,11 +81,30 @@ watch(
 );
 
 // logout
+watch(karyawan, (newVal) => {
+  const storedImage = checkLocalStorageForImage();
+  
+  if (storedImage && !isUpdating.value) {
+    avatar.value = storedImage;
+    imageKey.value++;
+  },
+  { immediate: true }
+);
+// update avatar setiap kali data karyawan berubah
+watch(karyawan, (val) => {
+  if (val?.foto_url) {
+    avatar.value = `${val.foto_url}?t=${Date.now()}`; 
+    localStorage.setItem("profileImage", avatar.value);
+  } else {
+    avatar.value = defaultAvatar;
+  }
+});
 const handleLogout = () => {
   store.dispatch("auth/logout");
   router.push("/login");
 };
 </script>
+
 
 <template>
   <div
@@ -73,8 +117,18 @@ const handleLogout = () => {
           :key="imageKey"
           :src="avatar"
           class="rounded-full w-24 h-24 object-cover"
+
+        <img 
+          :key="imageKey" 
+          :src="avatar" 
+          class="rounded-full w-24 h-24 object-cover" 
         />
       </div>
+
+        <img :src="avatar" class="rounded-full w-24 h-24 object-cover" />
+      </div>
+
+
       <h1 class="font-semibold text-xl mt-4 text-gray-900 dark:text-white">
         {{ nama }}
       </h1>
