@@ -3,12 +3,12 @@ import api from "@/services/api";
 export default {
   namespaced: true,
   state: () => ({
-    karyawan: null
+    karyawan: null,
   }),
   mutations: {
     SET_KARYAWAN(state, data) {
       state.karyawan = data;
-    }
+    },
   },
   actions: {
     async fetchKaryawanById({ commit }) {
@@ -19,6 +19,15 @@ export default {
             Authorization: `Bearer ${token}`,
           },
         });
+
+        const karyawan = response.data.data;
+        if (karyawan.foto_url) {
+          karyawan.foto_url = `${karyawan.foto_url}?t=${Date.now()}`;
+        }
+        commit("SET_KARYAWAN", karyawan);
+        localStorage.setItem("karyawan", JSON.stringify(karyawan));
+        return karyawan;
+
         // setelah dapet data dari API
 const karyawan = response.data.data;
 
@@ -30,10 +39,47 @@ if (karyawan.foto_url) {
 commit("SET_KARYAWAN", karyawan);
 localStorage.setItem("karyawan", JSON.stringify(karyawan));
 
+
       } catch (err) {
-        console.error("Gagal ambil data karyawan:", err.response?.data || err);
+        console.error("❌ Gagal ambil data karyawan:", err.response?.data || err);
+        throw err;
       }
     },
+    async updateKaryawan({ commit }, { data }) {
+      try {
+        const token = localStorage.getItem("token");
+        console.log("Data yang dikirim ke backend:", data);
+        
+        // PERUBAHAN: Kirim data sebagai JSON (cara asli yang berfungsi)
+        const response = await api.put(`/api/update-karyawan`, data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        
+        console.log("Response dari update karyawan:", response.data);
+        
+        const responseData = response.data;
+        const updated = responseData.data || responseData;
+        
+        if (updated.foto_url) {
+          updated.foto_url = `${updated.foto_url}?t=${Date.now()}`;
+        }
+        
+        commit("SET_KARYAWAN", updated);
+        localStorage.setItem("karyawan", JSON.stringify(updated));
+        return updated;
+      } catch (err) {
+        console.error("❌ Gagal update karyawan:", err.response?.data || err);
+        if (err.response?.data?.errors) {
+          console.error("Detail validation errors:", JSON.stringify(err.response.data.errors, null, 2));
+        }
+        throw err;
+      }
+    },
+
+
 
 
     async updateKaryawan({ commit }, { data }) {
@@ -65,15 +111,16 @@ localStorage.setItem("karyawan", JSON.stringify(karyawan));
 
 
 
+
     async initKaryawan({ commit }) {
       const stored = localStorage.getItem("karyawan");
       if (stored) {
         commit("SET_KARYAWAN", JSON.parse(stored));
       }
-    }
+    },
   },
   getters: {
     karyawan: (state) => state.karyawan,
-    karyawanId: (state) => state.karyawan?.id || null
-  }
-}
+    karyawanId: (state) => state.karyawan?.id || null,
+  },
+};

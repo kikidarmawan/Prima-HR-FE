@@ -1,8 +1,7 @@
 <script setup>
-import { ref, watchEffect } from "vue";
+import { ref, watchEffect, computed } from "vue";
 import { useStore } from "vuex";
 import api from "@/services/api";
-
 import TabPersonal from "./components/TabPersonal.vue";
 import TabProfessional from "./components/TabProfessional.vue";
 import TabDocuments from "./components/TabDocuments.vue";
@@ -11,41 +10,14 @@ import TabDocuments from "./components/TabDocuments.vue";
 const tabs = ["Personal", "Professional", "Documents"];
 const activeTab = ref("Personal");
 const store = useStore();
-const karyawan = ref(null);
 
-// Tunggu user tersedia
+// PERUBAHAN: Gunakan computed untuk mendapatkan data karyawan dari Vuex store
+const karyawan = computed(() => store.getters["karyawan/karyawan"]);
+
+// PERUBAHAN: Tetap ambil data dari API saat komponen dimount untuk memastikan data terbaru
 watchEffect(async () => {
-  let userId = store.state.auth.user?.id;
-
-  // Ambil dari localStorage kalau belum ada user
-  if (!userId) {
-    const userFromLocal = localStorage.getItem("user");
-    if (userFromLocal) {
-      const parsed = JSON.parse(userFromLocal);
-      userId = parsed.id;
-      store.commit("auth/SET_USER", parsed);
-    }
-  }
-
-  if (!userId) return;  
-
-  //token localStorage
-  const token = localStorage.getItem("token");
-  if (!token) {
-    console.warn("Token tidak ditemukan. Apakah sudah login?");
-    return;
-  }
-
   try {
-const res = await api.get(`/api/detail-karyawan`, {
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-});
-karyawan.value = res.data.data;
-localStorage.setItem("karyawan", JSON.stringify(karyawan.value));
-
-
+    await store.dispatch("karyawan/fetchKaryawanById");
   } catch (err) {
     console.error("Gagal ambil data karyawan:", err);
   }
@@ -54,21 +26,17 @@ localStorage.setItem("karyawan", JSON.stringify(karyawan.value));
 
 <template>
   <div class="min-h-screen bg-white dark:bg-[#0c0e19] px-4 sm:px-6 py-6 max-w-md mx-auto transition-colors duration-300">
-
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
       <router-link to="/profile" class="text-2xl text-gray-700 dark:text-gray-200 cursor-pointer">
         <i class="fa-solid fa-angle-left"><span class="text-white dark:text-black"></span></i>
       </router-link>
-
       <h1 class="text-lg font-bold text-center text-gray-900 dark:text-white -ml-10">
         My Profile
       </h1>
       <div>
-
       </div>
     </div>
-
     <!-- Tabs -->
     <div class="flex justify-around mb-5">
       <button v-for="tab in tabs" :key="tab" @click="activeTab = tab" :class="[
@@ -80,7 +48,6 @@ localStorage.setItem("karyawan", JSON.stringify(karyawan.value));
         {{ tab }}
       </button>
     </div>
-
     <!-- Tab Content -->
     <div class="space-y-6">
       <TabPersonal v-if="activeTab === 'Personal'" :data="karyawan" />
