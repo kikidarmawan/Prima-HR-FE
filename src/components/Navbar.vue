@@ -122,7 +122,6 @@
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import CameraModal from './CameraModal.vue'
-import SuccessModal from './SuccessModal.vue'
 import api from "@/services/api"
 import { useStore } from "vuex";
 import SuccessModal from "@/components/SuccessModalAbsensi.vue";
@@ -133,10 +132,7 @@ const store = useStore();
 const isCameraOpen = ref(false)
 const presensiData = ref(null)
 const loading  = computed(() => store.state.absen.loadingSubmitPresensi)
-const showSuccessModal = ref(false)
-const showErrorModal = ref(false)
 const previewFoto = ref(null)
-const errorMessage = ref("");
 
 // Modal states
 const showSuccessModal = ref(false)
@@ -180,7 +176,6 @@ async function handleSubmit(photoBase64) {
     const { message, fotoPath } = result
 
     showSuccessModal.value = true
-    console.log("Foto tersimpan di:", fotoPath)
 
     // alert(message || "Presensi berhasil!")
     previewFoto.value = fotoPath
