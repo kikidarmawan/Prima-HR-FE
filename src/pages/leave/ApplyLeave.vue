@@ -6,6 +6,8 @@ import SuccessLeave from "@/components/SuccessLeave.vue";
 
 const router = useRouter();
 const store = useStore();
+
+// state modal
 const showSuccessLeave = ref(false);
 const showLoadingModal = ref(false);
 
@@ -59,7 +61,7 @@ const applyLeave = async () => {
     await store.dispatch("p_absen/ajukanAbsen", payload);
     await store.dispatch("absensi/getAllAbsensiData");
 
-    // jeda aimasi loading
+    // kasih jeda biar animasi loading keliatan
     setTimeout(() => {
       showLoadingModal.value = false;
       showSuccessLeave.value = true;
@@ -122,9 +124,7 @@ const goToHome = () => {
         >
           <option disabled value="">Select Leave Type</option>
           <option
-            v-for="kategori in $store.getters[
-              'kategori_absen/allKategoriAbsensi'
-            ]"
+            v-for="kategori in $store.getters['kategori_absen/allKategoriAbsensi']"
             :key="kategori.id"
             :value="kategori.id"
             class="text-black dark:text-white bg-white dark:bg-gray-900"
@@ -220,6 +220,11 @@ const goToHome = () => {
     </transition>
 
     <!-- Modal Sukses -->
-    <SuccessLeave v-if="showSuccessLeave" @close="goToHome" />
+    <SuccessLeave
+      v-if="showSuccessLeave"
+      title="Leave Submitted"
+      message="Your request has been sent"
+      @close="goToHome"
+    />
   </div>
 </template>

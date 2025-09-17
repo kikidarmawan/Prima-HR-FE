@@ -6,35 +6,39 @@ import { useRouter } from "vue-router";
 
 const store = useStore();
 const router = useRouter();
+
 const karyawan = computed(() => store.getters["karyawan/karyawan"]);
 const nama = computed(() => karyawan.value?.nama_karyawan || "");
 const jabatan = computed(() => karyawan.value?.jabatan?.nama_jabatan || "");
+
+// dark mode
 const darkMode = ref(localStorage.getItem("theme") === "dark");
+
+// avatar
 const defaultAvatar = new URL("../../assets/images/Profile.png", import.meta.url).href;
 const avatar = ref(defaultAvatar);
 const imageKey = ref(0);
 const isUpdating = ref(false);
 
-// apply darkmode + load avatar
+// apply dark mode + fetch karyawan
 onMounted(async () => {
   document.documentElement.classList.toggle("dark", darkMode.value);
   await store.dispatch("karyawan/fetchKaryawanById");
 });
 
+// watch dark mode
 watch(darkMode, (val) => {
   document.documentElement.classList.toggle("dark", val);
   localStorage.setItem("theme", val ? "dark" : "light");
 });
 
+// check local storage for avatar
 const checkLocalStorageForImage = () => {
   const storedImage = localStorage.getItem("profileImage");
-  if (storedImage) {
-    return storedImage;
-  }
-  return null;
+  return storedImage || null;
 };
 
-// perubahan data karyawan
+// watch karyawan changes
 watch(
   karyawan,
   (newVal) => {
@@ -48,12 +52,11 @@ watch(
     } else {
       avatar.value = defaultAvatar;
     }
-
-    imageKey.value++;
   },
   { immediate: true }
 );
 
+// logout
 const handleLogout = () => {
   store.dispatch("auth/logout");
   router.push("/login");
