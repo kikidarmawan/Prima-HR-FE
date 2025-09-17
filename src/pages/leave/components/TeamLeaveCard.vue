@@ -177,7 +177,6 @@ const openConfirm = (type) => {
   showConfirm.value = true;
 };
 
-// ✅ Format date to "September 11, 2025"
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
   return date.toLocaleDateString("en-US", {
@@ -192,22 +191,22 @@ const confirmAction = async () => {
   showLoadingModal.value = true;
 
   try {
+    const backendStatus = confirmType.value === "approve" ? "Disetujui" : "Ditolak";
+
     await store.dispatch("team_leave/updateLeaveStatus", {
       item: props.item,
-      status: confirmType.value === "approve" ? "Approved" : "Rejected",
+      status: backendStatus,
     });
 
-    emit("action", { item: props.item, status: confirmType.value });
+    emit("action", { item: props.item, status: backendStatus });
 
     setTimeout(() => {
       showLoadingModal.value = false;
-      alertMessage.value = `Request has been ${
-        confirmType.value === "approve" ? "approved" : "rejected"
-      } successfully!`;
+      alertMessage.value = `Request has been ${backendStatus.toLowerCase()} successfully!`;
       alertType.value = "success";
       showAlert.value = true;
       setTimeout(() => (showAlert.value = false), 2000);
-    }, 1000);
+    }, 500);
   } catch (err) {
     console.error("Failed to update status:", err);
     showLoadingModal.value = false;
