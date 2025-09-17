@@ -6,6 +6,16 @@ const props = defineProps({
   selectedDate: { type: Object, default: null },
 });
 
+      const data = this.$store.getters["presensi/presensiByDate"](tanggalStr);
+      return data;
+    },
+    loading() {
+      return this.$store.getters["presensi/isLoadingTodayPresensi"];
+    },
+    isLoadingMonthPresensi() {
+      return this.$store.state.presensi.loading.loadingMonthPresensi;
+    },
+  },
 const store = useStore();
 
 const presensi = computed(() => store.state.presensi.todayPresensi);
@@ -41,6 +51,7 @@ watch(
   { immediate: true }
 );
 </script>
+
 
 <template>
   <!-- Loading Shimmer -->

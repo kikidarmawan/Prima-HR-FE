@@ -117,17 +117,23 @@ const updateProfile = async () => {
     if (jkMapped === "Laki-laki") jkMapped = "L";
     if (jkMapped === "Perempuan") jkMapped = "P";
 
-    // payload PUT
-    const formPayload = {
-      id: existingData.value?.id,
-      nama_karyawan: form.value.nama_karyawan,
-      email: form.value.email,
-      no_hp: form.value.no_hp,
-      jk: jkMapped,
-    };
+// payload PUT dengan fallback
+const formPayload = {
+  id: existingData.value?.id,
+  nama_karyawan: form.value.nama_karyawan || existingData.value?.nama_karyawan,
+  email: form.value.email || existingData.value?.email,
+  no_hp: form.value.no_hp || existingData.value?.no_hp,
+  jk: jkMapped || existingData.value?.jk,
+};
 
-    if (fotoUrl) formPayload.foto = fotoUrl;
-    console.log("Final payload PUT:", formPayload);
+if (fotoUrl) formPayload.foto = fotoUrl;
+if (!form.value.nama_karyawan) {
+  showLoadingModal.value = false;
+  errorMessage.value = "Field tidak boleh kosong.";
+  showErrorModal.value = true;
+  return;
+}
+
 
     const token = localStorage.getItem("token");
     const res = await api.put("/api/update-karyawan", formPayload, {

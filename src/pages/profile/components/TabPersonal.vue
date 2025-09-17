@@ -8,11 +8,11 @@ const props = defineProps({
 
 <template>
   <div class="space-y-4 px-4" v-if="data">
-    <Item label="Nama" :value="data.nama_karyawan" />
-    <Item label="Jenis Kelamin" :value="data.jk" />
+    <Item label="Name" :value="data.nama_karyawan" />
+    <Item label="Gender" :value="data.jk" />
     <Item label="Email" :value="data.email" />
-    <Item label="Nomor HP" :value="data.no_hp" />
-    <Item label="Alamat" :value="data.alamat" />
-    <Item label="Tempat, Tanggal Lahir" :value="`${data.tmp_lahir}, ${data.tgl_lahir}`" />
+    <Item label="Phone Number" :value="data.no_hp" />
+    <Item label="Address" :value="data.alamat" />
+    <Item label="Place, Date of Birth" :value="`${data.tmp_lahir}, ${data.tgl_lahir}`" />
   </div>
 </template>

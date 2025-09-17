@@ -164,7 +164,6 @@ export default {
         const res = await api.get(`/api/presensi-month`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        console.log(res.data.data);
         
         commit("SET_MONTH_PRESENSI", res.data.data || []);
         return res.data.data || [];

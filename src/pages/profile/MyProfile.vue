@@ -60,7 +60,21 @@ const checkLocalStorageForImage = () => {
   }
   return null;
 };
+
 // perubahan data karyawan
+watch(
+  karyawan,
+  (newVal) => {
+    const storedImage = checkLocalStorageForImage();
+
+    if (storedImage && !isUpdating.value) {
+      avatar.value = storedImage;
+      imageKey.value++;
+    } else if (newVal?.foto_url) {
+      avatar.value = `${newVal.foto_url}?t=${Date.now()}`;
+    } else {
+      avatar.value = defaultAvatar;
+    }
 watch(karyawan, (newVal) => {
 
   
@@ -69,20 +83,14 @@ watch(karyawan, (newVal) => {
   if (storedImage && !isUpdating.value) {
     avatar.value = storedImage;
     imageKey.value++;
-  } else if (newVal?.foto_url) {
-    avatar.value = `${newVal.foto_url}?t=${Date.now()}`;
-    console.log("✅ Avatar diganti:", avatar.value);
-  } else {
-    avatar.value = defaultAvatar;
-  }
-  
-  imageKey.value++;
-}, { immediate: true });
+  },
+  { immediate: true }
+);
 
 // update avatar setiap kali data karyawan berubah
 watch(karyawan, (val) => {
   if (val?.foto_url) {
-    avatar.value = `${val.foto_url}?t=${Date.now()}`; // 🔥 anti-cache
+    avatar.value = `${val.foto_url}?t=${Date.now()}`; 
     localStorage.setItem("profileImage", avatar.value);
   } else {
     avatar.value = defaultAvatar;

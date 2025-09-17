@@ -24,26 +24,19 @@ const actions = {
   async getTeamLeaveData({ commit }) {
     commit("SET_LOADING", true);
     commit("SET_ERROR", null);
-  
+
     try {
-      const currentKaryawanId = store.state.auth.user.karyawan.id;
-      const res = await api.get(`/api/absensi-manager/${currentKaryawanId}`);
-  
-      
-      const mapped = res.data.data.map(item => {
-        // console.log("Raw API item:", item); // cek lagi
-        
+      const res = await api.get("/api/absensi-manager");
+
+      const mapped = res.data.data.map((item) => {
         return {
           ...item,
-          name: item.karyawan?.name,   // kalau masih ada relasi karyawan
+          name: item.karyawan?.name,
           date: item.tanggal,
-          karyawan_id: item.karyawan_id // 👈 ambil langsung dari root
+          karyawan_id: item.karyawan_id,
         };
       });
-      
-      
-      
-  
+
       commit("SET_TEAM_LEAVE", mapped);
     } catch (err) {
       console.error("Failed to fetch team leave:", err);
@@ -52,36 +45,30 @@ const actions = {
       commit("SET_LOADING", false);
     }
   },
-  
 
-
-// update status (accept / reject)
-async updateLeaveStatus({ dispatch }, { item, status }) {
+  // update status (accept / reject)
+  async updateLeaveStatus({ dispatch }, { item, status }) {
     try {
       const payload = {
-        tanggal: item.date,          
-        karyawan_id: item.karyawan_id,  
-        status: status,                 
+        tanggal: item.date,
+        karyawan_id: item.karyawan_id,
+        status: status,
         alasan_ditolak: status === "Ditolak" ? "Alasan ditolak" : null,
       };
-  
+
       console.log("=== Updating Leave ===");
       console.log("Leave ID:", item.id);
       console.log("Payload:", payload);
-  
+
       await api.put(`/api/update-absensi-status/${item.id}`, payload);
-  
+
       // refresh data
       await dispatch("getTeamLeaveData");
     } catch (err) {
       console.error("=== Update Failed ===");
       console.error("Error Response:", err.response?.data || err.message);
     }
-  }
-  
-  
-  
-  
+  },
 };
 
 export default {
