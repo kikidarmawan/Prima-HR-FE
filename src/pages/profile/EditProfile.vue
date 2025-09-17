@@ -17,17 +17,19 @@ const form = ref({
   foto_path: null,  
 });
 
+const defaultAvatar = new URL("../../assets/images/Profile.png", import.meta.url).href;
+
+
 const defaultAvatar = new URL(
   "../../assets/images/Profile.png",
   import.meta.url
 ).href;
 
+
 const previewImage = ref(null);
 const existingData = ref(null);
 
 // modal
-
-
 const showLoadingModal = ref(false);
 const showSuccessModal = ref(false);
 const showErrorModal = ref(false);
@@ -47,19 +49,13 @@ onMounted(async () => {
 
     const storedImage = localStorage.getItem(`profileImage_${data.id}`);
 
-    const storedImage = localStorage.getItem("profileImage");
-    if (storedImage) {
-      previewImage.value = storedImage;
-    } else {
-      previewImage.value = data.foto_url || defaultAvatar;
-    }
-
     previewImage.value = data.foto_url
       ? `${import.meta.env.VITE_API_URL}/${data.foto_url}?t=${Date.now()}`
       : defaultAvatar;
-
   }
 });
+
+
 watch(
   () => store.getters["karyawan/karyawan"],
   (newData) => {
@@ -90,6 +86,7 @@ watch(
   { deep: true, immediate: true }
 );
 
+
 // upload avatar
 const handleImageUpload = (event) => {
   const file = event.target.files[0];
@@ -101,23 +98,32 @@ const handleImageUpload = (event) => {
 
 // update profile
 const updateProfile = async () => {
+  if (!form.value.nama_karyawan) {
+    errorMessage.value = "Field tidak boleh kosong.";
+    showErrorModal.value = true;
+    return;
+  }
+
   showLoadingModal.value = true;
   try {
+
+    let fotoUrl = null;
+
+
     let fotoPath = form.value.foto_path;
     let fotoPreviewUrl = null;
 
     // kalau ada file baru → upload ke server
+
     if (form.value.foto instanceof File) {
       const formData = new FormData();
       formData.append("foto", form.value.foto);
 
       const token = localStorage.getItem("token");
       const uploadRes = await api.post("/api/upload-foto-karyawan", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
       });
+
 
       if (uploadRes.data?.status) {
         fotoPreviewUrl = `${uploadRes.data.url_path}?t=${Date.now()}`;
@@ -132,12 +138,26 @@ const updateProfile = async () => {
 
         fotoPath = uploadRes.data.foto_path;
         form.value.foto_path = fotoPath;
+
       if (uploadRes.data?.status && uploadRes.data.url_path) {
-        const newUrl = `${uploadRes.data.url_path}?t=${Date.now()}`;
+        fotoUrl = uploadRes.data.url_path;
+        const newUrl = `${fotoUrl}?t=${Date.now()}`;
         previewImage.value = newUrl;
         localStorage.setItem("profileImage", newUrl);
       }
     }
+
+
+    let jkMapped = form.value.jk === "Laki-laki" ? "L" : form.value.jk === "Perempuan" ? "P" : form.value.jk;
+
+    const payload = {
+      id: existingData.value?.id,
+      nama_karyawan: form.value.nama_karyawan || existingData.value?.nama_karyawan,
+      email: form.value.email || existingData.value?.email,
+      no_hp: form.value.no_hp || existingData.value?.no_hp,
+      jk: jkMapped || existingData.value?.jk,
+      ...(fotoUrl ? { foto: fotoUrl } : {}),
+    };
 
     let jkMapped = form.value.jk;
     if (jkMapped === "Laki-laki") jkMapped = "L";
@@ -161,32 +181,18 @@ const updateProfile = async () => {
       return;
     }
 
+
     const token = localStorage.getItem("token");
-    const res = await api.put("/api/update-karyawan", formPayload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
+    const res = await api.put("/api/update-karyawan", payload, {
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
     });
 
-  if (form.value.foto instanceof File) {
-    payload = new FormData();
-    payload.append("nama_karyawan", form.value.nama_karyawan);
-    payload.append("email", form.value.email);
-    payload.append("no_hp", form.value.no_hp);
-    payload.append("jk", form.value.jk);
-    payload.append("foto", form.value.foto);
-  } else {
-    payload = {
-      nama_karyawan: form.value.nama_karyawan,
-      email: form.value.email,
-      no_hp: form.value.no_hp,
-      jk: form.value.jk,
-    };
-  }
-
-
     const updatedData = res.data.data || res.data;
+
+    store.commit("karyawan/SET_KARYAWAN", updatedData);
+    localStorage.setItem("karyawan", JSON.stringify(updatedData));
+
+
     // update store & localStorage
     store.commit("karyawan/SET_KARYAWAN", updatedData);
     localStorage.setItem("karyawan", JSON.stringify(updatedData));
@@ -220,12 +226,11 @@ const updateProfile = async () => {
     await store.dispatch("karyawan/fetchKaryawanById");
 
 
+
     showLoadingModal.value = false;
     showSuccessModal.value = true;
   } catch (err) {
-    showLoadingModal.value = false;
-    console.error("Full error:", err);
-    console.error("Validation errors:", err.response?.data?.errors);
+    console.error("Error update profile:", err.response?.data || err);
 
     let errorText = "";
     if (err.response?.data?.errors) {
@@ -234,10 +239,8 @@ const updateProfile = async () => {
         .join("; ");
     }
 
-    errorMessage.value =
-      errorText ||
-      err.response?.data?.message ||
-      "Gagal update profile, coba lagi.";
+    errorMessage.value = errorText || err.response?.data?.message || "Gagal update profile, coba lagi.";
+    showLoadingModal.value = false;
     showErrorModal.value = true;
   }
 };
@@ -247,6 +250,7 @@ const handleSuccessClose = () => {
   router.push("/profile");
 };
 </script>
+
 
 <template>
   <div
@@ -304,7 +308,12 @@ const handleSuccessClose = () => {
             type="text"
             v-model="form.nama_karyawan"
             class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
+
+>
+
+
           <label class="block text-blue-500 mb-1 text-sm font-medium">Name</label>
+
           <input
             type="text"
             v-model="form.nama_karyawan"
@@ -312,14 +321,16 @@ const handleSuccessClose = () => {
             placeholder="Enter your name"
           />
         </div>
-        <!-- Email -->
+      
         <div>
+
           <label class="block text-blue-500 mb-1 text-sm font-medium">Email</label>
           >
           <input
             type="email"
             v-model="form.email"
             class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
+
           <label class="block text-blue-500 mb-1 text-sm font-medium">Email</label>
           <input
             type="email"
@@ -328,18 +339,16 @@ const handleSuccessClose = () => {
             placeholder="Enter your email"
           />
         </div>
-        <!-- Phone -->
+      
         <div>
+
           <label class="block text-blue-500 mb-1 text-sm font-medium">Phone</label>
           <label class="block text-blue-500 mb-1 text-sm font-medium"
             >Phone</label
           >
 
 
-          <input
-            type="text"
-            v-model="form.no_hp"
-            class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
+
           <label class="block text-blue-500 mb-1 text-sm font-medium">Phone</label>
           <input
             type="text"

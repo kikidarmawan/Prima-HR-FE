@@ -2,20 +2,12 @@
 import { computed, watch } from "vue";
 import { useStore } from "vuex";
 
+// props
 const props = defineProps({
   selectedDate: { type: Object, default: null },
 });
 
-      const data = this.$store.getters["presensi/presensiByDate"](tanggalStr);
-      return data;
-    },
-    loading() {
-      return this.$store.getters["presensi/isLoadingTodayPresensi"];
-    },
-    isLoadingMonthPresensi() {
-      return this.$store.state.presensi.loading.loadingMonthPresensi;
-    },
-  },
+// store
 const store = useStore();
 
 // presensi dari store
@@ -27,6 +19,7 @@ const presensiByDate = computed(() => {
   const tanggalStr =
     typeof rawTanggal === "object" ? rawTanggal.tanggal : rawTanggal;
 
+  if (!tanggalStr) return null;
   return store.getters["presensi/presensiByDate"](tanggalStr);
 });
 
@@ -43,14 +36,14 @@ function formatTime(time) {
 
 // fetch presensi sesuai tanggal
 async function fetchPresensi() {
-  const karyawan = store.state.auth.user?.karyawan_id;
-  if (!karyawan || !props.selectedDate?.raw) return;
+  const karyawanId = store.state.auth.user?.karyawan_id;
+  if (!karyawanId || !props.selectedDate?.raw) return;
 
-  const today = new Date().toISOString().split("T")[0];
-  if (props.selectedDate.raw === today) {
-    await store.dispatch("presensi/fetchTodayPresensi", karyawan);
+  const todayStr = new Date().toISOString().split("T")[0];
+  if (props.selectedDate.raw === todayStr) {
+    await store.dispatch("presensi/fetchTodayPresensi", karyawanId);
   } else {
-    await store.dispatch("presensi/fetchMonthPresensi", karyawan);
+    await store.dispatch("presensi/fetchMonthPresensi", karyawanId);
   }
 }
 
@@ -63,6 +56,7 @@ watch(
   { immediate: true }
 );
 </script>
+
 
 
 <template>

@@ -171,6 +171,8 @@ const goToHome = () => {
         Apply Leave
       </button>
     </form>
+
+
     <!-- Modal Loading (rapi + overlay non-clickable) -->
     <transition
       enter-active-class="transition-opacity duration-300 ease-out"
@@ -184,9 +186,9 @@ const goToHome = () => {
         v-if="showLoadingModal"
         class="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50 pointer-events-none"
       >
-        class="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50"
-      >
+
         <!-- Backdrop non-clickable -->
+
         <div
           class="bg-white dark:bg-gray-900 rounded-2xl p-6 max-w-sm w-full mx-4 flex flex-col items-center shadow-xl pointer-events-auto"
         >
