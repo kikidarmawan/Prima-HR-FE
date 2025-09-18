@@ -14,85 +14,36 @@ const jabatan = computed(() => karyawan.value?.jabatan?.nama_jabatan || "");
 // Dark mode
 const darkMode = ref(localStorage.getItem("theme") === "dark");
 
-
 // Avatar
 const defaultAvatar = new URL("../../assets/images/Profile.png", import.meta.url).href;
 const avatar = ref(defaultAvatar);
 const imageKey = ref(0);
 const isUpdating = ref(false);
 
-// Helper untuk cek localStorage avatar
-const checkLocalStorageForImage = () => localStorage.getItem("profileImage") || null;
-
 // Apply dark mode & fetch karyawan
 onMounted(async () => {
   document.documentElement.classList.toggle("dark", darkMode.value);
 
-  const savedImage = checkLocalStorageForImage();
-  if (savedImage) avatar.value = savedImage;
-
-  await store.dispatch("karyawan/fetchKaryawanById");
-});
-
-// Watch dark mode
-
-// avatar
-const defaultAvatar = new URL(
-  "../../assets/images/Profile.png",
-  import.meta.url
-).href;
-const avatar = ref(defaultAvatar);
-const imageKey = ref(0);
-// apply darkmode + load avatar
-onMounted(async () => {
-  document.documentElement.classList.toggle("dark", darkMode.value);
-  await store.dispatch("karyawan/fetchKaryawanById");
- 
-});
-// fallback avatar
-const defaultAvatar = new URL("../../assets/images/Profile.png", import.meta.url).href;
-const avatar = ref(defaultAvatar);
-
-// apply darkmode + load avatar
-onMounted(async () => {
   const savedImage = localStorage.getItem("profileImage");
   if (savedImage) {
     avatar.value = savedImage;
   }
 
-  document.documentElement.classList.toggle("dark", darkMode.value);
-
-  // ambil data terbaru dari backend
   await store.dispatch("karyawan/fetchKaryawanById");
 });
 
-// update theme
-
+// Watch dark mode toggle
 watch(darkMode, (val) => {
   document.documentElement.classList.toggle("dark", val);
   localStorage.setItem("theme", val ? "dark" : "light");
 });
 
-
-// Watch karyawan untuk update avatar
-
-// watch perubahan data karyawan
-const checkLocalStorageForImage = () => {
-  const storedImage = localStorage.getItem("profileImage");
-  if (storedImage) {
-    return storedImage;
-  }
-  return null;
-};
-
-// perubahan data karyawan
-
+// Watch perubahan data karyawan
 watch(
   karyawan,
   (newVal) => {
     if (newVal) {
       const storedImage = localStorage.getItem(`profileImage_${newVal.id}`);
-
       if (storedImage) {
         avatar.value = storedImage;
       } else if (newVal.foto_url) {
@@ -100,29 +51,10 @@ watch(
       } else {
         avatar.value = defaultAvatar;
       }
-
       imageKey.value++;
-
-    } else if (newVal?.foto_url) {
-      avatar.value = `${newVal.foto_url}?t=${Date.now()}`;
-      localStorage.setItem("profileImage", avatar.value);
     } else {
       avatar.value = defaultAvatar;
     }
-
-    }
-  },
-  { immediate: true }
-);
-
-// logout
-watch(karyawan, (newVal) => {
-  const storedImage = checkLocalStorageForImage();
-  
-  if (storedImage && !isUpdating.value) {
-    avatar.value = storedImage;
-    imageKey.value++;
-
   },
   { immediate: true }
 );
@@ -139,24 +71,10 @@ const handleLogout = () => {
     <!-- Profile -->
     <div class="flex flex-col items-center p-10 relative">
       <div class="relative w-24 h-24">
-
+        <!-- Avatar -->
         <img :key="imageKey" :src="avatar" class="rounded-full w-24 h-24 object-cover" />
-
-        <img
-          :key="imageKey"
-          :src="avatar"
-          class="rounded-full w-24 h-24 object-cover"
-
-        <img 
-          :key="imageKey" 
-          :src="avatar" 
-          class="rounded-full w-24 h-24 object-cover" 
-        />
       </div>
 
-        <img :src="avatar" class="rounded-full w-24 h-24 object-cover" />
-
-      </div>
       <h1 class="font-semibold text-xl mt-4 text-gray-900 dark:text-white">{{ nama }}</h1>
       <h2 class="text-base text-gray-500 dark:text-gray-400">{{ jabatan }}</h2>
       <router-link to="/edit-profile">
@@ -172,13 +90,7 @@ const handleLogout = () => {
       <router-link to="/profile/details">
         <div class="flex items-center justify-between px-2 py-5 border-b border-gray-200 dark:border-gray-700">
           <div class="flex items-center gap-4">
-
             <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-
-            <div
-              class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
-            >
-
               <i class="fa-regular fa-user text-2xl text-gray-600 dark:text-gray-300"></i>
             </div>
             <span class="text-base font-medium text-gray-800 dark:text-gray-200">My Profile</span>
@@ -191,13 +103,7 @@ const handleLogout = () => {
       <router-link to="/change-password">
         <div class="flex items-center justify-between px-2 py-5 border-b border-gray-200 dark:border-gray-700">
           <div class="flex items-center gap-4">
-
             <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-
-            <div
-              class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
-            >
-
               <i class="fa-solid fa-lock text-2xl text-gray-600 dark:text-gray-300"></i>
             </div>
             <span class="text-base font-medium text-gray-800 dark:text-gray-200">Change Password</span>
@@ -209,13 +115,7 @@ const handleLogout = () => {
       <!-- Settings (Switch Mode) -->
       <div class="flex items-center justify-between px-2 py-5 border-b border-gray-200 dark:border-gray-700">
         <div class="flex items-center gap-4">
-
           <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-
-          <div
-            class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
-          >
-
             <i class="fa-solid fa-gear text-2xl text-gray-600 dark:text-gray-300"></i>
           </div>
           <span class="text-base font-medium text-gray-800 dark:text-gray-200">Switch Mode</span>
@@ -231,12 +131,8 @@ const handleLogout = () => {
     <!-- Logout -->
     <button @click="handleLogout" class="w-full text-left cursor-pointer">
       <div class="flex items-center gap-5 px-9 py-5 mt-2 text-red-500">
-        <div
-          class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center"
-        >
-          <i
-            class="fa-solid fa-arrow-right-from-bracket text-base text-red-500 dark:text-red-100"
-          ></i>
+        <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center">
+          <i class="fa-solid fa-arrow-right-from-bracket text-base text-red-500 dark:text-red-100"></i>
         </div>
         <span class="text-base font-medium">Log out</span>
       </div>
