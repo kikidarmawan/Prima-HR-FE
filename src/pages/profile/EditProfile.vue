@@ -13,79 +13,82 @@ const form = ref({
   email: "",
   no_hp: "",
   jk: "",
-  foto: null,        
-  foto_path: null,  
+  foto: null,
+  foto_path: null,
 });
 
 const defaultAvatar = new URL("../../assets/images/Profile.png", import.meta.url).href;
-
-
-const defaultAvatar = new URL(
-  "../../assets/images/Profile.png",
-  import.meta.url
-).href;
-
-
-const previewImage = ref(null);
+const previewImage = ref(defaultAvatar);
 const existingData = ref(null);
 
-// modal
+// modal state
 const showLoadingModal = ref(false);
 const showSuccessModal = ref(false);
 const showErrorModal = ref(false);
 const errorMessage = ref("");
 
+// Fungsi untuk mendapatkan URL lengkap gambar
+const getImageUrl = (path) => {
+  if (!path) return defaultAvatar;
+  
+  // Jika path sudah URL lengkap, gunakan langsung
+  if (typeof path === 'string' && path.startsWith('http')) {
+    return `${path}?t=${Date.now()}`;
+  }
+  
+  // Jika path relatif, tambahkan base URL
+  if (typeof path === 'string') {
+    return `${import.meta.env.VITE_API_URL}/${path}?t=${Date.now()}`;
+  }
+  
+  return defaultAvatar;
+};
+
 // ambil data awal
 onMounted(async () => {
-  await store.dispatch("karyawan/fetchKaryawanById");
-  const data = store.getters["karyawan/karyawan"];
-  if (data) {
-    existingData.value = data;
-    form.value.nama_karyawan = data.nama_karyawan || "";
-    form.value.email = data.email || "";
-    form.value.no_hp = data.no_hp || "";
-    form.value.jk = data.jk || "";
-    form.value.foto_path = data.foto_path || null;
+  try {
+    await store.dispatch("karyawan/fetchKaryawanById");
+    const data = store.getters["karyawan/karyawan"];
+    
+    if (data) {
+      existingData.value = data;
+      form.value.nama_karyawan = data.nama_karyawan || "";
+      form.value.email = data.email || "";
+      form.value.no_hp = data.no_hp || "";
+      form.value.jk = data.jk || "";
+      form.value.foto_path = data.foto_path || null;
 
-    const storedImage = localStorage.getItem(`profileImage_${data.id}`);
-
-    previewImage.value = data.foto_url
-      ? `${import.meta.env.VITE_API_URL}/${data.foto_url}?t=${Date.now()}`
-      : defaultAvatar;
+      // Cek localStorage untuk gambar yang tersimpan
+      const storedImage = localStorage.getItem(`profileImage_${data.id}`);
+      if (storedImage) {
+        previewImage.value = storedImage;
+      } else {
+        // Gunakan foto_url atau defaultAvatar
+        previewImage.value = getImageUrl(data.foto_url || data.foto_path);
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching employee data:", error);
+    previewImage.value = defaultAvatar;
   }
 });
 
-
-watch(
-  () => store.getters["karyawan/karyawan"],
-  (newData) => {
-    if (newData) {
-      existingData.value = newData;
-      previewImage.value = newData.foto_url
-        ? `${import.meta.env.VITE_API_URL}/${newData.foto_url}?t=${Date.now()}`
-        : defaultAvatar;
-    }
-  },
-  { deep: true, immediate: true }
-);
-
+// update preview ketika data berubah
 watch(
   () => store.getters["karyawan/karyawan"],
   (newData) => {
     if (newData) {
       existingData.value = newData;
       form.value.foto_path = newData.foto_path || null;
-      if (
-        !showLoadingModal.value &&
-        !localStorage.getItem(`profileImage_${newData.id}`)
-      ) {
-        previewImage.value = newData.foto_url || defaultAvatar;
+      
+      // Hanya update preview jika tidak sedang loading dan tidak ada gambar tersimpan di localStorage
+      if (!showLoadingModal.value && !localStorage.getItem(`profileImage_${newData.id}`)) {
+        previewImage.value = getImageUrl(newData.foto_url || newData.foto_path);
       }
     }
   },
-  { deep: true, immediate: true }
+  { deep: true }
 );
-
 
 // upload avatar
 const handleImageUpload = (event) => {
@@ -106,131 +109,84 @@ const updateProfile = async () => {
 
   showLoadingModal.value = true;
   try {
-
-    let fotoUrl = null;
-
-
     let fotoPath = form.value.foto_path;
     let fotoPreviewUrl = null;
 
     // kalau ada file baru → upload ke server
-
     if (form.value.foto instanceof File) {
       const formData = new FormData();
       formData.append("foto", form.value.foto);
 
       const token = localStorage.getItem("token");
       const uploadRes = await api.post("/api/upload-foto-karyawan", formData, {
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-
       if (uploadRes.data?.status) {
-        fotoPreviewUrl = `${uploadRes.data.url_path}?t=${Date.now()}`;
-        previewImage.value = fotoPreviewUrl;
-
-        if (existingData.value?.id) {
-          localStorage.setItem(
-            `profileImage_${existingData.value.id}`,
-            fotoPreviewUrl
-          );
-        }
-
         fotoPath = uploadRes.data.foto_path;
         form.value.foto_path = fotoPath;
-
-      if (uploadRes.data?.status && uploadRes.data.url_path) {
-        fotoUrl = uploadRes.data.url_path;
-        const newUrl = `${fotoUrl}?t=${Date.now()}`;
-        previewImage.value = newUrl;
-        localStorage.setItem("profileImage", newUrl);
+        
+        // Update preview dengan URL baru
+        if (uploadRes.data.url_path) {
+          fotoPreviewUrl = `${uploadRes.data.url_path}?t=${Date.now()}`;
+          previewImage.value = fotoPreviewUrl;
+          
+          // Simpan ke localStorage
+          if (existingData.value?.id) {
+            localStorage.setItem(
+              `profileImage_${existingData.value.id}`,
+              fotoPreviewUrl
+            );
+          }
+        }
       }
     }
 
+    // mapping jk
+    let jkMapped = form.value.jk;
+    if (jkMapped === "Laki-laki") jkMapped = "L";
+    if (jkMapped === "Perempuan") jkMapped = "P";
 
-    let jkMapped = form.value.jk === "Laki-laki" ? "L" : form.value.jk === "Perempuan" ? "P" : form.value.jk;
-
+    // payload PUT
     const payload = {
       id: existingData.value?.id,
       nama_karyawan: form.value.nama_karyawan || existingData.value?.nama_karyawan,
       email: form.value.email || existingData.value?.email,
       no_hp: form.value.no_hp || existingData.value?.no_hp,
       jk: jkMapped || existingData.value?.jk,
-      ...(fotoUrl ? { foto: fotoUrl } : {}),
+      ...(fotoPath ? { foto_path: fotoPath } : {}),
     };
-
-    let jkMapped = form.value.jk;
-    if (jkMapped === "Laki-laki") jkMapped = "L";
-    if (jkMapped === "Perempuan") jkMapped = "P";
-
-    // payload PUT
-    const formPayload = {
-      id: existingData.value?.id,
-      nama_karyawan:
-        form.value.nama_karyawan || existingData.value?.nama_karyawan,
-      email: form.value.email || existingData.value?.email,
-      no_hp: form.value.no_hp || existingData.value?.no_hp,
-      jk: jkMapped || existingData.value?.jk,
-      ...(fotoPath ? { foto_path: fotoPath } : {}), 
-    };
-
-    if (!form.value.nama_karyawan) {
-      showLoadingModal.value = false;
-      errorMessage.value = "Field tidak boleh kosong.";
-      showErrorModal.value = true;
-      return;
-    }
-
 
     const token = localStorage.getItem("token");
     const res = await api.put("/api/update-karyawan", payload, {
-      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
     });
 
     const updatedData = res.data.data || res.data;
-
-    store.commit("karyawan/SET_KARYAWAN", updatedData);
-    localStorage.setItem("karyawan", JSON.stringify(updatedData));
-
-
+    
     // update store & localStorage
     store.commit("karyawan/SET_KARYAWAN", updatedData);
     localStorage.setItem("karyawan", JSON.stringify(updatedData));
 
     // update state
-    form.value.nama_karyawan =
-      updatedData.nama_karyawan || form.value.nama_karyawan;
+    form.value.nama_karyawan = updatedData.nama_karyawan || form.value.nama_karyawan;
     form.value.email = updatedData.email || form.value.email;
     form.value.no_hp = updatedData.no_hp || form.value.no_hp;
     form.value.jk = updatedData.jk || form.value.jk;
     form.value.foto_path = updatedData.foto_path || form.value.foto_path;
 
-    if (fotoPreviewUrl) {
-      previewImage.value = fotoPreviewUrl;
-      if (existingData.value?.id) {
-        localStorage.setItem(
-          `profileImage_${existingData.value.id}`,
-          fotoPreviewUrl
-        );
-      }
-    }
-
-  try {
-    await store.dispatch("karyawan/updateKaryawan", { data: payload });
-    await store.dispatch("karyawan/fetchKaryawanById"); // refresh data
-    alert("Profile berhasil diupdate ✅");
-    router.push("/profile");
-  } catch (err) {
-    console.error("❌ Error update profile:", err.response?.data || err);
-    alert("Gagal update profile ❌");
-    await store.dispatch("karyawan/fetchKaryawanById");
-
-
-
     showLoadingModal.value = false;
     showSuccessModal.value = true;
   } catch (err) {
-    console.error("Error update profile:", err.response?.data || err);
+    showLoadingModal.value = false;
+    console.error("Full error:", err);
+    console.error("Validation errors:", err.response?.data?.errors);
 
     let errorText = "";
     if (err.response?.data?.errors) {
@@ -239,8 +195,10 @@ const updateProfile = async () => {
         .join("; ");
     }
 
-    errorMessage.value = errorText || err.response?.data?.message || "Gagal update profile, coba lagi.";
-    showLoadingModal.value = false;
+    errorMessage.value =
+      errorText ||
+      err.response?.data?.message ||
+      "Gagal update profile, coba lagi.";
     showErrorModal.value = true;
   }
 };
@@ -250,7 +208,6 @@ const handleSuccessClose = () => {
   router.push("/profile");
 };
 </script>
-
 
 <template>
   <div
@@ -275,10 +232,11 @@ const handleSuccessClose = () => {
       <div class="flex flex-col items-center mb-6">
         <div class="relative">
           <img
-            :src="previewImage || defaultAvatar"
+            :src="previewImage"
             alt="Profile"
             class="w-28 h-28 rounded-full object-cover border-4 border-blue-400 shadow-md"
             :key="previewImage"
+            @error="() => { previewImage = defaultAvatar }"
           />
           <label
             for="avatar"
@@ -308,29 +266,12 @@ const handleSuccessClose = () => {
             type="text"
             v-model="form.nama_karyawan"
             class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
-
->
-
-
-          <label class="block text-blue-500 mb-1 text-sm font-medium">Name</label>
-
-          <input
-            type="text"
-            v-model="form.nama_karyawan"
-            class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
             placeholder="Enter your name"
           />
         </div>
-      
+        
+        <!-- Email -->
         <div>
-
-          <label class="block text-blue-500 mb-1 text-sm font-medium">Email</label>
-          >
-          <input
-            type="email"
-            v-model="form.email"
-            class="w-full px-4 py-3 border border-blue-400 rounded-xl focus:outline-none focus:ring focus:ring-blue-300 text-gray-800 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
-
           <label class="block text-blue-500 mb-1 text-sm font-medium">Email</label>
           <input
             type="email"
@@ -339,16 +280,9 @@ const handleSuccessClose = () => {
             placeholder="Enter your email"
           />
         </div>
-      
+        
+        <!-- Phone -->
         <div>
-
-          <label class="block text-blue-500 mb-1 text-sm font-medium">Phone</label>
-          <label class="block text-blue-500 mb-1 text-sm font-medium"
-            >Phone</label
-          >
-
-
-
           <label class="block text-blue-500 mb-1 text-sm font-medium">Phone</label>
           <input
             type="text"
@@ -357,6 +291,7 @@ const handleSuccessClose = () => {
             placeholder="Enter your phone number"
           />
         </div>
+        
         <!-- Save Button -->
         <button
           type="submit"
@@ -419,7 +354,7 @@ const handleSuccessClose = () => {
   <SuccessModal
     v-if="showSuccessModal"
     img="https://cdn-icons-png.flaticon.com/512/190/190411.png"
-    message="Profile berhasil diupdate "
+    message="Profile berhasil diupdate"
     @close="handleSuccessClose"
   />
 

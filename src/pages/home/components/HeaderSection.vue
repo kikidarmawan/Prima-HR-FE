@@ -18,8 +18,6 @@ const jabatan = computed(() => karyawan.value?.jabatan?.nama_jabatan || "");
 // foto profil, fallback ke localStorage atau default
 const fotoUrl = computed(() => {
 
-  const storedImage = localStorage.getItem("profileImage");
-
   if (!karyawan.value) return Oren;
   const storedImage = localStorage.getItem(`profileImage_${karyawan.value.id}`);
 
