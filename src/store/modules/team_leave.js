@@ -55,11 +55,6 @@ const actions = {
         status: status,
         alasan_ditolak: status === "Ditolak" ? "Alasan ditolak" : null,
       };
-
-      console.log("=== Updating Leave ===");
-      console.log("Leave ID:", item.id);
-      console.log("Payload:", payload);
-
       await api.put(`/api/update-absensi-status/${item.id}`, payload);
 
       // refresh data

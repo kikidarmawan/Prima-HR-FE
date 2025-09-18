@@ -98,26 +98,20 @@ export default {
             const today = new Date()
             const tanggal = today.toISOString().split("T")[0]
     
-            // 🔎 refresh dulu data today
             await dispatch("fetchToday", tanggal)
   
             const todayData = state.today?.["0"] || null
             const sudahCheckIn = !!todayData?.jam_masuk
             const sudahCheckOut = !!todayData?.jam_keluar
-            console.log('today',todayData);
   
             if (sudahCheckIn && sudahCheckOut) {
                 throw new Error("Anda sudah melakukan presensi hari ini.")
             }
-    
-            // ✅ kalau belum checkin -> action checkin
-            // ✅ kalau sudah checkin tapi belum checkout -> action checkout
             const isCheckIn = !sudahCheckIn
             const jamSekarang = isCheckIn
                 ? formatHi(today)
                 : formatHis(today)
     
-            // 🔎 ambil lokasi user
             const pos = await new Promise((resolve, reject) => {
                 navigator.geolocation.getCurrentPosition(resolve, (err) => {
                 alert("Lokasi harus diizinkan untuk presensi!")
@@ -126,10 +120,8 @@ export default {
             })
             const { latitude, longitude } = pos.coords
     
-            // 🔎 upload foto
             const fotoPath = await dispatch("uploadFoto", photoBase64)
     
-            // 🔎 payload absensi
             const absensiPayload = {
                 karyawan_id: karyawanId,
                 tanggal,
@@ -138,7 +130,7 @@ export default {
                 : { jam_keluar: jamSekarang, lat_pulang: latitude, long_pulang: longitude, foto_keluar: fotoPath }),
             }
     
-            // 🔎 request ke API
+            //  request ke API
             const res = await api({
                 method: isCheckIn ? "post" : "put",
                 url: isCheckIn ? "/api/check-in" : "/api/check-out",
@@ -148,8 +140,8 @@ export default {
                 Accept: "application/json",
                 },
             })
-    
-            // 🔎 update state today biar langsung terbaru
+  
+            //  update state today biar langsung terbaru
             await dispatch("fetchToday", tanggal)
     
             return { message: res.data.message, fotoPath, type: isCheckIn ? "checkin" : "checkout" }
