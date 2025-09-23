@@ -55,7 +55,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://app.putratek.my.id',
+        target: 'https://hrisdev.theprime.id',
         changeOrigin: true,
         secure: false,
       },
