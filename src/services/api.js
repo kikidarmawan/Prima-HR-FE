@@ -1,12 +1,14 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://hrisdev.theprime.id/", //https://hris.theprime.id,
-  // withCredentials: true, 
+  baseURL: "https://sunbeam-proper-pipefish.ngrok-free.app",
   timeout: 15000,
+  headers: {
+    "ngrok-skip-browser-warning": "true", // ⬅️ ini wajib buat bypass halaman warning
+  },
 });
 
-// Interceptor untuk menambahkan token otomatis ke semua request
+// Interceptor untuk token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -15,12 +17,36 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 export default api;
+
+
+
+// import axios from "axios";
+
+// const api = axios.create({
+//   baseURL: "https://sunbeam-proper-pipefish.ngrok-free.app", //https://hris.theprime.id,
+//   // withCredentials: true, 
+//   timeout: 15000,
+// });
+
+// // Interceptor untuk menambahkan token otomatis ke semua request
+// api.interceptors.request.use(
+//   (config) => {
+//     const token = localStorage.getItem("token");
+//     if (token) {
+//       config.headers.Authorization = `Bearer ${token}`;
+//     }
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
+
+// export default api;
 
 // ini api js saya
 // import axios from "axios";

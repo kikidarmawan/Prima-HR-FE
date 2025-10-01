@@ -1,4 +1,4 @@
-<script setup>
+7889<script setup>
 import { computed } from "vue";
 import { useStore } from "vuex";
 
