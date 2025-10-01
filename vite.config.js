@@ -10,7 +10,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
+      includeAssets: ['prime.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
         name: 'Prima HR',
         short_name: 'PrimaHR',

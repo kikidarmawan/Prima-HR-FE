@@ -11,30 +11,39 @@ export default {
     },
   },
   actions: {
-    async fetchKaryawanById({ commit }) {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await api.get(`/api/detail-karyawan`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+async fetchKaryawanById({ commit }) {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await api.get(`/api/detail-karyawan`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-        const karyawan = response.data.data;
+    // 🔍 Debug log biar kelihatan isi response sebenarnya
+    console.log("API detail-karyawan response:", response.data);
 
-        // Cache-busting foto
-        if (karyawan.foto_url) {
-          karyawan.foto_url = `${karyawan.foto_url}?t=${Date.now()}`;
-        }
+    const karyawan = response.data?.data;
 
-        commit("SET_KARYAWAN", karyawan);
-        localStorage.setItem("karyawan", JSON.stringify(karyawan));
-        return karyawan;
-      } catch (err) {
-        console.error("❌ Gagal ambil data karyawan:", err.response?.data || err);
-        throw err;
-      }
-    },
+    if (!karyawan) {
+      console.warn("⚠️ Data karyawan kosong dari API");
+      commit("SET_KARYAWAN", null);
+      return null;
+    }
+
+    if (karyawan.foto_url) {
+      karyawan.foto_url = `${karyawan.foto_url}?t=${Date.now()}`;
+    }
+
+    commit("SET_KARYAWAN", karyawan);
+    localStorage.setItem("karyawan", JSON.stringify(karyawan));
+    return karyawan;
+  } catch (err) {
+    console.error("❌ Gagal ambil data karyawan:", err.response?.data || err);
+    throw err;
+  }
+},
+
 
     // Satu updateKaryawan saja, handle JSON & FormData
     async updateKaryawan({ commit }, { data }) {
@@ -72,11 +81,17 @@ export default {
     },
 
     async initKaryawan({ commit }) {
-      const stored = localStorage.getItem("karyawan");
-      if (stored) {
-        commit("SET_KARYAWAN", JSON.parse(stored));
-      }
-    },
+  try {
+    const stored = localStorage.getItem("karyawan");
+    if (stored && stored !== "undefined" && stored !== "null") {
+      commit("SET_KARYAWAN", JSON.parse(stored));
+    }
+  } catch (e) {
+    console.warn("❌ Gagal parse karyawan dari localStorage:", e);
+    localStorage.removeItem("karyawan");
+  }
+}
+,
   },
   getters: {
     karyawan: (state) => state.karyawan,

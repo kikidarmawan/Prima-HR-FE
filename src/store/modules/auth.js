@@ -1,12 +1,34 @@
 import api from "@/services/api";
 
+// helper buat parsing localStorage dengan aman
+function safeParse(key) {
+  try {
+    const item = localStorage.getItem(key);
+
+    // kalau null → return null
+    if (!item) return null;
+
+    // kalau string literal "undefined" atau "null" → hapus biar bersih
+    if (item === "undefined" || item === "null") {
+      localStorage.removeItem(key);
+      return null;
+    }
+
+    return JSON.parse(item);
+  } catch (e) {
+    console.warn(`❌ Gagal parse localStorage ${key}:`, e);
+    localStorage.removeItem(key); // bersihin supaya ga error terus
+    return null;
+  }
+}
+
 export default {
   namespaced: true,
 
   state: () => ({
     token: localStorage.getItem("token") || null,
-    user: JSON.parse(localStorage.getItem("user")) || null,
-    karyawan: JSON.parse(localStorage.getItem("karyawan")) || null,
+    user: safeParse("user"),
+    karyawan: safeParse("karyawan"),
     errorMessage: null,
     isLoggedIn: !!localStorage.getItem("token"),
   }),
@@ -22,15 +44,15 @@ export default {
     SET_KARYAWAN(state, karyawan) {
       state.karyawan = karyawan;
     },
-    SET_ERROR(state, error) {
-      state.errorMessage = error;
+    SET_ERROR(state, message) {
+      state.errorMessage = message;
     },
     LOGOUT(state) {
       state.token = null;
       state.user = null;
       state.karyawan = null;
-      state.isLoggedIn = false;
       state.errorMessage = null;
+      state.isLoggedIn = false;
     },
   },
 
@@ -42,7 +64,7 @@ export default {
         const token = data.token;
         const user = data.data || data.user;
 
-        // Simpan token & user
+        // simpan token & user
         commit("SET_TOKEN", token);
         commit("SET_USER", user);
         localStorage.setItem("token", token);
@@ -76,8 +98,8 @@ export default {
 
     initializeToken({ commit }) {
       const token = localStorage.getItem("token");
-      const user = JSON.parse(localStorage.getItem("user"));
-      const karyawan = JSON.parse(localStorage.getItem("karyawan"));
+      const user = safeParse("user");
+      const karyawan = safeParse("karyawan");
 
       if (token) {
         commit("SET_TOKEN", token);
@@ -90,6 +112,7 @@ export default {
         commit("SET_KARYAWAN", karyawan);
       }
     },
+
     async refreshKaryawan({ commit, state }) {
       if (!state.token) return;
 
@@ -112,8 +135,6 @@ export default {
     user: (state) => state.user,
     karyawan: (state) => state.karyawan,
     karyawanId: (state) => state.karyawan?.id,
-    fotoUrl: (state) => {
-      return state.karyawan?.foto_url || null;
-    },
+    fotoUrl: (state) => state.karyawan?.foto_url || null,
   },
 };
